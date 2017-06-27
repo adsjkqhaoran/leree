@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta content="telephone=no" name="format-detection">
+    <link rel="stylesheet" href="css/comomn/common.css">
+    <link rel="stylesheet" href="css/index/index.css">
+    <!--build:js js/bundle/common/prev.bundle.js-->
+    <script src="js/common/flexible.js"></script>
+    <script src="js/common/fastclick.min.js"></script>
+    <script src="js/common/zepto.js"></script>
+    <script src="js/common/deferred.js"></script>
+    <script src="js/common/callbacks.js"></script>
+    <!--endbuild-->
+    <!-- 引入样式 -->
+</head>
+<body>
+<div id="app" class="Index" v-cloak>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.306" :downRefresh="true"  @loadmore="loadMore" @canload="canLoad" :can-load-more="canLoadMore">
+                <!--swiper-->
+                <div id="swiper">
+                    <swiper-horizon :data-list="swiperDataList"></swiper-horizon>
+                </div>
+                <!--/swiper-->
+                <!--quick-menu-->
+                <div class="quick-menu">
+                    <div class="quick-menu-item">
+                        <i class="icon-mobile icon">
+
+                        </i>
+                        <p  >{{ $t("hot.cate.mobile") }}</p>
+                    </div>
+                    <div class="quick-menu-item">
+                        <i class="icon-tv icon">
+                        </i>
+                        <p>{{ $t("hot.cate.tv") }}</p>
+                    </div>
+                    <div class="quick-menu-item">
+                        <i class="icon-fitting icon">
+
+                        </i>
+                        <p>{{ $t("hot.cate.fitting") }}</p>
+                    </div>
+                    <a href="./view/lists/cate.html" class="quick-menu-item">
+                        <i class="icon-cate icon">
+
+                        </i>
+                        <p>{{ $t("hot.cate.allCate") }}</p>
+                    </a>
+                    <div class="clearFloat"></div>
+                </div>
+                <!--/quick-menu-->
+
+                <!--superMobile-->
+                <div class="super-mobile-swiperbox swiper-box-cont m_t_10">
+                    <div class="super-mobile-tit">
+                        <div class="guide" style=" background:#ff2929;"></div>
+                       {{$t('index.superMobile')}}
+                    </div>
+                    <div class="super-mobile-swiper swiper-box swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="imghold">
+                                    <img class="lazy" data-src="https://m.360buyimg.com/mobilecms/s357x357_jfs/t3484/8/2265351092/94162/f83b67bb/5847e402N7be10765.jpg!q50.jpg" alt="">
+                                </div>
+                                <div class="sku-tit col_2">
+                                    Внешний аккумулятор LeTV Super Powe мАч
+                                </div>
+                                <div class="price">
+                                    <span>461,00</span> руб
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="imghold">
+                                    <img class="lazy" data-src="https://m.360buyimg.com/mobilecms/s357x357_jfs/t3484/8/2265351092/94162/f83b67bb/5847e402N7be10765.jpg!q50.jpg" alt="">
+                                </div>
+                                <div class="sku-tit col_2">
+                                    LE max2
+                                </div>
+                                <div class="price">
+                                    <span>461,00</span> руб
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="imghold">
+                                    <img class="lazy" data-src="https://m.360buyimg.com/mobilecms/s357x357_jfs/t3484/8/2265351092/94162/f83b67bb/5847e402N7be10765.jpg!q50.jpg" alt="">
+                                </div>
+                                <div class="sku-tit col_2">
+                                    LE max2
+                                </div>
+                                <div class="price">
+                                    <span>461,00</span> руб
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="imghold">
+                                    <img class="lazy" data-src="https://img13.360buyimg.com/n1/s450x450_jfs/t2032/247/2169781190/130079/aaff902d/56c5293aN8786f6da.jpg" alt="">
+                                </div>
+                                <div class="sku-tit col_2">
+                                    LE max2
+                                </div>
+                                <div class="price">
+                                    <span>461,00</span> руб
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+                <div class="clearFloat"></div>
+                <!--/superMobile-->
+
+                <!--recommended-->
+                <div class="recommend m_t_20">
+                       <div class="recomment-tit">
+                           {{$t('index.recommend')}}
+                       </div>
+                       <ul class="recomment-box m_t_20">
+                            <li>
+                                <a href="./view/goods/detail.html?skuId=20210105013097">
+                                    <div class="imghold">
+                                        <img class="lazy" data-src="https://m.360buyimg.com/mobilecms/s357x357_jfs/t3484/8/2265351092/94162/f83b67bb/5847e402N7be10765.jpg!q50.jpg" alt="">
+                                    </div>
+                                    <div class="sku-tit col_2">
+                                        LE max2
+                                    </div>
+                                    <div class="price">
+                                        <span>461,00</span> руб
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <div class="imghold">
+                                    <img class="lazy" data-src="https://m.360buyimg.com/mobilecms/s357x357_jfs/t4075/142/133307582/213299/2be51c50/583e5a17N93b4b95b.jpg!q50.jpg" alt="">
+                                </div>
+                                <div class="sku-tit col_2">
+                                    Внешний аккумулятор LeTV Super Powe мАч
+                                </div>
+                                <div class="price">
+                                    <span>461,00</span> руб
+                                </div>
+                            </li>
+                            <li>
+                               <div class="imghold">
+                                   <img class="lazy" data-src="https://m.360buyimg.com/mobilecms/s357x357_jfs/t4594/255/191593744/170968/37f65243/58cb7f8eN4fb85c08.jpg!q50.jpg" alt="">
+                               </div>
+                               <div class="sku-tit col_2">
+                                   LE max2
+                               </div>
+                               <div class="price">
+                                   <span>461,00</span> руб
+                               </div>
+                           </li>
+                            <li>
+                               <div class="imghold">
+                                   <img class="lazy" data-src="https://img13.360buyimg.com/n1/s450x450_jfs/t2032/247/2169781190/130079/aaff902d/56c5293aN8786f6da.jpg" alt="">
+                               </div>
+                               <div class="sku-tit col_2 ">
+                                   Внешний аккумулятор LeTV Super Powe мА Внешний аккумулятор LeTV Super Powe мАч
+                               </div>
+                               <div class="price">
+                                   <span>461,00</span> руб
+                               </div>
+                           </li>
+                           <div class="clearFloat"></div>
+                       </ul>
+                </div>
+                <!--/recommended-->
+            </pull-wrap>
+
+        </div>
+
+    </div>
+    <!--加载更多-->
+    <load-More :state="loadState" >
+        <template v-if="loadState=='canLoad'">
+            {{$t('com.loadMore.scanMore')}}
+        </template>
+        <template v-if="loadState=='loadMore'">
+            {{$t('com.loading.default')}}...
+        </template>
+    </load-More>
+    <!--/加载更多-->
+    <le-foot  :a-index="0"></le-foot>
+</div>
+</body>
+
+<!--build:js js/bundle/common/tool.bundle.js-->
+<script src="js/common/md5.min.js"></script>
+<script src="js/common/weui.js"></script>
+<script src="js/common/alloy_touch.js"></script>
+<script src="js/common/underscore-min.js"></script>
+<script src="js/common/jquery.lazyloadxt.js"></script>
+<script src="js/common/app_tools.js"></script>
+<script src="js/common/touch.min.js"></script>
+<!--endbuild-->
+
+
+<!--build:js js/bundle/common/animate.bundle.js-->
+<script src="js/common/transform.js"></script>
+<script src="js/common/velocity.min.js"></script>
+<!--endbuild-->
+<script src="js/common/swiper.jquery.min.js"></script>
+<script src="js/common/vue.min.js"></script>
+
+<!--build:js js/bundle/common/lang.bundle.js-->
+<script src="js/common/vue-i18n.js"></script>
+<script src="js/lang/lang.js"></script>
+<!--endbuild-->
+
+<script src="js/components/common.js"></script>
+
+
+<script>
+
+    var vm = new Vue({
+        el : "#app",
+        i18n: i18n,
+        data : {
+            swiperDataList : {},
+            loadState:'',
+            canLoadMore : true
+        },
+        components : {
+            swiperHorizon: swiperHorizon,
+            pullWrap : npullWrap,
+            leFoot : leFoot,
+            loadMore : loadMore,
+
+        },
+        created : function(){
+            window.loading = appTools.loading(this.$t('com.loading.default'));
+        },
+        mounted : function(){
+            //兼容自带左右滑动的浏览器= =
+//            fixSwiper();
+            this.init();
+
+            setTimeout(function(){
+                loading.hide(function(){
+                    $('.wrap').css({'overflowY':'scroll'});
+                });
+            },1000);
+        },
+        methods:{
+            init:function(){
+                this.initSwiper();
+                this.initSwiperBox();
+            },
+            initSwiper:function(){
+                var xthis = this;
+                setTimeout(function () {
+                    xthis.swiperDataList = [{
+                        'src': 'http://img2.lemall.ru/wap/20170126/default/17288210563884265',
+                        'href': '#1'
+                    }, {
+                        'src': 'http://img2.lemall.ru/wap/20170126/default/17288210563884265',
+                        'href': '#2'
+                    }];
+                }, 300);
+            },
+            initSwiperBox: function(){
+                new Swiper('.swiper-box',{
+                    slidesPerView : 3,
+                    direction: 'horizontal',
+                    touchAngle: 30,
+                    onSlideChangeEnd : function(){
+                        $('body,html').trigger('scroll');
+                    },
+                    pagination: '.swiper-pagination'
+                })
+            },
+            loadMore:function(callback){
+                var xthis = this;
+                xthis.loadState = 'loadMore';
+                setTimeout(function(){
+                    xthis.loadState = 'end';
+                    callback();
+                },3000);
+            },
+            canLoad : function(){
+                this.loadState = 'canLoad';
+            },
+            cancelLoad:function(){
+                this.loadState = '';
+            }
+        }
+    });
+</script>
+</html>

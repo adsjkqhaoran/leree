@@ -1,0 +1,1077 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>account</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta content="telephone=no" name="format-detection">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/user/account.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Account" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('account.header')}}
+        </div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.06">
+                <!--头像部分-->
+
+                <div class="account-logo-wrap">
+                    <div class="account-logo-cont">
+                        <div class="circle">
+                        </div>
+                        <a href="javascript:void(0);" class="img-hold">
+                            <template v-if="!userInfo.image_url">
+                                <img src="../../images/user/user/defaultLogo@3x.png" alt="">
+                            </template>
+                            <template v-else>
+                                <img :src="userInfo.image_url" alt="">
+                            </template>
+                            <input id="uploadPortrait" type="file" accept="image/png,image/jpg,image/gif">
+                        </a>
+                    </div>
+                    <div class="account-info">
+                        <p>ID：{{userInfo.user_code}}</p>
+                        <p>
+                            <template v-if="userInfo.nick_name">
+                                {{userInfo.nick_name}}
+                            </template>
+                            <template v-else>
+                                {{$t('user.noNickName')}}
+                            </template>
+                        </p>
+                    </div>
+                </div>
+                <!--/头像部分-->
+                <!--列表-->
+                <div class="account-cell d_flex" @click="showPop('name')">
+                    <div class="icon user-icon"></div>
+                    <div class="text cell-1 flex_1">
+                        {{$t('account.userInfo')}}
+                    </div>
+                    <div class="bar d_flex">
+                        <div class="s_arrow dark flex_1"></div>
+                    </div>
+                </div>
+                <div class="account-cell d_flex" @click="showPop('tel')">
+                    <div class="icon tel-icon"></div>
+                    <div class="text cell-1 flex_1">
+                        <span>{{$t('account.loginTel')}}</span>
+                        <template v-if="userInfo.is_check_mobile">
+                            <span>{{hashTel}}</span>
+                        </template>
+                        <template v-else>
+                            <span>{{$t('com.btn.bind')}}</span>
+                        </template>
+                    </div>
+                    <div class="bar d_flex">
+                        <div class="s_arrow dark flex_1"></div>
+                    </div>
+                </div>
+                <div class="account-cell d_flex" @click="showPop('email')">
+                    <div class="icon email-icon"></div>
+                    <div class="text cell-1 flex_1">
+                        <span>{{$t('account.loginEmail')}}</span>
+                        <template v-if="userInfo.is_check_email">
+                            <span>{{hashEmail}}</span>
+                        </template>
+                        <template v-else>
+                            <span>{{$t('com.btn.bind')}}</span>
+                        </template>
+                    </div>
+                    <div class="bar d_flex">
+                        <div class="s_arrow dark flex_1"></div>
+                    </div>
+                </div>
+                <div class="account-cell d_flex" @click="showPop('paw')">
+                    <div class="icon paw-icon"></div>
+                    <div class="text cell-1 flex_1">
+                        <span>{{$t('account.paw')}}</span>
+                        <span>{{$t('com.btn.edit')}}</span>
+                    </div>
+                    <div class="bar d_flex">
+                        <div class="s_arrow dark flex_1"></div>
+                    </div>
+                </div>
+                <!--两行的情形预留-->
+                <!--<div class="account-cell d_flex" @click="showPop('paw')">-->
+                <!--<div class="icon paw-icon"></div>-->
+                <!--<div class="text  flex_1">-->
+                <!--<p>{{$t('account.paw')}}：</p>-->
+                <!--<p>{{$t('account.setted')}}</p>-->
+                <!--</div>-->
+                <!--<div class="bar d_flex">-->
+                <!--<div class="s_arrow dark flex_1"></div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--/两行的情形预留-->
+                <!--/列表-->
+            </pull-wrap>
+        </div>
+    </div>
+    <!--修改用户信息-->
+    <name-slide-pop direct="right" :width-rem=10 :duration=250 :state="slidePop.name" :opacity="0.9" v-cloak>
+        <div class="edit-box">
+            <nav class="header light">
+                <i class="back" @click="hidePop('name')"></i>
+                <div class="tit">{{$t('account.userInfo')}}</div>
+            </nav>
+            <div class="edit-cont" id="userInfo-form">
+                <div class="form-group">
+                    <div class="form-item">
+                        <i class="nickname-icon"></i>
+                        <input
+                                type="text"
+                                id="nick_name"
+                                name="nickname"
+                                v-model="userInfo.nick_name"
+                                :placeholder="$t('com.form.nickName.placeholder')"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-item">
+                        <i class="username-icon"></i>
+                        <input
+                                type="text"
+                                id="real_name"
+                                name="username"
+                                v-model="userInfo.real_name"
+                                :placeholder="$t('com.form.userName.placeholder')"
+                        />
+                    </div>
+                    <div class="form-item">
+                        <i class="sex-icon"></i>
+                        <input
+                                type="text"
+                                id="sex"
+                                readonly
+                                name="sex"
+                                v-model="sexPicker"
+                               :placeholder="$t('com.form.sex.placeholder')"
+                                @click="showSexPicker"
+                        />
+                        </input>
+                    </div>
+                    <div class="form-item">
+                        <i class="birthday-icon"></i>
+                        <input
+                                type="text"
+                                id="birthday"
+                                name="birthday"
+                                v-model="dateBirthday"
+                               :placeholder="$t('com.form.birthday.placeholder')"
+                                @click="showDatePick('birthday',userInfo.birthday)"
+                               readonly="readonly"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-item" @click="showCityPicker('city0')">
+                        <i class="area-icon"></i>
+                        <input
+                                type="text"
+                                readonly="readonly"
+                                name="country"
+                                id="city0"
+                                v-model="cityJson.selected.city0.name"
+                                :placeholder="$t('com.form.country.placeholder')"
+                        />
+                        <div class="s_arrow"></div>
+                    </div>
+                    <div class="form-item" @click="showCityPicker('city1')">
+                        <input
+                                type="text"
+                                id="city1"
+                                name="area"
+                                v-model="cityJson.selected.city1.name"
+                               :placeholder="$t('com.form.area.placeholder')"
+                                readonly="readonly"
+                        />
+                        <div class="s_arrow"></div>
+                    </div>
+                    <div class="form-item">
+                        <input
+                                type="text"
+                                @click="showCityPicker('city2')"
+                                readonly="readonly"
+                                id="city2"
+                                name="city"
+                                v-model="cityJson.selected.city2.name"
+                                :placeholder="$t('com.form.city.placeholder')"
+                        />
+                        <div class="s_arrow"></div>
+                    </div>
+                    <div class="form-item">
+                        <textarea
+                                name=""
+                                id="adressDetail"
+                                :placeholder="$t('com.form.detailAdress.placeholder')"
+                                rows="10"
+                        >{{detailAdress}}</textarea>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="le_btn btn_blue btn_react foot-btn" @click="editInfoPost">{{$t('com.btn.save')}}</div>
+        </div>
+    </name-slide-pop>
+    <!--/修改用户信息-->
+    <!--修改手机-->
+    <tel-slide-pop direct="right" :width-rem=10 :duration=250 :state="slidePop.tel" :opacity="0.9" v-cloak>
+        <div class="edit-box">
+            <nav class="header light">
+                <i class="back" @click="hidePop('tel')"></i>
+                <div class="tit">{{$t('account.editTel')}}</div>
+            </nav>
+            <div class="edit-cont" id="editTel-form">
+                <div class="form-group">
+                    <div class="form-item" v-if="userInfo.is_check_mobile">
+                        <i class="quhao">+{{$t('com.form.quhao')}}</i>
+                        <input type="text" id="oldTel" name="oldTel" value=""
+                               :placeholder="$t('com.form.oldTel.placeholder')" required :pattern="$t('regex.tel')"/>
+                    </div>
+                    <div class="form-item">
+                        <i class="quhao">+{{$t('com.form.quhao')}}</i>
+                        <input type="text" id="newTel" name="newTel" value=""
+                               :placeholder="$t('com.form.newTel.placeholder')" required :pattern="$t('regex.tel')"/>
+                    </div>
+                    <div class="form-item">
+                        <i class="msg-icon"></i>
+                        <div class="d_flex" style="width: 100%;">
+                            <input class="flex_2" required type="text" id="telMsg" name="telmsg" value=""
+                                   :placeholder="$t('com.form.inputValidate.placeholder')" style="width:50%;"
+                                   :pattern="$t('regex.msg')">
+                            <div class="le_btn btn_blue_border btn_form flex_1" style="width: 50%;"
+                                 @click="getMsg('tel')">
+                                <template v-if="!msg.tel.state">
+                                    {{$t('com.btn.getCode')}}
+                                </template>
+                                <template v-else>
+                                    {{msg.tel.wait}}s
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <i class="paw-icon"></i>
+                        <input type="password" :pattern="$t('regex.limit50')" id="telPaw" name="telPaw" value=""
+                               :placeholder="$t('com.form.inputPaw.placeholder')" required>
+                        <template v-if="pawState.telPaw">
+                            <i class="icon-paw-show" @click="tooglePaw('telPaw')"></i>
+                        </template>
+                        <template v-else>
+                            <i class="icon-paw-hide" @click="tooglePaw('telPaw')"></i>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class=" le_btn btn_blue btn_react foot-btn" @click="editTelFormPost">{{$t('com.btn.save')}}</div>
+        </div>
+    </tel-slide-pop>
+    <!--/修改手机-->
+    <!--修改邮箱-->
+    <email-slide-pop direct="right" :width-rem=10 :duration=250 :state="slidePop.email" :opacity="0.9" v-cloak>
+        <div class="edit-box">
+            <nav class="header light">
+                <i class="back" @click="hidePop('email')"></i>
+                <div class="tit">{{$t('account.editEmail')}}</div>
+            </nav>
+            <div class="edit-cont" id="editEmail-form">
+                <div class="form-group">
+                    <div class="form-item" v-if="userInfo.is_check_email">
+                        <i class="email-icon"></i>
+                        <input
+                                type="text"
+                                id="oldEmail"
+                                name="oldEmail"
+                                value=""
+                                :placeholder="$t('com.form.oldEmail.placeholder')"
+                                required
+                                :pattern="$t('regex.email')"
+                        />
+                    </div>
+                    <div class="form-item">
+                        <i class="email-icon"></i>
+                        <input
+                                type="text"
+                                id="newEmail"
+                                name="newEmail"
+                                value=""
+                                :placeholder="$t('com.form.newEmail.placeholder')"
+                                required
+                                :pattern="$t('regex.email')"
+                        />
+                    </div>
+                    <div class="form-item">
+                        <i class="msg-icon"></i>
+                        <div class="d_flex" style="width: 100%;">
+                            <input class="flex_2"
+                                   required
+                                   type="text"
+                                   name="Emailmsg"
+                                   id="emailMsg"
+                                   value=""
+                                   :placeholder="$t('com.form.inputValidate.placeholder')"
+                                   style="width:50%;"
+                                   :pattern="$t('regex.msg')"
+                            />
+                            <div class="le_btn btn_blue_border btn_form flex_1" style="width: 50%;"
+                                 @click="getMsg('email')">
+                                <template v-if="!msg.email.state">
+                                    {{$t('com.btn.getCode')}}
+                                </template>
+                                <template v-else>
+                                    {{msg.email.wait}}s
+                                </template>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="form-item">
+                        <i class="paw-icon"></i>
+                        <input
+                                type="password"
+                                id="emailPaw"
+                                name="emailPaw"
+                                value=""
+                                :placeholder="$t('com.form.inputPaw.placeholder')"
+                                required
+                                :pattern="$t('regex.limit50')"
+                        />
+                        <template v-if="pawState.emailPaw">
+                            <i class="icon-paw-show" @click="tooglePaw('emailPaw')"></i>
+                        </template>
+                        <template v-else>
+                            <i class="icon-paw-hide" @click="tooglePaw('emailPaw')"></i>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class=" le_btn btn_blue btn_react foot-btn" @click="editEmailFormPost">{{$t('com.btn.save')}}</div>
+        </div>
+    </email-slide-pop>
+    <!--/修改邮箱-->
+    <!--修改密码-->
+    <paw-slide-pop direct="right" :width-rem=10 :duration=250 :state="slidePop.paw" :opacity="0.9" v-cloak>
+        <div class="edit-box">
+            <nav class="header light">
+                <i class="back" @click="hidePop('paw')"></i>
+                <div class="tit">{{$t('account.paw')}}</div>
+            </nav>
+            <div class="edit-cont " id="editPaw-form">
+                <div class="form-group">
+                    <!--旧密码-->
+                    <div class="form-item">
+                        <i class="paw-icon"></i>
+                        <input
+                                type="password"
+                                id="oldPaw"
+                                name="oldPaw"
+                                value=""
+                                :placeholder="$t('com.form.oldPaw.placeholder')"
+                                :notMatchTips="$t('com.form.setPaw.notMatchTips')"
+                                :pattern="$t('regex.setPaw')"
+                                required
+                        />
+                        <template v-if="pawState.oldPaw">
+                            <i class="icon-paw-show" @click="tooglePaw('oldPaw')"></i>
+                        </template>
+                        <template v-else>
+                            <i class="icon-paw-hide" @click="tooglePaw('oldPaw')"></i>
+                        </template>
+                    </div>
+                    <!--/旧密码-->
+                    <!--新密码-->
+                    <div class="form-item">
+                        <i class="paw-icon"></i>
+                        <input
+                                type="password"
+                                id="newPaw"
+                                name="newPaw"
+                                value=""
+                                :placeholder="$t('com.form.newPaw.placeholder')"
+                                :notMatchTips="$t('com.form.setPaw.notMatchTips')"
+                                :pattern="$t('regex.setPaw')"
+                                required
+                        />
+                        <template v-if="pawState.newPaw">
+                            <i class="icon-paw-show" @click="tooglePaw('newPaw')"></i>
+                        </template>
+                        <template v-else>
+                            <i class="icon-paw-hide" @click="tooglePaw('newPaw')"></i>
+                        </template>
+                    </div>
+                    <!--/新密码-->
+                    <!--确认密码-->
+                    <div class="form-item">
+                        <i class="paw-confirm-icon"></i>
+                        <input
+                                type="password"
+                                id="confirmPaw"
+                                name="confirmPaw"
+                                value=""
+                                :placeholder="$t('com.form.confirm.placeholder')"
+                                required
+                                :pattern="$t('regex.limit50')"
+                        />
+                        <template v-if="pawState.confirmPaw">
+                            <i class="icon-paw-show" @click="tooglePaw('confirmPaw')"></i>
+                        </template>
+                        <template v-else>
+                            <i class="icon-paw-hide" @click="tooglePaw('confirmPaw')"></i>
+                        </template>
+                    </div>
+                    <!--/确认密码-->
+
+                </div>
+            </div>
+            <div class=" le_btn btn_blue btn_react foot-btn" @click="editPawFormPost">{{$t('com.btn.save')}}</div>
+        </div>
+    </paw-slide-pop>
+    <!--/修改密码-->
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/alloy_touch.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script src="../../js/common/md5.min.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n: i18n,
+        data: {
+            tt:{
+                a:''
+            },
+            userInfo: {
+
+            },
+            slidePop: {
+                name: false,
+                paw: false,
+                email: false,
+                tel: false
+            },
+            cityJson: {
+                selected: {
+                    city0:{},
+                    city1: {},
+                    city2: {}
+                },
+                city0:[],
+                city1: [],
+                city2: []
+            },
+            datePicker: [],
+            sexPicker: '',
+            sexMap :[],
+            pawState: {
+                'oldPaw': false,
+                'newPaw': false,
+                'confirmPaw': false,
+                'telPaw': false,
+                'emailPaw': false
+            },
+            msg: {
+                tel: {
+                    state: false,
+                    wait: 90
+                },
+                email: {
+                    state: false,
+                    wait: 90
+                }
+            }
+        },
+        components: {
+            pullWrap: pullWrap,
+            nameSlidePop: slidePop,
+            pawSlidePop: slidePop,
+            emailSlidePop: slidePop,
+            telSlidePop: slidePop
+        },
+        computed: {
+            dateBirthday: function () {
+                if(_.isEmpty(this.datePicker)&&!_.isEmpty(this.userInfo)){
+                    var date = '';
+                    if(this.userInfo.birthday){
+                        date = this.userInfo.birthday.match('[0-9]+-[0-9]+-[0-9]+');
+                    }
+                    return date
+                }
+                var temp = '';
+                _.map(this.datePicker, function (item) {
+                    temp = temp ? temp + '-' + item.value : item.value;
+                })
+                return temp;
+            },
+            hashTel: function () {
+                if (this.userInfo.mobile) {
+                    return this.userInfo.mobile.replace(/^(\d{3})(.*)(\d{3})$/, '$1****$3');
+                }
+            },
+            hashEmail: function () {
+                if (this.userInfo.email) {
+                    return this.userInfo.email.replace(/^(\w{1,3})(.*)(@\w+\.\w+)$/, '$1***$3');
+                }
+            },
+            detailAdress : function(){
+                var xthis = this;
+                if(!_.isEmpty(xthis.userInfo.address)){
+                    return xthis.userInfo.address.split('|')[3];
+                }
+            }
+
+        },
+        mounted: function () {
+            var xthis = this;
+            //初始化logo动画
+            this.initLogoAnimate();
+            //
+
+            //初始化城市pick
+            $(function () {
+
+                xthis.getStorage();
+                xthis.bindImgChange();
+                xthis.initSex();
+
+            })
+        },
+        created: function () {
+        },
+        methods: {
+            initDefault :function(){
+
+            },
+            initSex : function(){
+                var xthis = this;
+                xthis.sexMap = [{
+                    value: 1,
+                    label: xthis.$t('hot.man')
+                }, {
+                    value: 2,
+                    label: xthis.$t('hot.woman')
+                }];
+                var sexObj = _.indexBy(xthis.sexMap,'value');
+                if(xthis.userInfo.sex){
+                    xthis.sexPicker = sexObj[xthis.userInfo.sex].label;
+                }
+            },
+            /**
+             * 请求msg
+             */
+            getMsg: function (type) {
+                var xthis = this;
+                var sendType = {
+                    'tel': 2,
+                    'email': 3
+                };
+                var username = {
+                    'tel': $('#newTel').val(),
+                    'email': $('#newEmail').val()
+                };
+                //防止重复发送
+                if (xthis.msg[type].state) return false;
+                ajaxInstall.com(appTools.ajax.getMsg,
+                        username[type],
+                        sendType[type]
+                        )
+                        .done(function (data) {
+                            if (data.err == 0) {
+                                xthis.sendMsg(type);
+                            } else {
+                                Vue.$toast({message: data.msg})
+                            }
+                        })
+            },
+            //锁定msg
+            sendMsg: function (type) {
+                var xthis = this;
+                var time = 90;
+                if (xthis.msg[type].state == false) {
+                    xthis.msg[type].state = !xthis.msg[type].state;
+                    if (xthis.msg[type].state && xthis.msg[type].wait == time) {
+                        var interval = setInterval(function () {
+                            xthis.msg[type].wait = xthis.msg[type].wait - 1;
+                            if (xthis.msg[type].wait == 0) {
+                                clearInterval(interval);
+                                xthis.msg[type].wait = time;
+                                xthis.msg[type].state = false;
+                            }
+                        }, 1000);
+                    }
+                }
+            },
+            //初始化logo动画
+            initLogoAnimate: function () {
+                var animateDom = $('.account-logo-cont').find('.circle');
+                Vue.nextTick(function () {
+                    animateDom.velocity({rotateZ: "360deg"}, {duration: 1000, delay: 300});
+                    animateDom.velocity({scale: [0.9, 1], opacity: [0.5, 1]}, {duration: 1500, delay: 300, loop: true});
+                })
+            },
+            //初始化时间选择器
+            showDatePick: function (datePickId,defaultDataTime) {
+                var xthis = this;
+                var dataArr = '';
+                if(defaultDataTime){
+                    dataArr = defaultDataTime.match('([0-9]+)-([0-9]+)-([0-9]+)');
+                    dataArr.shift();
+                }
+                weui.datePicker({
+                    start: 1930,
+                    end: new Date(),
+                    defaultValue: dataArr?dataArr:[1991, 6, 9],
+                    onChange: function (result) {
+                    },
+                    onConfirm: function (result) {
+                        xthis.datePicker = result;
+                    },
+                    cancel: xthis.$t('com.btn.cancel'),
+                    confirm: xthis.$t('com.btn.confirm'),
+                    id: datePickId
+                });
+            },
+            showPop: function (strage) {
+                var xthis = this;
+                //修复输入法使得视窗变小bug
+                var wheight = $(window).height();
+                var sheight = $('.wrap').height();
+                $('.edit-cont').height(sheight);
+                $(window).resize(function () {
+                    $('.le_btn').hide();
+                    if ($(window).height() == wheight) {
+                        $('.le_btn').show();
+                    }
+                });
+                if(strage=='name'){
+                    var userInfo = appTools.userInfo;
+                    //处理城市picker默认值
+                    if(userInfo.address){
+                        var cityArr =  userInfo.address.split('|');
+                        //填入初始数据
+                        xthis.initCityPick(0, 0,function(){
+                            var city0 = _.findWhere(xthis.cityJson.city0,{value:cityArr[0]});
+                            xthis.cityJson.selected.city0 = {
+                                'id': city0.value,
+                                'name':city0.label
+                            };
+                        });
+                        xthis.initCityPick(1, 1,function(){
+                            var city1 = _.findWhere(xthis.cityJson.city1,{value:cityArr[1]});
+                            xthis.cityJson.selected.city1 = {
+                                'id': city1.value,
+                                'name':city1.label
+                            };
+                        });
+                        xthis.initCityPick(2, cityArr[1],function(){
+                            //初始化城市数据
+                            var city2 = _.findWhere(xthis.cityJson.city2,{value:cityArr[2]});
+                            xthis.cityJson.selected.city2 = {
+                                'id': city2.value,
+                                'name':city2.label
+                            }
+                        });
+                    }else{
+                        xthis.initCityPick(0, 0);
+                    }
+                }
+                this.slidePop[strage] = true;
+            },
+            hidePop: function (strage) {
+                this.slidePop[strage] = false;
+            },
+            //初始化城市数据
+            initCityPick: function (depth, id, callback) {
+                var xthis = this;
+                ajaxInstall.com(appTools.ajax.getCity,id)
+                        .done(function (data) {
+                            if (data.err == 0) {
+                                var tempCityJson = [];
+                                _.each(data.data, function (item, key) {
+                                    tempCityJson.push({
+                                        label: item.name,
+                                        value: item.id,
+                                        code: item.zip_code
+                                    });
+                                })
+                                xthis.cityJson['city' + depth] = tempCityJson;
+                            }
+                        }).then(function(){
+                            if (callback) {
+                                callback('city' + depth)
+                            }
+                    })
+
+            },
+            /**
+             * 把请求来的picker数据出入picker
+             * @param cityIndex pick的id
+             */
+            inSertCityPickData: function (cityIndex) {
+                var xthis = this;
+                weui.picker(xthis.cityJson[cityIndex], {
+                    onChange: function (result) {
+                    },
+                    onConfirm: function (result) {
+                        xthis.cityJson.selected[cityIndex] = {name: result[0].label, id: result[0].value};
+                    },
+                    cancel: vm.$t('com.btn.cancel'),
+                    confirm: vm.$t('com.btn.confirm'),
+                    depth: 1,
+                    id: cityIndex
+                });
+
+            },
+            /**
+             * 通过选择的pick不同请求不同的城市数据
+             * @param city
+             */
+            showCityPicker: function (city) {
+                var xthis = this;
+                var strategy = {};
+                appTools.rHightInput('#edit-form');
+                strategy['city0'] = function () {
+                    xthis.initCityPick(0,0,xthis.inSertCityPickData)
+                    xthis.cityJson.selected.city1 = {};
+                    xthis.cityJson.selected.city2 = {};
+                }
+                strategy['city1'] = function () {
+                    if (_.isEmpty(xthis.cityJson.selected['city0'])) {
+                        appTools.hightInput('#edit-form', $('#city0'));
+                        Vue.$toast({message: xthis.$t('com.form.selectTips')});
+                    }else{
+                        xthis.initCityPick(1,xthis.cityJson.selected['city0'].id,xthis.inSertCityPickData)
+                        xthis.cityJson.selected.city2 = {};
+                    }
+                }
+                strategy['city2'] = function () {
+                    if (_.isEmpty(xthis.cityJson.selected['city1'])) {
+                        appTools.hightInput('#userInfo-form', $('#city1'));
+                        Vue.$toast({message: xthis.$t('com.form.selectTips')});
+                    } else {
+                        $('#city1').removeClass('warn');
+                        //初始化城市pick
+                        xthis.initCityPick(2, xthis.cityJson.selected['city1'].id, xthis.inSertCityPickData);
+                    }
+                }
+                strategy[city]();
+
+            },
+            showSexPicker: function () {
+                var xthis = this;
+                weui.picker(xthis.sexMap, {
+                    onChange: function (result) {
+                    },
+                    onConfirm: function (result) {
+                        xthis.sexPicker =result[0].label;
+                    },
+                    cancel: vm.$t('com.btn.cancel'),
+                    confirm: vm.$t('com.btn.confirm'),
+                    depth: 1,
+                    defaultValue : [xthis.sexPicker],
+                    id: 'sex'
+                });
+            },
+
+            tooglePaw: function (pawType) {
+                var xthis = this;
+                xthis.pawState[pawType] = !xthis.pawState[pawType];
+                if (xthis.pawState[pawType]) {
+                    $('#' + pawType).attr('type', 'text');
+                } else {
+                    $('#' + pawType).attr('type', 'password');
+                }
+            },
+
+
+            ajaxEditTel: function (isBind, mobile, password, sms_code, user_name) {
+                var cmd = isBind ? 10 : 8;
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": cmd //*
+                    },{
+                        "mobile": mobile, //* 绑定新邮箱
+                        "user_name": user_name,//旧邮箱或旧手机
+                        "password": md5(password),
+                        "sms_code": sms_code //* 手机或邮件收到的验证码
+                    }),
+                    method: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            ajaxEditEmail: function (isBind, email, password, sms_code, user_name) {
+                var cmd = isBind ? 9 : 7;
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": cmd, //*
+                    },{
+                        "email": email, //* 绑定新邮箱
+                        "user_name": user_name,//旧邮箱或旧手机
+                        "password": md5(password),
+                        "sms_code": sms_code //* 手机或邮件收到的验证码
+                    }),
+                    method: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            ajaxEditPaw: function (uid, password, new_password) {
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data:appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "6", //*
+                    },{
+                        "password": md5(password), //* 原密码
+                        "new_password": md5(new_password) //* 新密码
+                    }),
+                    type: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            validaAdress : function(){
+                //由于地址必须为完整的12|12|12|地址 enterDetailEdress
+                //只要是填了就必须填写完整
+                var xthis = this;
+                var postAdress = '';
+                _.map(xthis.cityJson.selected,function(item){
+                    postAdress =item.id ? postAdress + '|' + item.id:postAdress;
+                });
+                if($('#adressDetail').val()){
+                    postAdress = postAdress +'|'+$('#adressDetail').val();
+                }
+                postAdress = postAdress.slice(1,postAdress.length);
+                if(1<=postAdress.split('|').length&&postAdress.split('|').length<4&&postAdress){
+                    Vue.$toast({message:vm.$t('hot.tips.enterDetailEdress')});
+                    return false;
+                }
+                return postAdress;
+            },
+            editInfoPost :function(){
+                var xthis = this;
+                appTools.formValidate('#userInfo-form', {
+                    success: function () {
+                        var postAdress = '';
+                        postAdress = xthis.validaAdress();
+                        if(postAdress === false) return false;
+                        //修改性别
+                        var sexObj = _.indexBy(xthis.sexMap,'label');
+                        var sexId = $('#sex').val()?sexObj[$('#sex').val()].value:'';
+                        ajaxInstall.com(
+                                xthis.ajaxEditInfo,
+                                $('#nick_name').val(),
+                                $('#real_name').val(),
+                                sexId,
+                                $('#birthday').val(),
+                                postAdress
+                        ).done(function(data){
+                            if(data.err==0){
+                                appTools.setUserCookie(appTools.userInfo.user_name)
+                                        .done(function(){
+                                            xthis.getStorage()
+                                            xthis.hidePop('name');
+                                        });
+                            }
+                        });
+                    }
+                })
+            },
+            ajaxEditInfo : function(nick_name,real_name,sex,birthday,address){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "21", //*
+                    },{
+                        "nick_name": nick_name, //* 昵称
+                        "full_name": real_name, //* 姓名
+                        "sex": sex, //* 性别 1:男，2:女
+                        "birthday": birthday, //* 生日 格式：2015-02-05
+                        "address": address, //* 地址 第一级地址编号+第二级地址编号+第三级地址编号+街道地址 例如：12|122|1224|街道
+                    }),
+                    type: 'get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            editPawFormPost: function () {
+                var xthis = this;
+                var newPaw = $('#newPaw').val();
+                var oldPaw = $('#oldPaw').val();
+                appTools.formValidate('#editPaw-form', {
+                    special: function () {
+                        //两次密码不一致
+                        if (newPaw != $('#confirmPaw').val()) {
+                            Vue.$toast({message: vm.$t('hot.tips.twoPawDifferent')});
+                            return false;
+                        }
+                    },
+                    success: function () {
+                        ajaxInstall.com(xthis.ajaxEditPaw,
+                                appTools.userInfo.user_code,
+                                oldPaw, newPaw)
+                                .done(function (data) {
+                                    if (data.err == 0) {
+                                        xthis.hidePop('paw');
+                                        appTools.setCookie('user_info', '');
+                                        _.delay(function () {
+                                            appTools.isUserLogined();
+                                        }, 500);
+                                    }
+                                    Vue.$toast({message: data.msg});
+                                })
+                    }
+                })
+            },
+            editTelFormPost: function () {
+                var xthis = this;
+                var isBind = appTools.userInfo.is_check_mobile;
+                appTools.formValidate('#editTel-form', {
+                    success: function () {
+                        $('#newTel').removeClass('warn');
+                        //提交
+                        ajaxInstall.com(xthis.ajaxEditTel,
+                                isBind, $('#newTel').val(),
+                                $('#telPaw').val(),
+                                $('#telMsg').val(),
+                                $('#oldTel').val())
+                                .done(function (data) {
+                                    if (data.err == 0) {
+                                        Vue.$toast({message: data.msg});
+                                        xthis.hidePop('tel');
+                                        appTools.setUserCookie(appTools.userInfo.user_name)
+                                                .done(function(){
+                                                    xthis.getStorage()
+                                        });
+
+                                    } else {
+                                        Vue.$toast({message: data.msg});
+                                    }
+                                })
+                    }
+                })
+            },
+
+            editEmailFormPost: function () {
+                var xthis = this;
+                var isBind = appTools.userInfo.is_check_email;
+                appTools.formValidate('#editEmail-form', {
+                    success: function () {
+                        ajaxInstall.com(
+                                xthis.ajaxEditEmail,
+                                isBind,
+                                $('#newEmail').val(),
+                                $('#emailPaw').val(),
+                                $('#emailMsg').val(),
+                                $('#oldEmail').val())
+                                .done(function (data) {
+                                    if (data.err == 0) {
+                                        Vue.$toast({message: data.msg});
+                                        xthis.hidePop('email');
+                                        appTools.setUserCookie(appTools.userInfo.user_name)
+                                                .done(function(){
+                                                    xthis.getStorage()
+                                                });
+                                    } else {
+                                        Vue.$toast({message: data.msg});
+                                    }
+                                })
+                    }
+                })
+            },
+            getStorage: function () {
+                var xthis = this;
+                appTools.isUserLogined();
+                var userInfo = appTools.userInfo;
+                if (userInfo['image_url']) {
+                    userInfo['image_url'] = appTools.imgSrc(userInfo['image_url'], 5);
+                }
+
+                //修改图片
+                this.userInfo = userInfo;
+            },
+            //头像修改
+            ajaxImgUpload :function(base64){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data:appTools.ajax.combineDataJson({
+                        "opt": "1", //*
+                        "cmd": "22", //*
+                    },{
+                        "imgName": appTools.userInfo.user_code+"_icon.png", //* 图片文件名
+                        "imgData":base64, //* 图片二进制文件（Base64String）
+                    }),
+                    type: 'post',dataType:'json',
+                    cache: false
+                });
+            },
+            bindImgChange : function(){
+                var xthis = this;
+                var uploadPortrait = $("#uploadPortrait");
+                uploadPortrait.on("change",function (e) {
+                    var imgFile = uploadPortrait[0].files[0];
+                    if(!imgFile) return;
+                    xthis.getBase64Image(imgFile,function(base64){
+                        var imageDate = base64.split(",")[1];
+                        imageDate = encodeURIComponent(imageDate);
+                        ajaxInstall.com(xthis.ajaxImgUpload,imageDate)
+                           .done(function(data){
+                            if(data.err == 0){
+                                appTools.setUserCookie(appTools.userInfo.user_name)
+                                .then(function(){
+                                    xthis.getStorage()
+                                });
+                            }
+                        })
+                    })
+                });
+            },
+            getBase64Image: function (imgFile, callback) {
+                var createObjectURL = window.URL ? window.URL.createObjectURL : window.webkitURL.createObjectURL;
+                var src = createObjectURL(imgFile);
+                var img = new Image();
+                img.onload = function (e) {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    var ctx = canvas.getContext("2d");
+                    ctx.fillStyle = 'rgba(0,0,0,0)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+
+
+                    var dataURL = canvas.toDataURL("image/png");
+                    if (callback) callback(dataURL);
+                    //return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+                };
+                img.src = src;
+            }
+        }
+    });
+</script>
+</html>

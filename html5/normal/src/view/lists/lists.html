@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>lists</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/lists/lists.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Lists" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+         <div class="tit">{{$t('cateLists.header')}}</div>
+        <div class="icon-search" @click="togglePop('search')"></div>
+        <div class="icon-trace" @click="togglePop('trace')"></div>
+    </nav>
+    <!--排序功能-->
+    <div class="select-shadow" v-show="sortShow" @click="toggleSort"></div>
+    <div class="sort-select select-down" v-cloak>
+        <div class="select-default" @click="toggleSort">{{sortSelectData[sortSelectDefault].name}} <span
+                class="s-angle">▼</span>
+        </div>
+        <transition name="down">
+            <ul class="select-lists" v-show="sortShow">
+                <li class="d_flex" v-for="(item,index) in sortSelectData" @click="changeSort(index)">
+                    <span>{{item.name}}</span>
+                    <div class="flex_1"></div>
+                    <le-check :is-checked="item.checked"></le-check>
+                </li>
+            </ul>
+        </transition>
+    </div>
+    <!--/排序功能-->
+    <div class="wrap" v-cloak>
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="2" :down-refresh="true" @loadmore="loadMore" @canload="canLoad">
+                <div class="sku-lists">
+                    <div class="cart-item">
+                        <div class="singal" v-for="item in text">
+                            <div class="cont">
+                                <div class="sku">
+                                    <div class="logo">
+                                        <img src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"
+                                             alt="">
+                                    </div>
+                                    <div class="info">
+                                        <div class="tit">
+                                            <a href="#">
+                                                Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                                Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="price">
+                                        <span>461,00</span> руб
+                                    </div>
+                                    <div class="fav">
+                                        <i class="fav-icon"></i>
+                                        <span>1230</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </pull-wrap>
+        </div>
+    </div>
+    <!--筛选-->
+    <!--加载更多-->
+    <load-More :state="loadState"></load-More>
+    <!--/加载更多-->
+    <search-pop direct="right" :width-rem=8 :duration=250 slide-class="lists-pop" :state="popState.search"
+                :opacity="0.6" @shadowclose="hidePop('search')" v-cloak>
+        <div class="search-content">
+            <!--table-->
+            <div class="search-table">
+                <!--group-->
+                <div class="search-group">
+                    <div class="search-cate search-cate-handle">
+                        <span>Бренды</span>
+                        <div class="s_arrow dark"></div>
+                    </div>
+                    <ul class="search-ul">
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                                       data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                                       alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7uALNJpAAALFJL3KmY809.png"
+                                 alt="">
+                        </li>
+                        <li class="active img-li">
+                            <img class="lazy"
+                                 data-src="http://img3.aolaigo.com/group1/M00/06/CC/CggUFlfo-7GAeiWdAAAIRg87kxg489.png"
+                                 alt="">
+                        </li>
+                        <div class="clearFloat"></div>
+                    </ul>
+                </div>
+                <!--/group-->
+
+                <!--group-->
+                <div class="search-group ">
+                    <div class="search-cate search-cate-handle">
+                        <span>Высокая низких продаж</span>
+                        <div class="s_arrow dark"></div>
+                    </div>
+                    <ul class="search-ul">
+                        <li>LETV</li>
+                        <li class="active">COOLPAD</li>
+                        <div class="clearFloat"></div>
+                    </ul>
+                </div>
+                <!--/group-->
+                <!--group-->
+                <div class="search-group">
+                    <div class="search-cate ">
+                        <span>Высокая низких продаж</span>
+                    </div>
+                    <ul class="search-ul">
+                        <li>LETV</li>
+                        <li class="active">COOLPAD</li>
+                        <div class="clearFloat"></div>
+                    </ul>
+                </div>
+                <!--/group-->
+            </div>
+            <!--/table-->
+            <div class="search-btn-cont">
+                <div class="le_btn btn_gray btn_react search-btn">{{$t('com.btn.reset')}}</div>
+                <div class="le_btn btn_blue btn_react search-btn">{{$t('com.btn.confirm')}}</div>
+            </div>
+        </div>
+    </search-pop>
+    <!--/筛选-->
+    <!--浏览记录-->
+    <trace-pop direct="right" :width-rem=4.8 :duration=250 slide-class="lists-pop" :state="popState.trace"
+                :opacity="0.6" @shadowclose="hidePop('trace')" v-cloak>
+        <div class="trace-content">
+            <div class="trace-empty" style="display:none;">
+                <div class="empty-step1 icon-bgtrace"></div>
+                <div class="empty-step2 icon-bgtrace"></div>
+                <div class="empty-step3 icon-bgtrace"></div>
+            </div>
+            <div class="trace-list">
+                <a href="javascript:void(0);" class="trace-item">
+                    <div class="imghold">
+                        <img class="lazy" data-src="https://img14.360buyimg.com/n1/s320x320_jfs/t3064/188/1693292264/115570/e891640b/57d11bfaN2e8acade.jpg!q80.webp" alt="">
+                    </div>
+                    <div class="col_2 f_color_666 f_10 t_align_c m_t_5">Внешний аккумулятор LeTV Super Power Bank 13400 мАч</div>
+                    <div class="price t_align_c f_16 f_red m_t_5">461,00 руб</div>
+                </a>
+                <a href="javascript:void(0);" class="trace-item">
+                    <div class="imghold">
+                        <img class="lazy" data-src="https://img14.360buyimg.com/n1/s320x320_jfs/t3064/188/1693292264/115570/e891640b/57d11bfaN2e8acade.jpg!q80.webp" alt="">
+                    </div>
+                    <div class="col_2 f_color_666 f_10 t_align_c m_t_5">Внешний аккумулятор LeTV Super Power Bank 13400 мАч</div>
+                    <div class="price t_align_c f_16 f_red m_t_5">461,00 руб</div>
+                </a>
+                <a href="javascript:void(0);" class="trace-item">
+                    <div class="imghold">
+                        <img class="lazy" data-src="https://img14.360buyimg.com/n1/s320x320_jfs/t3064/188/1693292264/115570/e891640b/57d11bfaN2e8acade.jpg!q80.webp" alt="">
+                    </div>
+                    <div class="col_2 f_color_666 f_10 t_align_c m_t_5">Внешний аккумулятор LeTV Super Power Bank 13400 мАч</div>
+                    <div class="price t_align_c f_16 f_red m_t_5">461,00 руб</div>
+                </a>
+                <a href="javascript:void(0);" class="trace-item">
+                    <div class="imghold">
+                        <img class="lazy" data-src="https://img14.360buyimg.com/n1/s320x320_jfs/t3064/188/1693292264/115570/e891640b/57d11bfaN2e8acade.jpg!q80.webp" alt="">
+                    </div>
+                    <div class="col_2 f_color_666 f_10 t_align_c m_t_5">Внешний аккумулятор LeTV Super Power Bank 13400 мАч</div>
+                    <div class="price t_align_c f_16 f_red m_t_5">461,00 руб</div>
+                </a>
+                <a href="javascript:void(0);" class="trace-item">
+                    <div class="imghold">
+                        <img class="lazy" data-src="https://img14.360buyimg.com/n1/s320x320_jfs/t3064/188/1693292264/115570/e891640b/57d11bfaN2e8acade.jpg!q80.webp" alt="">
+                    </div>
+                    <div class="col_2 f_color_666 f_10 t_align_c m_t_5">Внешний аккумулятор LeTV Super Power Bank 13400 мАч</div>
+                    <div class="price t_align_c f_16 f_red m_t_5">461,00 руб</div>
+                </a>
+                <a href="javascript:void(0);" class="trace-item">
+                    <div class="imghold">
+                        <img class="lazy" data-src="https://img14.360buyimg.com/n1/s320x320_jfs/t3064/188/1693292264/115570/e891640b/57d11bfaN2e8acade.jpg!q80.webp" alt="">
+                    </div>
+                    <div class="col_2 f_color_666 f_10 t_align_c m_t_5">Внешний аккумулятор LeTV Super Power Bank 13400 мАч</div>
+                    <div class="price t_align_c f_16 f_red m_t_5">461,00 руб</div>
+                </a>
+            </div>
+        </div>
+    </trace-pop>
+    <!--/浏览记录-->
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/components/common.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+            sortSelectData: [{name:'',checked:true}],
+            sortSelectDefault: 0,
+            sortShow: false,
+            popState: {
+                search: false,
+                trace:false
+            },
+            text:[0,1],
+            loadState : ''
+        },
+        components: {
+            pullWrap: pullWrap,
+            leCheck: leCheck,
+            searchPop: slidePop,
+            tracePop : slidePop,
+            loadMore : loadMore
+        },
+        mounted: function () {
+            this.sortSelectData = [
+                {name: 'последовательность', checked: true},
+                {name: this.$t('com.sort.priceAsc'), checked: false},
+                {name: this.$t('com.sort.priceDesc'), checked: false},
+                {name: this.$t('com.sort.saleDesc'), checked: false}
+            ];
+            $('.search-cate-handle').click(function(){
+                var sArrowDom = $(this).find('.s_arrow');
+               if(sArrowDom.hasClass('s_arrow_up')){
+                   sArrowDom.removeClass('s_arrow_up');
+                   $(this).siblings('.search-ul').velocity('slideDown',{duration:300});
+               }else{
+                   sArrowDom.addClass('s_arrow_up');
+                   $(this).siblings('.search-ul').velocity('slideUp',{duration:300});
+               };
+            })
+        },
+        created: function () {
+        },
+        methods: {
+            changeSort: function (index) {
+                var xthis = this;
+                _.map(xthis.sortSelectData, function (item, key) {
+                    if (item.checked) {
+                        xthis.sortSelectData[key].checked = false;
+                    }
+                });
+                xthis.sortSelectDefault = index;
+                this.sortSelectData[index].checked = !this.sortSelectData[index].checked;
+                this.sortShow = false;
+            },
+            toggleSort: function () {
+                this.sortShow = !this.sortShow;
+            },
+            showPop: function (type) {
+                this.popState[type] = true;
+                $('html,body').trigger('scroll');
+            },
+            hidePop: function (type) {
+                this.popState[type] = false;
+            },
+            togglePop: function (type) {
+                if(!this.popState[type]){
+                    this.popState[type] = true;
+                    setTimeout(function(){
+                        $('html,body').trigger('scroll');
+                    },300);
+                }else{
+                    this.popState[type] = false;
+                }
+            },
+            loadMore:function(obj){
+                var xthis = this;
+                xthis.loadState = 'loadMore';
+                setTimeout(function(){
+                    xthis.text = [0,1,2,3,4,5,6,7,8,9,10];
+                    obj.touchObj.to(obj.touchObj.min);
+                    xthis.loadState = 'end';
+                },2000);
+            },
+            canLoad : function(){
+                this.loadState = 'canLoad';
+            }
+        }
+
+    });
+</script>
+</html>

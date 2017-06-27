@@ -1,0 +1,454 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta content="telephone=no" name="format-detection">
+    <title>login</title>
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/user/login.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="User user-bg" v-cloak>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="0">
+                <nav class="header dark">
+                    <i class="back"></i>
+                </nav>
+                <div class="Login">
+                    <div class="logo"></div>
+                    <div id="loginForm" class="form">
+                        <div class="form-item-l">
+                            <i class="icon-user"></i>
+                            <div class="input-cont">
+                                <input type="text"
+                                       id="user_name"
+                                       name="name"
+                                       required
+                                       :placeholder="$t('com.form.inputName.placeholder')"
+                                       :emptyTips="$t('com.form.inputName.emptyTips')"
+                                       :notMatchTips="$t('com.form.inputName.notMatchTips')"
+                                       :pattern="$t('regex.limit50')"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-item-l">
+                            <i class="icon-paw"></i>
+                            <div class="input-cont">
+                                <input type="password"
+                                       name="password"
+                                       id="password"
+                                       required
+                                       :emptyTips="$t('com.form.inputPaw.emptyTips')"
+                                       :notMatchTips="$t('com.form.inputPaw.notMatchTips')"
+                                       :placeholder="$t('com.form.inputPaw.placeholder')"
+                                       :pattern="$t('regex.limit50')"
+                                />
+                            </div>
+                            <template v-if="pawShow">
+                                <i class="icon-paw-show" @click="pawToggle()"></i>
+                            </template>
+                            <template v-else>
+                                <i class="icon-paw-hide" @click="pawToggle()"></i>
+                            </template>
+
+                        </div>
+                        <div class="form-item-l">
+                            <div class="le_btn btn_blue" @click="validLogin()">{{$t('com.btn.login')}}</div>
+                        </div>
+                    </div>
+                    <div class="forget-tip">
+                        <a href="/view/user/find.html" class="f_color_999">{{$t('login.forgetPawTips')}}</a>
+                    </div>
+                    <div class="autoflex"></div>
+                    <div class="share">
+                        <div class="tit">
+                            {{$t('login.otherLogin')}}
+                        </div>
+                        <ul class="icon ">
+                            <li class=""><a href="#1"></a></li>
+                            <li class=""><a href="#2"></a></li>
+                            <li class=""><a href="#3"></a></li>
+                        </ul>
+                    </div>
+                    <div class="register-tip">
+                        {{$t('login.noAccount')}} <span @click="popShow('register')">{{$t('login.register')}} >></span>
+                    </div>
+                </div>
+                <register-pop width-rem="10" duration="300" direct="right" slide-class="right-full-pop"
+                              :state="popState.register" v-cloak>
+                    <div class="Register d_flex user-bg">
+                        <nav class="header dark">
+                            <i class="back" @click="popHide('register')"></i>
+                        </nav>
+                        <div class="logo"></div>
+                        <div class="form" id="registerForm">
+                            <div class="form-item-l">
+                                <i class="icon-user"></i>
+                                <div class="input-cont">
+                                    <input
+                                            type="text"
+                                            id="registerName"
+                                            name="name"
+                                            required
+                                            :placeholder="$t('com.form.inputName.placeholder')"
+                                            :pattern="$t('regex.limit50')"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-item-l">
+                                <i class="icon-code"></i>
+                                <div class="input-cont half ">
+                                    <input type="text"
+                                           id="registerValidCode"
+                                           name="code"
+                                           required
+                                           :placeholder="$t('com.form.inputMsg.placeholder')"
+                                    />
+
+                                </div>
+                                <canvas id="graphCodeCanvas" class="imgValidCode" width="120" height="60" style="vertical-align: middle;" @click="changeValidImg"></canvas>
+                            </div>
+                            <div class="register-tips f_12 f_color_999">
+                                <p>{{$t('login.commitRegisterTips')}}</p>
+                                <p class="f_blue">《{{$t('login.leecoPromise')}}》</p>
+                            </div>
+                            <div class="form-item-l">
+                                <div class="le_btn btn_blue" @click="popShow('register2')" >{{$t('com.btn.login')}}</div>
+                            </div>
+                            <div class="validLogin-tip f_14">
+                                {{$t('login.hasAccountTips')}} <span class="f_blue" @click="popHide('register')">{{$t('com.btn.login')}} >></span>
+                            </div>
+                        </div>
+                    </div>
+                </register-pop>
+                <register2-pop width-rem="10" duration="300" direct="right" slide-class="right-full-pop"
+                               :state="popState.register2" v-cloak>
+                    <div class="Register2 user-bg">
+                        <nav class="header dark">
+                            <i class="back" @click="popHide('register2')"></i>
+                        </nav>
+                        <div class="msg-send f_14 f_color_999 t_align_c">
+                            {{$t('login.msgSendedTips')}}
+                        </div>
+                        <div class="form" id="register2Form">
+                            <div class="form-item-l">
+                                <i class="icon-msg"></i>
+                                <div class="input-cont half">
+                                    <input
+                                            type="text"
+                                            id="registerMsg"
+                                            name="msg"
+                                            required
+                                            :placeholder="$t('com.form.inputValidate.placeholder')"
+
+                                            :pattern="$t('regex.msg')"
+                                    />
+                                </div>
+                                <div class="msg-btn le_btn btn_black" @click="getMsg('register')"  >
+                                    <template v-if="!msg.register.state">
+                                        {{$t('com.btn.getCode')}}
+                                    </template>
+                                    <template v-else>
+                                        {{msg.register.wait}}s
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="form-item-l">
+                                <i class="icon-paw"></i>
+                                <div class="input-cont">
+                                    <input type="password"
+                                           required
+                                           name="npassword"
+                                           id="npassword"
+                                           :placeholder="$t('com.form.setPaw.placeholder')"
+                                           :notMatchTips="$t('com.form.setPaw.notMatchTips')"
+                                           :pattern="$t('regex.setPaw')"
+                                    />
+                                </div>
+                                <template v-if="npawShow">
+                                    <i class="icon-paw-show" @click="npawToggle()"></i>
+                                </template>
+                                <template v-else>
+                                    <i class="icon-paw-hide" @click="npawToggle()"></i>
+                                </template>
+
+                            </div>
+                            <div class="f_12 f_color_999 t_align_c m_t_20">
+                                {{$t('login.setPawTips')}}
+                            </div>
+                            <div class="form-item-l">
+                                <div class="le_btn btn_blue" @click="validRegister">{{$t('com.btn.register')}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </register2-pop>
+            </pull-wrap>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/alloy_touch.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script src="../../js/common/md5.min.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n: i18n,
+        data: {
+            pawShow: false,
+            npawShow: false,
+            popState: {
+                'register': false,
+                'register2': false
+            },
+            msg: {
+                register: {
+                    state: false,
+                    wait: 90
+                }
+            }
+        },
+        components: {
+            registerPop: slidePop,
+            register2Pop: slidePop,
+            pullWrap: pullWrap
+        },
+        mounted: function () {
+            var xthis = this;
+            //撑满屏幕
+            setTimeout(function(){
+                $('#app').height($('.wrap').height());
+                $('.scroll').children('div').height($('.wrap').height());
+                $(window).resize(function () {
+                    $('#app').height($('.wrap').height());
+                    $('.scroll').children('div').height($('.wrap').height());
+                })
+            },300);
+            //刷新验证吗
+            appTools.refreshGraphCode();
+            //获取缓存信息
+            $(function(){
+                xthis.getStorage();
+            })
+        },
+        created: function () {
+        },
+        methods: {
+            ajaxLogin : function(user_name,password){
+                return    $.ajax({
+                        url:appTools.api.memberApi,
+                        data:appTools.ajax.combineData({
+                            "opt": "1", //*
+                            "cmd": "5", //*
+                        },{
+                            "udid": "", //*
+                            "user_name":user_name , //* 用户帐号，手机或邮件
+                            "password":md5(password) //* 密码
+                        }),
+                        type: 'get',dataType:'jsonp',
+                        cache:false
+                    });
+            },
+            ajaxRegister : function(user_name,password,sms_code){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data:appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "4", //*
+                    },{
+                        "udid": "", //*
+                        "user_name": user_name, //* 用户帐号，手机或邮件
+                        "password": md5(password), //* 密码
+                        "sms_code": sms_code, //* 手机或邮件收到的验证码
+                    }),
+                    type: 'get', dataType: 'jsonp',
+                    cache: false
+                });
+            },
+            /**
+             * 请求msg
+             */
+            getMsg : function(type){
+                var xthis = this ;
+                //防止重复发送
+                if(xthis.msg[type].state) return false;
+                appTools.ajax.getMsg($('#registerName').val(),1).done(function(data){
+                    if(data.err==0){
+                        xthis.sendMsg(type);
+                    }else{
+                        Vue.$toast({message:data.msg})
+                    }
+                })
+            },
+            /**
+             * 锁定msg
+             * @param type
+             */
+            sendMsg: function (type) {
+                var xthis = this;
+                var time = 90;
+                if (xthis.msg[type].state == false) {
+                    xthis.msg[type].state = !xthis.msg[type].state;
+                    if (xthis.msg[type].state && xthis.msg[type].wait == time) {
+                        var interval = setInterval(function () {
+                            xthis.msg[type].wait = xthis.msg[type].wait - 1;
+                            if (xthis.msg[type].wait == 0) {
+                                clearInterval(interval);
+                                xthis.msg[type].wait = time;
+                                xthis.msg[type].state = false;
+                            }
+                        }, 1000);
+                    }
+                }
+            },
+
+            pawToggle: function () {
+                this.pawShow = !this.pawShow;
+                if (this.pawShow) {
+                    $('#password').attr('type', 'text');
+                } else {
+                    $('#password').attr('type', 'password');
+                }
+            },
+            npawToggle: function () {
+                this.npawShow = !this.npawShow;
+                if (this.npawShow) {
+                    $('#npassword').attr('type', 'text');
+                } else {
+                    $('#npassword').attr('type', 'password');
+                }
+            },
+            popHide: function (type) {
+                this.popState[type] = false;
+            },
+            popShow: function (type) {
+                var xthis = this;
+                if(type=='register'){
+                    xthis.popState[type] = true;
+                }
+                if(type=='register2'){
+                    appTools.validate('#registerForm', function (error,$el) {
+                        $('#registerForm').find('input').each(function(){
+                            $(this).parent().removeClass('warn')
+                        });
+                        if (error) {
+                            $el.parent().addClass('warn');
+                            appTools.alert(error);
+                            return false;
+                        }
+                        if(curGraphCode.toLowerCase()!=$('#registerValidCode').val().toLowerCase()){
+                            appTools.alert(vm.$t('com.form.inputMsg.notMatchTips'));
+                            return false;
+                        }
+                        xthis.popState[type] = true;
+                    })
+                }
+            },
+
+            changeValidImg:function(){
+                appTools.refreshGraphCode();
+            },
+
+            validRegister : function(){
+                var xthis  = this;
+                appTools.validate('#register2Form', function (error,$el) {
+                    $('#register2Form').find('input').each(function () {
+                        $(this).parent().removeClass('warn')
+                    });
+                    if (error) {
+                        $el.parent().addClass('warn');
+                        appTools.alert(error);
+                        return false;
+                    }
+                    xthis.toRegister();
+
+                });
+            },
+            toRegister : function(){
+                var xthis = this;
+                localStorage.setItem('user_name',$('#registerName').val());
+                ajaxInstall.com(
+                        xthis.ajaxRegister,
+                        $('#registerName').val(),
+                        $('#npassword').val(),
+                        $('#registerMsg').val()
+                )
+                .done(function(data){
+                        if(data.err==0){
+                            xthis.popHide('register');
+                            xthis.popHide('register2');
+                        }else{
+                            Vue.$toast({message:data.msg})
+                        }
+                })
+            },
+
+            toLogin : function(){
+                var xthis = this;
+                localStorage.setItem('user_name',$('#user_name').val());
+                ajaxInstall.com(
+                        xthis.ajaxLogin,
+                        $('#user_name').val(),
+                        $('#password').val()
+                )
+               .done(function(data){
+                   if(data.err!=0){
+                       appTools.alert(data.msg);
+                   }else{
+                       //登陆成功！
+                       appTools.setUserCookie(data.data.user_name,data.data);
+//                       appTools.alert(data.msg,{
+//                           callback:function(){
+//                              var arg =  appTools.parseUrlQuery(window.location.href);
+//                              if(arg.redict){
+//                                  window.location =unescape(arg.redict) ;
+//                              }else{
+//                                  window.location = '/view/user/user.html';
+//                              }
+//                           }
+//                       });
+                         _.delay(function(){
+                             var arg =  appTools.parseUrlQuery(window.location.href);
+                             if(arg.redict){
+                                 window.location =unescape(arg.redict) ;
+                             }else{
+                                 window.location = '/view/user/user.html';
+                             }
+                         },300);
+                   }
+               })
+           },
+            validLogin: function () {
+                var xthis = this;
+                appTools.validate('#loginForm', function (error,$el) {
+                    $('#loginForm').find('input').each(function(){
+                        $(this).parent().removeClass('warn')
+                    });
+                    if(error){
+                        $el.parent().addClass('warn');
+                        appTools.alert(error);
+                        return false;
+                    }
+                    xthis.toLogin();
+                })
+            },
+            getStorage : function(){
+                $('#user_name').val(localStorage.getItem('user_name'));
+                $('#registerName').val(localStorage.getItem('user_name'));
+                appTools.isUserLogined();
+            }
+        }
+    });
+</script>
+</html>

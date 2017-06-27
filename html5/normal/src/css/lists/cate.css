@@ -1,0 +1,90 @@
+body {
+  background: #F4F4F4; }
+
+.Cate {
+  background: #F4F4F4; }
+  .Cate .wrap {
+    width: 100%;
+    position: absolute;
+    top: 1.06667rem;
+    bottom: 0rem;
+    overflow: hidden; }
+    .Cate .wrap .scroll {
+      display: block;
+      width: 100%; }
+  .Cate .left-wrap {
+    width: 29.33333%;
+    position: absolute;
+    top: 0rem;
+    bottom: 0rem;
+    left: 0rem;
+    overflow: hidden;
+    background: #f4f4f4; }
+    .Cate .left-wrap .left-cate-ul li {
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding-top: 0.66667rem;
+      padding-bottom: 0.66667rem;
+      padding-left: 0.4rem;
+      padding-right: 0.4rem;
+      color: #666666;
+      font-size: 12px;
+      border-top-width: 0.02827rem;
+      border-top-style: solid;
+      border-top-color: #eee; }
+      .Cate .left-wrap .left-cate-ul li.active {
+        background: #fff;
+        border-left-width: 0.10667rem;
+        border-left-style: solid;
+        border-left-color: #00A4E7;
+        border-top-width: 0.02827rem;
+        border-top-style: solid;
+        border-top-color: #f4f4f4; }
+      .Cate .left-wrap .left-cate-ul li p {
+        width: 1.86667rem;
+        text-align: center; }
+  .Cate .right-wrap {
+    width: 70.66667%;
+    position: absolute;
+    top: 0rem;
+    bottom: 0rem;
+    right: 0rem;
+    overflow: hidden;
+    background: #fff;
+    border-top-width: 0.02827rem;
+    border-top-style: solid;
+    border-top-color: #f4f4f4; }
+    .Cate .right-wrap .right-item {
+      padding: 0.05333rem; }
+      .Cate .right-wrap .right-item .item-img {
+        width: 100%; }
+      .Cate .right-wrap .right-item .item-group {
+        margin-top: 0.13333rem; }
+        .Cate .right-wrap .right-item .item-group .item-group-name {
+          color: #666666;
+          font-size: 12px;
+          text-align: center;
+          height: 1.33333rem;
+          line-height: 1.33333rem; }
+        .Cate .right-wrap .right-item .item-group .item-group-ul li {
+          width: 33%;
+          float: left;
+          display: inline-block;
+          -webkit-box-sizing: border-box;
+                  box-sizing: border-box;
+          padding-left: 0.4rem;
+          padding-right: 0.4rem;
+          height: 2.53333rem;
+          margin-top: 0.13333rem; }
+          .Cate .right-wrap .right-item .item-group .item-group-ul li .imghold {
+            width: 1.6rem;
+            height: 1.6rem;
+            overflow: hidden; }
+            .Cate .right-wrap .right-item .item-group .item-group-ul li .imghold img {
+              width: 100%; }
+          .Cate .right-wrap .right-item .item-group .item-group-ul li p {
+            color: #666666;
+            font-size: 10px;
+            text-align: center;
+            margin-top: 0.13333rem;
+            line-height: 1.1em; }

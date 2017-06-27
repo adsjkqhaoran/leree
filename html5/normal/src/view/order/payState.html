@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>paySuccess</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/payState.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="PayState" v-cloak>
+    <nav class="header light">
+        <i class="back disable"></i>
+        <div class="tit">{{$t('pay.header')}}</div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <!--<pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.06">-->
+            <!--</pull-wrap>-->
+            <div class="pay-result">
+                <div class="pay-success" v-if="payState">
+                    <div class="pay-img">
+                    </div>
+                    <div class="le_btn btn_blue_border m_t_20">
+                        {{$t('hot.tips.paySucces')}}
+                    </div>
+                </div>
+                <div class="pay-error" v-else>
+                    <div class="pay-img">
+                    </div>
+                    <div class="le_btn btn_gray_border m_t_20">
+                        {{$t('com.btn.rePay')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+            payState : false
+        },
+        components: {
+        },
+        mounted: function () {
+            var xthis  = this;
+            var args  = appTools.parseUrlQuery(location.href);
+            $(function(){
+                if(args){
+                   xthis.payState =  args.state=='true'?true : false;
+                }
+                $('.back').click(function(){
+                    location.href = '/';
+                })
+            })
+        },
+        created: function () {
+        },
+        methods: {
+
+        }
+    });
+</script>
+</html>

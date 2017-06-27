@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta content="telephone=no" name="format-detection">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/goods/goods.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Detail" v-cloak v-show="selectedInfo">
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">
+            {{$t('goodDetail.header')}}</div>
+        <a href="/view/cart/cart.html" class="small-cart">
+            <span class="num" v-if="cartNum!=0">{{cartNum}}</span>
+        </a>
+    </nav>
+
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap :tab-fix-px="tabFixPx" :tab-fix="tabFix" wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="2.36" :down-refresh="canLoadMore" @loadmore="loadMore" @canload="canLoad" :special="-tabFixPx" @special="hideTab" :can-load-more="canLoadMore">
+                <div class="base-info">
+
+
+                    <div id="swiper">
+                        <swiper-horizon :data-list="swiperDataLists"  pagination-type='fraction'></swiper-horizon>
+                    </div>
+
+                    <div class="toolBar">
+                        <div class="share" style=""></div>
+                        <div class="addlove" :class="{loved:isFav}" @click="addFav(skuId)"></div>
+                    </div>
+                    <div class="detail-btit">
+                        {{skuInfo.name}}
+                    </div>
+                    <div class="now-price">
+                        <span v-if="selectedInfo">{{finalPrice}}</span> руб
+                    </div>
+                    <div class="old-price">
+                        <span>{{skuInfo.p_in_scj}}</span> руб.
+                    </div>
+                    <div class="detail-tips"  >
+                        <template v-for="item in activeInfo">
+                            <p >{{item.slogan}}</p>
+                        </template>
+                    </div>
+                    <ul class="detail-cate">
+                        <!--<li class="row">-->
+                            <!--<div class="content">-->
+                                <!--<div class="flex_0">-->
+                                    <!--<span class="name">{{$t('goodDetail.flowRule')}}:</span>-->
+                                <!--</div>-->
+                                <!--<div class="flex_1">-->
+                                    <!--<span class="props">{{$t('goodDetail.freeFlow')}}</span>-->
+                                <!--</div>-->
+                                <!--<div class="flex_0">-->
+                                    <!--<span class="name">{{$t('goodDetail.sales')}}:</span>-->
+                                <!--</div>-->
+                                <!--<div class="flex_0">-->
+                                    <!--<span class="props">1234</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <li class="row" @click="showCatePop(0);">
+                            <div class="content">
+                                <div class="flex_0">
+                                    <span class="name">{{$t('goodDetail.selectType')}}:</span>
+                                </div>
+                                <div class="flex_1">
+                                    <span class="props col_1">
+                                        <template v-for="item in selectObj.selected">
+                                            {{item}}&nbsp;&nbsp;
+                                        </template>
+                                    </span>
+                                </div>
+                                <div class="flex_0">
+                                    <div class="s_arrow dark"></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="detail-more-bar  ">
+                    <li class="active">{{$t('goodDetail.detail')}}</li>
+                    <li class="">{{$t('goodDetail.param')}}</li>
+                    <li class="">{{$t('goodDetail.recommend')}}（1630）</li>
+                    <div class="clearFloat"></div>
+                </ul>
+
+                <div class="detail-more" style="display: none;">
+
+
+                    <ul class="detail-more-cont">
+                        <li>
+                            <div>
+                                <template v-for="item in descLists">
+                                    <img width="100%" v-if="item.type=='img'"  class="lazy"
+                                         :data-src="item.value" />
+                                    <p v-if="item.type=='text'">{{item.value}}</p>
+                                </template>
+
+
+                            </div>
+                        </li>
+                        <li style="display: none;">
+                            <table class="table_border m_t_20">
+                                <tr v-for="item in skuInfo.spec">
+                                    <th>{{item.ShowTitle}}</th>
+                                    <td>{{item.ShowValue}}</td>
+                                </tr>
+                            </table>
+                        </li>
+                        <!--评论-->
+                        <li style="display:none;">
+                            <div class="detail-comment">
+                                <div class="comment-item">
+                                    <div class="tit">
+                                        <div class="user-logo">
+                                            <img src="../../images/goods/slogo@3x.png" alt="">
+                                        </div>
+                                        <div class="user-info">
+                                            <div class="user-name">5758389899@qq.com</div>
+                                            <div class="comoent-data">2017-03-14 14:30:28</div>
+                                        </div>
+                                        <div class="comment-starts">
+                                            <starts num="1.5"></starts>
+                                        </div>
+                                    </div>
+                                    <div class="clearFloat"></div>
+                                    <div class="message">
+                                        Внешний аккумулятор LeTV Super Power Bank 134 мАч аккумулятор LeTV Super Power Bank
+                                        13400 мАчаккумулятор LeTV Super Power Bank 13400 мАч…
+                                    </div>
+                                </div>
+                                <div class="comment-item">
+                                    <div class="tit">
+                                        <div class="user-logo">
+                                            <img src="../../images/goods/slogo@3x.png" alt="">
+                                        </div>
+                                        <div class="user-info">
+                                            <div class="user-name">5758389899@qq.com</div>
+                                            <div class="comoent-data">2017-03-14 14:30:28</div>
+                                        </div>
+                                        <div class="comment-starts">
+                                            <starts num="5"></starts>
+                                        </div>
+                                    </div>
+                                    <div class="clearFloat"></div>
+                                    <div class="message">
+                                        Внешний аккумулятор LeTV Super Power Bank 134 мАч аккумулятор LeTV Super Power Bank
+                                        13400 мАчаккумулятор LeTV Super Power Bank 13400 мАч…
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <!--/评论-->
+                    </ul>
+                </div>
+            </pull-wrap>
+        </div>
+
+    </div>
+    <!--加载更多-->
+    <load-More :state="loadState" v-if="canLoadMore">
+        <template v-if="loadState=='canLoad'">
+            {{$t('com.loadMore.scanMore')}}
+        </template>
+        <template v-if="loadState=='loadMore'">
+            {{$t('com.loading.default')}}...
+        </template>
+    </load-More>
+    <!--/加载更多-->
+
+    <ul class="detail-foot" >
+        <template v-if="selectedInfo&&selectedInfo.state!=0" >
+            <li @click="showCatePop(0);">
+            <span>
+                {{$t('com.btn.toCart')}}
+            </span>
+            </li>
+            <li @click="showCatePop(1);">
+            <span>
+                {{$t('com.btn.buyNow')}}
+            </span>
+            </li>
+        </template>
+        <template v-else >
+            <div class="le_btn btn_react btn_dgray" >
+                {{$t('hot.tips.offShelf')}}
+            </div>
+        </template>
+    </ul>
+    <slide-Pop direct="bottom" :width-rem=10 :duration=250 slide-class="cate-pop" :state="isCatePopShow" :opacity="0.7"
+               v-cloak>
+        <div class="box" slot="default">
+            <div class="cont">
+                <div class="logo">
+                    <img v-if="selectedInfo" class="lazy"
+                         :src="selectedInfo.logo"
+                         alt="">
+                </div>
+                <div class="prize">
+                    <span v-if="selectedInfo">{{finalPrice}}</span> руб
+                </div>
+                <div class="pop_close" @click="hideCatePop()"></div>
+                <div class="cate-box">
+                    <div class="select"  v-if="selectObj.attrs.length">
+                        <div class="select-item" v-for="(item,depth) in selectObj.attrs">
+                            <div class="tit" >
+                                {{item.name}}   <span v-if="!selectObj.selected[item.key]" class="f_red f_14 f_weight_bold">!</span>
+                            </div>
+                            <ul>
+                                <li v-for="(selectState,selectKey)  in item.value"
+                                    :class="{active:selectObj.selected[item.key]==selectKey,disable:!selectState&&selectObj.selected[item.key]!=selectKey}"
+                                    @click="changeType(item.key,selectKey,selectState)">
+                                    {{selectKey}}
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="clearFloat"></div>
+                    </div>
+                    <div class="detail-num-box">
+                        <span>{{$t('com.numControl.num')}}</span>
+                        <div class="num-control">
+                            <num-control :step="1" :state="true" v-if="selectedInfo" :limit="skuInfo.max_count" :max="selectedInfo.stock" :min="skuInfo.start_count" :num="skuNum" @countnumplus="numPlus" @countnumdel="numDel" trace="skuid">
+                            </num-control>
+                        </div>
+                    </div>
+                </div>
+                <div class="le_btn btn_react" v-if="selectedInfo" :class="{'btn_blue':selectedInfo.stock,'btn_dgray':!selectedInfo.stock}" @click="toBuy">
+                    <template v-if="selectedInfo&&selectedInfo.stock>0" >
+                        {{$t('com.btn.confirm')}}
+                    </template>
+                    <template v-else>
+                        {{$t('com.btn.sellOut')}}
+                    </template>
+
+                </div>
+            </div>
+        </div>
+    </slide-Pop>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/swiper.jquery.min.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n: i18n,
+        data: {
+            skuId : 0,
+            skuInfo :{} ,//商品基本信息
+            activeInfo :[],//参与优惠信息
+            appWorkPrice :{},//优惠价格
+            selectObj:{
+                selected:{},
+                attrs:[],
+                skus:{}
+            },//筛选功能
+            swiperDataLists: [],
+            isCatePopShow: false,
+            popState: {},
+            descLists :[],
+            skuNum: 1,
+            tabTop:0,
+            loadState : '',
+            canLoadMore : true,
+            tabFix : 0,
+            tabFixPx : 0,
+            cartNum : 0,//购物车数量
+            buyType : 0, //0加入购物车,1立即购买
+            isFav : false, //是否已经收藏过
+            fastPhoto : '', //上次商品快照,用于取消选中
+            skuKey : ''
+        },
+        computed:{
+            //计算出选中的商品信息
+            selectedInfo : function(){
+
+                var xthis = this;
+                var selectObj = xthis.selectObj;
+                return selectObj.skus[xthis.skusKey];
+
+            },
+            skusKey : function(){
+                var skusKey = '';
+                var xthis = this;
+                var attrs= xthis.selectObj.attrs;
+                var selected = xthis.selectObj.selected;
+                var selected = xthis.selectObj.selected;
+                var isFullSelected = Object.keys(selected).length==attrs.length;
+                if(!_.isEmpty(selected)&& isFullSelected){
+                    //组装出选中的key
+                    _.map(attrs,function(item,index){
+                        skusKey =skusKey?(skusKey +'___'+ selected[item.key]): selected[item.key];
+                        //顺便保存一份快照
+                        xthis.fastPhoto = skusKey;
+                    });
+                    return skusKey;
+                }else{
+                    //保存一份上一次的快照
+                    return xthis.fastPhoto;
+                }
+            },
+            //计算出最终价
+            finalPrice : function(){
+                //活动信息
+                var finalResult ='';
+                var appWorkPrice = this.appWorkPrice;
+                var selectInfo = this.selectedInfo;
+                var skuInfo = this.skuInfo;
+                if(!_.isEmpty(appWorkPrice)&&skuInfo){
+                    //有活动
+                    finalResult =  this.getPrice(appWorkPrice[0],selectInfo.price,skuInfo.p_in_scj);
+                }else{
+                    //没活动
+                    finalResult =  selectInfo.price.toFixed(2);
+                }
+                return finalResult?finalResult:'';
+            }
+
+        },
+        components: {
+            swiperHorizon: swiperHorizon,
+            numControl: numControl,
+            slidePop: slidePop,
+            starts: starts,
+            pullWrap : npullWrap,
+            loadMore : loadMore
+        },
+        mounted: function () {
+            //添加下拉加载更多功能
+            var xthis = this;
+            $(function(){
+                xthis.initSkuInfo();
+                xthis.getCartNum();
+            })
+        },
+        created: function () {
+
+        },
+        methods: {
+            ajaxIsFav : function(skuId){
+                return  $.ajax({
+                    url:appTools.api.productApi,
+                    xhrFields : {withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        "opt": "product",
+                        "cmd": "getcollect"
+                    },{
+                        sku : skuId
+                    }),
+                    type:'post',
+                    dataType: "json"
+                });
+            },
+            getIsFav : function(skuId){
+              var xthis = this;
+              ajaxInstall.com(
+                      xthis.ajaxIsFav,
+                      skuId
+              ).done(function(data){
+                  if(data.err == 0){
+                      if(data.data == 1){
+                          xthis.isFav = true;
+                      }
+                  }
+              })
+            },
+            //
+            addFav : function(skuId){
+                var xthis  = this;
+                appTools.isUserLogined(true);
+                if(_.isEmpty(appTools.userInfo)){
+                    appTools.confirm(vm.$t('hot.tips.pleaseLogin'),{
+                        confirm : function(){
+                            appTools.redirect();
+                        }
+                    })
+                }else{
+                    ajaxInstall.com(
+                            xthis.ajaxAddFav,
+                            xthis.skuId,
+                            appTools.userInfo.user_code
+                    ).done(function(data){
+                        if(data.err==0){
+                            Vue.$toast({message:vm.$t('hot.tips.addFavSuccess')})
+                        }
+                    });
+                }
+            },
+            //加入购物车
+            ajaxAddFav : function(skuId,userId){
+                return  $.ajax({
+                    url:appTools.api.productApi,
+                    xhrFields : {withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        "opt": "product",
+                        "cmd": "addcollect"
+                    },{
+                        skus :[skuId]
+                    }),
+                    type:'post',
+                    dataType: "json"
+                });
+            },
+            getCartNum : function(){
+                var xthis = this;
+                appTools.isUserLogined(true);
+                ajaxInstall.com(
+                        appTools.ajax.getCartNum
+                ).done(function(data){
+                    if(data&&data.err==0){
+                        if(parseInt(data.data)==0) return false;
+                        xthis.cartNum = data.data;
+                    }
+                })
+            },
+            initSkuInfo : function(skuId){
+                var xthis = this;
+                var arg = '';
+                if(!skuId){
+//                    初始渲染 从连接里拿
+                    arg  = appTools.parseUrlQuery(window.location.href);
+                }else{
+                    //重新渲染
+                    arg = {
+                        skuId : skuId
+                    }
+                }
+
+                //如果没有商品id返回上一页
+                if(!arg.skuId){
+                    setTimeout(function(){
+                        history.go(-1);
+                        return false;
+                    },2000);
+                }
+                var xthis = this;
+                xthis.skuId = arg.skuId;
+                //loading 数据
+                ajaxInstall.com(
+                        xthis.ajaxSkuInfo,
+                        arg.skuId
+                        )
+                        .done(function(skuInfo){
+                            if(skuInfo.data&&skuInfo.err=='0'){
+                                xthis.skuInfo = skuInfo.data;
+                                //  加小数点后两位
+                                xthis.skuInfo.p_in_scj =  xthis.skuInfo.p_in_scj.toFixed(2);
+                                //调整最低起售件数
+                                xthis.skuInfo.start_count =  xthis.skuInfo.start_count?xthis.skuInfo.start_count:1;
+                                xthis.skuNum = xthis.skuInfo.start_count;
+                                //初始化swiper
+                                xthis.initSwiper(skuInfo.data.imgUrls);
+                                //初始化商品规格属性
+                                var selectType =  [];
+                                _.map(skuInfo.data.salePropName,function(item){
+                                    selectType.push($.extend(item,{exist:true,value:{}}));
+                                });
+                                //组装规格参数
+                                var selectTypes = xthis.initSelectType(skuInfo.data.sku,selectType,arg.skuId);
+                                xthis.selectObj.skus = selectTypes.skus;
+                                xthis.selectObj.attrs = selectTypes.attrs;
+                                xthis.selectObj.selected = selectTypes.selected;
+                                //根据选择刷新属性
+                                xthis.selectObj.attrs = xthis.filterSelect();
+                                //组装优惠查询query
+                                var actquery = xthis.getActQuery(skuInfo.data,arg.skuId);
+                                //优惠信息查询
+                                $.ajax({
+                                    url:appTools.api.activityApi
+                                    ,data:appTools.ajax.combineData({
+                                        'cmd':2,
+                                        'opt':'9'
+                                    },actquery),
+                                    type:'GET'
+                                    ,dataType: "jsonp"
+                                }).done(function(Data) {
+                                    if (Data&&Data.err==0&&Data.data) {
+                                        var temp = Data.data;
+                                        xthis.activeInfo = temp;
+                                    }
+                                });
+                                //优惠价格查询
+                                $.ajax({
+                                    url:appTools.api.activityApi,
+                                    data:appTools.ajax.combineData({
+                                        'cmd':1,
+                                        'opt':'9'
+                                    },actquery),
+                                    method:'GET',
+                                    dataType: "jsonp"
+                                }).done(function(Data) {
+                                    if(Data.err==0){
+                                        xthis.appWorkPrice = Data.data;
+                                    }
+                                });
+                                //初始化商品图片
+                                xthis.initDesc(skuInfo.data.desc);
+                                //调整loadingmore 高度
+                                _.delay(function(){
+                                    xthis.tabFixPx = $('.base-info').height() - $('.header').height();
+                                },1000);
+                            }else{
+                                setTimeout(function(){
+                                    history.go(-1);
+                                    return false;
+                                },2000);
+                            }
+                        })
+                        .then(function(){
+                            xthis.getIsFav(arg.skuId);
+                        });
+            },
+            ajaxSkuInfo : function(sku){
+              return  $.ajax({
+                    url:appTools.api.productApi,
+                    data:appTools.ajax.combineData({
+                        cmd :'getsku',
+                        opt:''
+                    },{sku:sku}),
+                    type:'GET',
+                    dataType: "jsonp"
+                });
+            },
+            ajaxAddOrder : function(skuId,bty){
+                return  $.ajax({
+                    url:appTools.api.cartApi,
+                    data:appTools.ajax.combineDataJson({
+                        cmd :'22',
+                        opt:'5'
+                    },{
+                        goodsId:skuId,
+                        goods_amount:bty
+
+                    }),
+                    type:'post',
+                    dataType: "json"
+                });
+            },
+            toBuy : function(){
+                var xthis = this;
+                //是否选择完整属性
+                var selected = this.selectObj.selected;
+                var attrs = this.selectObj.attrs;
+                var isFullSelected = Object.keys(selected).length==attrs.length;
+                if(!isFullSelected){
+                    Vue.$toast({
+                        message:vm.$t('hot.tips.selectFullAttrsTips'),
+                        position : 'bottom'
+                    });
+                    return false;
+                }
+                //是否有库存
+                if(xthis.selectedInfo.stock<1){
+                    return false;
+                }
+                if(this.buyType==0){
+                    //加入购物陈
+                    ajaxInstall.com(
+                            xthis.ajaxAddCart,
+                            xthis.selectedInfo.skuid,
+                            xthis.skuNum
+                    ).done(function(data){
+                       if(data&&data.err == 0){
+                            xthis.isCatePopShow = false;
+                            xthis.cartNum = parseInt(xthis.cartNum) + parseInt(xthis.skuNum);
+                       }
+                       Vue.$toast({message:data.msg});
+                    })
+                }
+                if(this.buyType==1){
+                    //加入订单
+                    ajaxInstall.com(
+                            xthis.ajaxAddOrder,
+                            xthis.selectedInfo.skuid,
+                            xthis.skuNum
+                    ).done(function(data){
+                        if(data.err==0){
+                            Vue.$toast({
+                                message:data.msg,
+                                position : 'bottom'});
+                            _.delay(function(){
+                                window.location = '/view/order/order.html';
+                            },300)
+                        }
+                    })
+                }
+            },
+            ajaxAddCart: function (sku,bty) {
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data: JSON.stringify(
+                            appTools.ajax.combineData({
+                                "opt": "5", //*5表示购物车接口
+                                "cmd": "1", //*1表示加入购物车
+                            }, {
+                                "goodsId": sku,//*商品SKU编号
+                                "goods_amount": bty, //*购买数量
+                                "v": "1"//*API版本号
+                            })),
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            /**
+             * 组装规格参数
+             * @param sourceSkus
+             * @param attrs 属性数组
+             * @param defaultSkuId 默认选中skuid
+             * @returns {{skus: {}, attrs: Array, selected: {}}}
+             */
+            initSelectType :function(sourceSkus,attrs,defaultSkuId){
+                var skus = {};//组装后的字典
+                var stocks = 0,//商品总库存
+                        selected = {};//选中属性
+                for (var i = 0, l = sourceSkus.length; i < l; i++) {
+                    var     separator = '___',
+                            sku = sourceSkus[i],
+                            stock = sku.Stock ? parseInt(sku.Stock, 10) : 0,
+                            skuid = sku.SKUID || '',
+                            price = sku.Sale_Price || 0,
+                            state = sku.Status,
+                            logo = appTools.imgSrc(sku.Logo, 8);
+                    //判断是否为默认选中属性
+                    if(skuid==defaultSkuId){
+                        _.map(attrs,function(item){
+                            //遍历生成选择属性
+                            selected[item.key] = sku[item.key];
+                        });
+                    }
+                    //生成最终skus字典链接字符
+                    var skusKey ='';
+                    _.map(attrs,function(item,index){
+                        skusKey =skusKey?(skusKey +'___'+ sku[item.key]):sku[item.key];
+
+                    });
+                    //插入skus商品字典
+                    skus[skusKey] = {
+                        skuid: skuid,
+                        stock: stock,
+                        price: price,
+                        state:state,
+                        logo: logo
+                    };
+                    //统计总库存
+                    stocks += stock;
+                }
+
+                //总库存
+                skus.stocks = stocks;
+
+                return {
+                    skus : skus,
+                    attrs : attrs,
+                    selected : selected
+                };
+            },
+            //重新刷新筛选的属性
+            filterSelect : function(){
+                var xthis = this;
+                var selectObj = this.selectObj;
+                var attrs = selectObj.attrs;
+                var selected = selectObj.selected;
+                var fliter = {};
+                //多重循环实现下面注释功能
+                _.map(attrs,function(aItem,akey){
+                    fliter = {};
+                    if(selected[attrs[akey].key]){
+                        fliter[attrs[akey].key]  = selected[attrs[akey].key];
+                    }
+
+                    var result = _.where(xthis.skuInfo.sku,fliter);
+                    _.map(result,function(ritem,rkey){ //含有这个属性的商品循环
+                        _.map(attrs,function(tItem,tkey){ //循环属性类别
+                            if(tkey==akey) return false; //跳出循环 循环除该类别之外的其他属性类别
+                            attrs[tkey].value[ritem[attrs[tkey].key]] =  ritem.Stock? true : false;//属性
+                        })
+
+                    })
+                });
+
+                return attrs;
+            },
+            //获取活动请求参数
+            getActQuery : function(skuInfo,skuid){
+                var actquery = {};
+                actquery.sku = skuid;
+                return actquery;
+            },
+            //渲染swiper
+            initSwiper: function (imgs) {
+                var swiperDataLists = [];
+                _.each(imgs,function(src){
+                    swiperDataLists.push({
+                        'src': appTools.imgSrc(src,2),
+                        'href' :''
+                    })
+                })
+                this.swiperDataLists = swiperDataLists;
+            },
+            //渲染描述
+            initDesc : function(imgLists){
+                var descLists = [];
+                _.each(imgLists,function(item){
+                    if(item.type=='text'){
+                        descLists.push({
+                            'type':item.type,
+                            'value': item.value
+                        })
+                    }else if(item.type=='img'){
+                        descLists.push({
+                            'type':item.type,
+                            'value': appTools.imgSrc(item.value,2)
+                        })
+                    }
+
+                })
+                this.descLists = descLists;
+                Vue.nextTick(function(){
+                    $('body').find("img.lazy[data-src]").lazyLoadXT({
+                        scrollContainer:'body',
+                    });
+                })
+            },
+            //初始化fixtab
+            initMore: function () {
+                var bar = $('.detail-more-bar');
+                var wrap = $('.wrap');
+                var xthis = this;
+                bar.find('li').click(function () {
+                    var index = $(this).index();
+                    xthis.tabFix = index;
+                    $(this).addClass('active').siblings().removeClass('active');
+                    $('.detail-more-cont').find('li').eq(index).show(0).siblings().hide(0);
+                    $('.detail-more-cont').trigger('scroll');
+                })
+
+            },
+            showCatePop: function (style) {
+                this.isCatePopShow = true;
+                this.buyType = style;
+                setTimeout(function () {
+                    $('body').trigger('scroll');
+                }, 500);
+            },
+            hideCatePop: function () {
+                this.isCatePopShow = false;
+            },
+            //购买数量加1
+            numPlus: function (option) {
+                if (option.state == 'invalid') {
+                    //超出库存
+                    vm.$toast({
+                        'message': this.$t('com.numControl.maxTips'),
+                        position : 'bottom'});
+                    ;
+                } else if(option.state=='limit'){
+                    //限购
+                    vm.$toast({
+                        'message': this.$t('com.numControl.limitTips', [option.info]),
+                        position : 'bottom'
+                    });
+                } else{
+                    this.skuNum = option.value;
+                }
+            },
+            //购买数据减1
+            numDel: function (option) {
+                if (option.state == 'invalid') {
+                    vm.$toast({
+                        'message': this.$t('com.numControl.minTips', [option.info]),
+                        position : 'bottom'});
+                } else {
+                    this.skuNum = option.value;
+                }
+            },
+            /**
+             * 优惠活动价格
+             * @param model优惠折扣
+             * @param sale_price销售价
+             * @param p_in_scj_price市场价
+             * @returns {*}
+             */
+            getPrice:function(model,sale_price,p_in_scj_price){
+                var price = 0;
+                var strategy = {};//策略
+                sale_price = parseFloat(sale_price);
+                p_in_scj_price =parseFloat(p_in_scj_price);
+                //折扣
+                strategy['1'] = function(){
+                    if(model.mode == "1"){
+                        price = parseFloat(sale_price)*parseFloat(model.value)*0.1;
+                    }else if(model.mode == "2"){
+                        price = parseFloat(p_in_scj_price)*parseFloat(model.value)*0.1;
+                    }
+                }
+                //直降
+                strategy['2'] = function(){
+                    price = parseFloat(sale_price) - parseFloat(model.value);
+                }
+                //优惠价
+                strategy['3'] = function(){
+                    price = parseFloat(model.value);
+                }
+                if(model&&model.type){
+                    strategy[model.type]();
+                }
+                return price==0?false:price.toFixed(2);
+            },
+            //更换属性
+
+            changeType : function(key,value,able){
+                var xthis = this;
+                var selectObj =  this.selectObj;
+                //清空原先选择数量
+                this.skuNum = this.skuInfo.start_count;
+                //更换选中信息
+                if(!able){
+                    //暂时disabled显示的属性
+                    //选择到了暂时没有的属性 则重置其他所有属性并不选中 但不刷新商品信息
+                    selectObj.selected[key] = value;
+                    selectObj.selected = _.pick(selectObj.selected,key);//只抽出选中属性
+                    xthis.selectObj.attr = xthis.filterSelect();
+                }else{
+                    //非disable选项 可以选出完整的商品
+                    //组合出了完整的属性,故刷新商品
+                    //通过Vue.set 触发selectInfo的更新
+                    Vue.set(selectObj.selected,key,value);
+                    this.initSkuInfo(xthis.selectedInfo.skuid);
+                }
+
+            },
+            loadMore:function(callback){
+                var xthis = this;
+                xthis.loadState = 'loadMore';
+
+                setTimeout(function(){
+                    xthis.canLoadMore = false;
+                    $('.detail-more').show();
+                    xthis.initMore();
+                    _.delay(function(){
+                        $('.detail-more-cont').trigger('scroll');
+                    },300);
+                    callback();
+                    xthis.canLoadMore = false;
+                    xthis.loadState = 'end';
+                },1500);
+            },
+            canLoad : function(){
+                this.loadState = 'canLoad';
+            },
+            cancelLoad:function(){
+                this.loadState = '';
+            },
+            hideTab : _.throttle(function(value,special){
+//                if(special<value){
+//                    $('.detail-more-bar').hide();
+//                }
+//                if(special + 10 > value){
+//                    $('.detail-more-bar').show();
+//                }
+
+            },500)
+        }
+    });
+</script>
+</html>

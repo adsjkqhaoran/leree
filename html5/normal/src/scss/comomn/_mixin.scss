@@ -1,0 +1,157 @@
+@charset "utf-8;";
+@mixin fl(){
+  float: left;
+  display: inline-block;
+}
+@mixin fr(){
+  float:right;
+  display:inline-block;
+}
+
+@mixin lheight($height){
+  line-height:$height;
+  height:$height;
+}
+@mixin middle(){
+  display:table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+@mixin aHover($color,$hover,$active){
+  a {
+    color: $color;
+    @if $hover{
+      &:hover {
+        color: $hover;
+      }
+    }
+    @if $active{
+      &.active {
+        color: $active;
+      }
+    }
+  }
+}
+
+
+@mixin bg-image($url){
+  background-image: url($url + "@3x.png");
+  background-size:100%;
+  background-repeat: no-repeat;
+  //[data-dpr="3"] & {
+  //  background-image: url($url + "@3x.png");
+  //}
+}
+@mixin px2px($property,$px-values){
+ #{$property}:round($px-values / 2) ;
+  //[data-dpr="2"] & {
+  //  #{$property}:$px-values ;
+  //}
+  //// for mx3
+  //[data-dpr="2.5"] & {
+  //  #{$property}:round($px-values * 2.5 / 2) ;
+  //}
+  //// for 小米note
+  //[data-dpr="2.75"] & {
+  //  #{$property}: round($px-values * 2.75 / 2);
+  //}
+  //[data-dpr="3"] & {
+  //  #{$property}: round($px-values / 2 * 3) ;
+  //}
+  //// for 三星note4
+  //[data-dpr="4"] & {
+  //  #{$property}: $px-values ;
+  //}
+}
+@mixin px2rem($property,$px-values,$baseline-px:37.5px,$support-for-ie:false){
+  //Conver the baseline into rems
+  $baseline-rem: $baseline-px / 1rem * 1;
+  //Print the first line in pixel values
+  @if $support-for-ie {
+    #{$property}: $px-values;
+  }
+  //if there is only one (numeric) value, return the property/value line for it.
+  @if type-of($px-values) == "number"{
+    #{$property}: $px-values / $baseline-rem;
+  }
+  @else {
+    //Create an empty list that we can dump values into
+    $rem-values:();
+    @each $value in $px-values{
+      // If the value is zero or not a number, return it
+      @if $value == 0 or type-of($value) != "number"{
+        $rem-values: append($rem-values, $value / $baseline-rem);
+      }
+    }
+    // Return the property and its list of converted values
+    #{$property}: $rem-values;
+  }
+}
+
+@mixin border-px($px,$color,$direct:false,$style:solid){
+  @if $direct {
+    @include px2rem('border-#{$direct}-width',$px);
+    border-#{$direct}-style:$style;
+    border-#{$direct}-color:$color;
+  }@else{
+    @include px2rem('border-width',$px);
+    border-style:$style;
+    border-color:$color;
+  }
+}
+
+@mixin wh($wpx,$hpx){
+  @include px2rem('width',$wpx);
+  @include px2rem('height',$hpx);
+}
+@mixin whpx($wpx,$hpx){
+  @include px2px('width',$wpx);
+  @include px2px('height',$hpx);
+}
+@mixin xy-lt($x,$y){
+  @include px2rem('left',$x);
+  @include px2rem('top',$y);
+}
+@mixin xy-rt($x,$y){
+  @include px2rem('right',$x);
+  @include px2rem('top',$y);
+}
+@mixin xy-tb($x,$y){
+  @include px2rem('top',$x);
+  @include px2rem('bottom',$y);
+}
+@mixin xy-rb($x,$y){
+  @include px2rem('right',$x);
+  @include px2rem('bottom',$y);
+}
+@mixin padding-lr($x,$x2){
+  @include px2rem('padding-left',$x);
+  @include px2rem('padding-right',$x2);
+}
+@mixin margin-lr($x,$x2){
+  @include px2rem('margin-left',$x);
+  @include px2rem('margin-right',$x2);
+}
+@mixin padding-tb($x,$x2){
+  @include px2rem('padding-top',$x);
+  @include px2rem('padding-bottom',$x2);
+}
+@mixin margin-tb($x,$x2){
+  @include px2rem('margin-top',$x);
+  @include px2rem('margin-bottom',$x2);
+}
+@mixin font-size($x){
+  @include px2px('font-size',$x*2);
+}
+@mixin  l-height($x){
+  @include px2rem('height',$x);
+  @include px2rem('line-height',$x);
+}
+@mixin noSelect(){
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}

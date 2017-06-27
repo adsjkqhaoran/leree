@@ -1,0 +1,105 @@
+@import '../comomn/_mixin';
+@import '../comomn/_variable';
+$bgUrl: '../../images/order/pay/';
+body {
+  background: #F4F4F4;
+}
+.Pay{
+  background: #F4F4F4;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    .scroll{
+      display: block;
+    }
+  }
+  .pay-count{
+    width:100%;
+    @include l-height(78px);
+    background: #000;
+    color: #fff;
+    @include font-size(24px);
+    text-align: center;
+  }
+  .pay-type-box{
+    .pay-type-box-tit{
+      width: 100%;
+      @include l-height(35px);
+      @include border-px(1.06px,#eee,bottom);
+      @include px2rem('padding-left',15px);
+    }
+  }
+  .pay-type-ul{
+    li{
+      @include padding-lr(15px,15px);
+      @include padding-tb(20px,20px);
+      @include border-px(1.06px,#eee,bottom);
+      i{
+
+      }
+      .s_arrow{
+        @include wh(8px,14px);
+        @include px2rem('padding-top',45px);
+      }
+    }
+  }
+  .qiwi-input-full{
+    width:percentage(285/375);
+    margin:auto;
+    @include px2rem('margin-top',20px);
+    @include px2rem('margin-top',30px);
+    @include px2rem('margin-bottom',30px);
+  }
+  .cod-input-full{
+    width:percentage(285/375);
+    margin:auto;
+    @include px2rem('margin-top',20px);
+    @include px2rem('margin-top',30px);
+    @include px2rem('margin-bottom',30px);
+  }
+}
+i{
+  display: inline-block;
+  &.icon-yandex{
+    @include bg-image($bgUrl+'yandex');
+    @include wh(90px,41px);
+  }
+  &.icon-wallet{
+    @include bg-image($bgUrl+'wallet');
+    @include wh(24px,24px);
+    display: inline-block;
+  }
+  &.icon-qiwi{
+    @include bg-image($bgUrl+'qiwi');
+    @include wh(90px,35px);
+  }
+  &.icon-paypal{
+    @include bg-image($bgUrl+'paypal');
+    @include wh(100px,33px);
+  }
+  &.icon-cod{
+    @include bg-image($bgUrl+'COD');
+    @include wh(67px,24px);
+  }
+  &.icon-card{
+    @include bg-image($bgUrl+'card');
+    @include wh(28px,21px);
+  }
+  &.icon-telphone{
+    @include bg-image($bgUrl+'telphone');
+    @include wh(14px,40px);
+    background-position: center center;
+    position: absolute;
+    @include xy-lt(14px,-1px);
+  }
+  &.icon-msg{
+    @include bg-image($bgUrl+'msg');
+    @include wh(21px,40px);
+    background-position: center center;
+    position: absolute;
+    @include xy-lt(14px,-1px);
+  }
+}

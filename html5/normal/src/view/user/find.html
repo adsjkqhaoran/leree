@@ -1,0 +1,414 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta content="telephone=no" name="format-detection">
+    <title>Забыл пароль</title>
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/user/find.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Find user-bg" v-cloak>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="0">
+                <nav class="header dark">
+                    <i class="back"></i>
+                    <div class="tit">{{$t('find.header')}}</div>
+                </nav>
+
+                <div class="find-tips">
+                    {{$t('find.findTips')}}
+                </div>
+                <div class="form" id="findForm">
+                    <div class="form-item-l">
+                        <i class="icon-username"></i>
+                        <div class="input-cont">
+                            <input
+                                    type="text"
+                                    required="required"
+                                    name="user"
+                                    id="user_name"
+                                    :placeholder="$t('com.form.inputNew.placeholder')"
+                                    :pattern = "$t('regex.limit50')"
+                            />
+                        </div>
+                    </div>
+                    <div class="form-item-l">
+                        <i class="icon-msg"></i>
+                        <div class="input-cont half ">
+                            <input
+                                    type="text"
+                                    id="findValidCode"
+                                    name="code"
+                                    required="required"
+                                    :placeholder="$t('com.form.inputMsg.placeholder')"
+
+
+                            />
+                        </div>
+                        <canvas id="graphCodeCanvas" class="imgValidCode" width="120" height="60" style="vertical-align: middle;" @click="changeValidImg"></canvas>
+                    </div>
+
+                    <div class="form-item-l ">
+                        <div class="le_btn btn_blue m_t_20" @click="popShow('step')">{{$t('com.btn.nextStep')}}</div>
+                    </div>
+                </div>
+
+
+
+
+                <step-pop width-rem="10" duration="300"  direct="right" slide-class="right-full-pop" :state="popState.step" v-cloak>
+                    <div class="step-content user-bg">
+                        <nav class="header dark" @click="popHide('step')">
+                            <i class="back"></i>
+                            <div class="tit">{{$t('find.header')}}</div>
+                        </nav>
+                        <div class="step-tips t_align_c f_color_999 f_14">
+                           {{$t('find.chooseValidateType')}}
+                        </div>
+                        <div class="select-type">
+                            <div class="d_flex w_p_90 cell-item f_white" @click="popShow('step2'),changeFindType('email')"  v-if="baseInfo.is_check_email">
+                                <i class="icon-email"></i>
+                                <div class="text f_14  flex_1">{{$t('find.email')}}：{{hashEmail}}</div>
+                                <div class="f_color_666">
+                                    <span class="m_r_20">{{$t('find.enter')}}</span>
+                                    <div class="s_arrow dark"></div>
+                                </div>
+
+                            </div>
+                            <div class="d_flex w_p_90 cell-item f_white" @click="popShow('step2'),changeFindType('mobile')" v-if="baseInfo.is_check_mobile">
+                                <i class="icon-tel"></i>
+                                <div class="text f_14  flex_1">{{$t('com.form.tel.placeholder')}}：{{hashTel}}</div>
+                                <div class="f_color_666">
+                                    <span class="m_r_20">{{$t('find.enter')}}</span>
+                                    <div class="s_arrow dark"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </step-pop>
+                <step2-pop width-rem="10" duration="300"  direct="right" slide-class="right-full-pop" :state="popState.step2" v-cloak>
+                    <div class="step-content user-bg">
+                        <nav class="header dark" @click="popHide('step2')">
+                            <i class="back"></i>
+                            <div class="tit">{{$t('find.header')}}</div>
+                        </nav>
+                        <div class="step-tips t_align_c f_color_999 f_14">
+                            <template v-if="findType=='mobile'">
+                                {{$t('com.form.tel.placeholder')}}：{{hashTel}}
+                            </template>
+                            <template v-if="findType=='email'">
+                                {{$t('com.form.email.placeholder')}}：{{hashEmail}}
+                            </template>
+                        </div>
+                        <div class="form" id="find-form">
+                            <div class="form-item-l">
+                                <i class="icon-msg"></i>
+                                <div class="input-cont half">
+
+                                    <input
+
+                                            id="msg"
+                                            type="text"
+                                            name="msg"
+                                            required
+                                            :placeholder="$t('com.form.inputValidate.placeholder')"
+                                            :pattern = "$t('regex.msg')"
+
+
+                                    />
+
+
+
+
+                                </div>
+                                <template v-if="findType=='mobile'">
+                                    <div class="msg-btn le_btn btn_blue_border "  @click="getMsg('tel')">
+                                        <template v-if="msg.tel.state">
+                                            {{msg.tel.wait}}s
+                                        </template>
+                                        <template v-else>
+                                            {{$t('com.btn.getCode')}}
+                                        </template>
+                                    </div>
+                                </template>
+                                <template v-if="findType=='email'">
+                                    <div class="msg-btn le_btn btn_blue_border "  @click="getMsg('email')">
+                                        <template v-if="msg.email.state">
+                                            {{msg.email.wait}}s
+                                        </template>
+                                        <template v-else>
+                                            {{$t('com.btn.getCode')}}
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="form-item-l">
+                                <i class="icon-paw"></i>
+                                <div class="input-cont">
+                                    <input
+                                           id="paw"
+                                           type="password"
+                                           required
+                                           :placeholder="$t('com.form.inputPaw.placeholder')"
+                                           :pattern = "$t('regex.limit50')"
+                                    />
+                                </div>
+                                <template v-if="pawState.paw">
+                                    <i class="icon-paw-show" @click="tooglePaw('paw')"></i>
+                                </template>
+                                <template v-else>
+                                    <i class="icon-paw-hide" @click="tooglePaw('paw')"></i>
+                                </template>
+                            </div>
+                            <div class="form-item-l">
+                                <i class="icon-rpaw"></i>
+                                <div class="input-cont">
+                                    <input
+                                            id="confirmPaw"
+                                            type="password"
+                                            required
+                                            :placeholder="$t('com.form.confirmPaw.placeholder')"
+                                            :pattern = "$t('regex.limit50')"
+                                    />
+                                </div>
+                                <template v-if="pawState.confirmPaw">
+                                    <i class="icon-paw-show" @click="tooglePaw('confirmPaw')"></i>
+                                </template>
+                                <template v-else>
+                                    <i class="icon-paw-hide" @click="tooglePaw('confirmPaw')"></i>
+                                </template>
+                            </div>
+                            <div class="form-item-l">
+                                <div class="le_btn btn_blue" @click="findPost">{{$t('com.btn.confirm')}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </step2-pop>
+
+            </pull-wrap>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<!--<script src="../../js/lang/lang.js"></script>-->
+<script src="../../js/components/common.js"></script>
+<!--<script src="../../js/common/alloy_touch.js"></script>-->
+<!--<script src="../../js/common/app_tools.js"></script>-->
+<!--<script src="../../js/common/md5.min.js"></script>-->
+<script>
+    var vm = new Vue({
+        el : "#app",
+        i18n : i18n,
+        data : {
+            popState:{
+                'step' : false,
+                'step2' : false
+            },
+            baseInfo : {
+
+            },
+            findType :'',
+            msg: {
+                tel: {
+                    state: false,
+                    wait: 90
+                },
+                email: {
+                    state: false,
+                    wait: 90
+                }
+            },
+            pawState: {
+                paw : false,
+                confirmPaw : false
+            }
+        },
+        components : {
+            stepPop : slidePop,
+            step2Pop : slidePop,
+            pullWrap : pullWrap
+        },
+        computed : {
+            hashTel : function(){
+                if(!_.isEmpty(this.baseInfo.mobile)){
+                    return  this.baseInfo.mobile.replace(/^(\d{3})(.*)(\d{3})$/,'$1****$3');
+                }
+            },
+            hashEmail : function(){
+                if(!_.isEmpty(this.baseInfo.email)){
+                    return this.baseInfo.email.replace(/^(\w{1,3})(.*)(@\w+\.\w+)$/,'$1***$3');
+                }
+            }
+        },
+        mounted : function(){
+            //验证码
+            appTools.refreshGraphCode();
+            //
+            this.getStorage();
+            //撑满屏幕
+            $('#app').height($('.wrap').height());
+            $('.scroll').children('div').height($('.wrap').height());
+            $(window).resize(function(){
+                $('#app').height($('.wrap').height());
+                $('.scroll').children('div').height($('.wrap').height());
+            })
+        },
+        created:function(){
+        },
+        methods:{
+            tooglePaw: function (pawType) {
+                var xthis = this;
+                xthis.pawState[pawType] = !xthis.pawState[pawType];
+                if (xthis.pawState[pawType]) {
+                    $('#' + pawType).attr('type', 'text');
+                } else {
+                    $('#' + pawType).attr('type', 'password');
+                }
+            },
+            /**
+             * 请求msg
+             */
+            getMsg : function(type){
+                var xthis = this ;
+
+                var username = {
+                    'tel' : xthis.baseInfo.mobile,
+                    'email' :xthis.baseInfo.email
+                };
+                //防止重复发送
+                if(xthis.msg[type].state) return false;
+                ajaxInstall.com(appTools.ajax.getMsg,
+                        username[type],
+                        4
+                        )
+                        .done(function(data){
+                            if(data.err==0){
+                                xthis.sendMsg(type);
+                            }
+//                            Vue.$toast({message:data.msg});
+                        })
+            },
+            //锁定msg
+            sendMsg: function (type) {
+                var xthis = this;
+                var time = 90;
+                if (xthis.msg[type].state == false) {
+                    xthis.msg[type].state = !xthis.msg[type].state;
+                    if (xthis.msg[type].state && xthis.msg[type].wait == time) {
+                        var interval = setInterval(function () {
+                            xthis.msg[type].wait = xthis.msg[type].wait - 1;
+                            if (xthis.msg[type].wait == 0) {
+                                clearInterval(interval);
+                                xthis.msg[type].wait = time;
+                                xthis.msg[type].state = false;
+                            }
+                        }, 1000);
+                    }
+                }
+            },
+            ajaxFind : function(user_name,password,sms_code){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data:appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "11" //*
+                    },{
+                        "user_name": user_name, //* 用户帐号，选择手机或邮箱
+                        "password": md5(password), //* 重置新密码
+                        "sms_code": sms_code, //* 手机或邮件收到的验证码
+                    }),
+                    type: 'get',dataType:'jsonp',
+                    cache:false
+                });
+            },
+            findPost : function(){
+                var xthis = this;
+                appTools.validate('#find-form',function(error,el){
+                    if(error){
+                        appTools.alert(error);
+                        return false;
+                    }
+                    if($('#paw').val() != $('#confirmPaw').val()){
+                        appTools.alert(xthis.$t('hot.tips.twoPawDifferent'));
+                        return false;
+                    }
+
+                    ajaxInstall.com(
+                            xthis.ajaxFind,
+                            xthis.baseInfo[xthis.findType],
+                            $('#paw').val(),
+                            $('#msg').val()
+                    )
+                    .done(function(data){
+                        if(data.err==0){
+                            _.delay(function(){
+                                window.location = '/view/user/login.html';
+                            },500);
+                        }
+                        Vue.$toast({message:data.msg})
+                    })
+
+                })
+            },
+            changeFindType : function(type){
+                this.findType = type;
+            },
+
+            popHide : function(type){
+                this.popState[type] = false;
+            },
+            popShow : function(type){
+                var xthis = this;
+                if(type=='step'){
+                    appTools.validate('#findForm', function (error,$el) {
+                        $('#findForm').find('input').each(function(){
+                            $(this).parent().removeClass('warn')
+                        });
+                        if (error) {
+                            $el.parent().addClass('warn');
+                            appTools.alert(error);
+                            return false;
+                        }
+                        if(curGraphCode.toLowerCase()!=$('#findValidCode').val().toLowerCase()){
+                            appTools.alert(vm.$t('com.form.inputMsg.notMatchTips'));
+                            return false;
+                        }else{
+                            localStorage.setItem('user_name',$("#user_name").val());
+                               ajaxInstall.com(
+                                       appTools.ajax.getSimpleInfo,
+                                       $("#user_name").val())
+                                .done(function(data){
+                                    if(data.err==0){
+                                        xthis.baseInfo = data.data;
+                                        xthis.popState[type] = true;
+                                    }else{
+                                        appTools.alert(data.msg);
+                                    }
+                                })
+                        }
+
+                    })
+                }
+                if(type=='step2'){
+                    xthis.popState[type] = true;
+                }
+            },
+            changeValidImg : function(){
+                appTools.refreshGraphCode();
+            },
+            getStorage : function(){
+                $('#user_name').val(localStorage.getItem('user_name'));
+            }
+        }
+    });
+</script>
+</html>

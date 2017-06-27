@@ -1,0 +1,226 @@
+@import url(../comomn/swiper.min.css);
+body {
+  background: #F4F4F4; }
+
+.load_more {
+  bottom: 1.30667rem; }
+
+.Index {
+  background: #F4F4F4; }
+  .Index .header .edit {
+    width: 0.53333rem;
+    height: 1.06667rem;
+    display: block;
+    position: absolute;
+    right: 0.21333rem;
+    top: 0rem;
+    z-index: 1; }
+    .Index .header .edit:after {
+      content: '';
+      width: 0.48rem;
+      height: 1.06667rem;
+      display: block;
+      background-image: url("../../images/index/edit@3x.png");
+      -webkit-background-size: 100% 100%;
+              background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .Index .header .finish-edit {
+    height: 1.06667rem;
+    line-height: 1.06667rem;
+    color: #00A4E7;
+    font-size: 14px;
+    position: absolute;
+    right: 0.21333rem;
+    top: 0rem; }
+  .Index .wrap {
+    width: 100%;
+    position: absolute;
+    top: 0rem;
+    bottom: 1.30667rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0); }
+    .Index .wrap .scroll {
+      -webkit-transform: translateZ(0);
+              transform: translateZ(0);
+      display: block; }
+  .Index #swiper {
+    width: 100%;
+    height: 3.78667rem; }
+    .Index #swiper .swiper-container {
+      width: 100%;
+      height: 3.78667rem;
+      overflow: visible; }
+      .Index #swiper .swiper-container .swiper-lazy-loaded {
+        height: 100%;
+        width: 100%; }
+  .Index .quick-menu {
+    width: 100%;
+    height: 2.66667rem;
+    background: #fff; }
+    .Index .quick-menu .quick-menu-item {
+      width: 25%;
+      height: 2.66667rem;
+      float: left;
+      display: inline-block; }
+      .Index .quick-menu .quick-menu-item .icon {
+        margin: auto;
+        margin-top: 0.26667rem; }
+      .Index .quick-menu .quick-menu-item p {
+        color: #666666;
+        font-size: 10px;
+        line-height: 1.2em;
+        text-align: center;
+        width: 80%;
+        margin: auto;
+        margin-top: 0.08rem; }
+  .Index .recommend .recomment-tit {
+    height: 0.4rem;
+    line-height: 0.4rem;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    font-size: 12px;
+    color: #999; }
+    .Index .recommend .recomment-tit:before, .Index .recommend .recomment-tit:after {
+      content: '';
+      height: 0.2rem;
+      line-height: 0.2rem;
+      border-bottom-width: 0.02827rem;
+      border-bottom-style: solid;
+      border-bottom-color: #d8d8d8;
+      display: inline-block;
+      width: 2.88rem; }
+    .Index .recommend .recomment-tit:before {
+      position: absolute;
+      top: 0%;
+      left: 0%; }
+    .Index .recommend .recomment-tit:after {
+      position: absolute;
+      top: 0%;
+      right: 0%; }
+  .Index .recommend .recomment-box > li {
+    width: 49.5%;
+    background: #fff;
+    height: 6.93333rem;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    padding: 0.32rem;
+    float: left;
+    display: inline-block; }
+    .Index .recommend .recomment-box > li:nth-child(2n) {
+      margin-left: 1%; }
+    .Index .recommend .recomment-box > li:nth-child(n+3) {
+      margin-top: 0.13333rem; }
+    .Index .recommend .recomment-box > li .imghold {
+      width: 4.26667rem;
+      height: 4.26667rem;
+      overflow: hidden;
+      margin: auto; }
+      .Index .recommend .recomment-box > li .imghold img {
+        width: 100%; }
+    .Index .recommend .recomment-box > li .sku-tit {
+      color: #666666;
+      height: 0.8rem;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.2em;
+      margin-top: 0.26667rem; }
+    .Index .recommend .recomment-box > li .price {
+      color: #ff2929;
+      font-size: 14px;
+      margin-top: 0.13333rem;
+      text-align: center; }
+  .Index .swiper-box-cont {
+    background: #fff;
+    overflow: hidden; }
+    .Index .swiper-box-cont .super-mobile-tit {
+      font-size: 16px;
+      color: #666666;
+      height: 0.53333rem;
+      line-height: 0.53333rem;
+      position: relative;
+      font-weight: normal;
+      padding-left: 0.4rem;
+      margin-top: 0.26667rem; }
+      .Index .swiper-box-cont .super-mobile-tit .guide {
+        content: '';
+        width: 0.10667rem;
+        height: 0.53333rem;
+        position: absolute;
+        left: 0px;
+        top: 0px; }
+    .Index .swiper-box-cont .swiper-box {
+      overflow: visible !important;
+      height: 4rem;
+      background: #fff; }
+      .Index .swiper-box-cont .swiper-box .swiper-pagination {
+        position: absolute;
+        left: 0rem;
+        top: -0.53333rem;
+        width: 15%;
+        left: 85%;
+        height: 0.53333rem; }
+        .Index .swiper-box-cont .swiper-box .swiper-pagination .swiper-pagination-bullet {
+          margin-left: 0.05333rem;
+          margin-right: 0.05333rem;
+          -webkit-transform: scale(0.7);
+              -ms-transform: scale(0.7);
+                  transform: scale(0.7); }
+      .Index .swiper-box-cont .swiper-box .imghold {
+        width: 2.13333rem;
+        height: 2.13333rem;
+        overflow: hidden;
+        margin: auto; }
+        .Index .swiper-box-cont .swiper-box .imghold img {
+          width: 100%; }
+      .Index .swiper-box-cont .swiper-box .sku-tit {
+        color: #666666;
+        height: 0.8rem;
+        font-size: 12px;
+        text-align: center;
+        line-height: 1.2em;
+        margin-top: 0.13333rem; }
+      .Index .swiper-box-cont .swiper-box .price {
+        color: #ff2929;
+        font-size: 12px;
+        text-align: center;
+        margin-top: 0.13333rem; }
+
+i.icon-mobile {
+  background-image: url("../../images/index/mobile@3x.png");
+  -webkit-background-size: 100% 100%;
+          background-size: 100%;
+  background-repeat: no-repeat;
+  width: 1.49333rem;
+  height: 1.49333rem;
+  display: block; }
+
+i.icon-tv {
+  background-image: url("../../images/index/tv@3x.png");
+  -webkit-background-size: 100% 100%;
+          background-size: 100%;
+  background-repeat: no-repeat;
+  width: 1.49333rem;
+  height: 1.49333rem;
+  display: block; }
+
+i.icon-fitting {
+  background-image: url("../../images/index/fitting@3x.png");
+  -webkit-background-size: 100% 100%;
+          background-size: 100%;
+  background-repeat: no-repeat;
+  width: 1.49333rem;
+  height: 1.49333rem;
+  display: block; }
+
+i.icon-cate {
+  background-image: url("../../images/index/cate@3x.png");
+  -webkit-background-size: 100% 100%;
+          background-size: 100%;
+  background-repeat: no-repeat;
+  width: 1.49333rem;
+  height: 1.49333rem;
+  display: block; }

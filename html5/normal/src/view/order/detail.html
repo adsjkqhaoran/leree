@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/detail.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Detail" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('orderDetail.header')}}</div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <!--未付款-->
+            <div class="order-detail-top" v-if="orderData.status_val == 1">
+                <div class="order-state">{{$t('hot.order.waitPay')}}</div>
+                <div class="order-times" v-if="delayTime">{{delayTime}}</div>
+                <div class="clearFloat"></div>
+                <div class="order-tips">{{$t('hot.order.waitPayWarn')}}</div>
+            </div>
+            <!--/未付款-->
+            <!--未发货，待审核-->
+            <div class="order-detail-top waitSend" v-if="orderData.status_val == 4 || orderData.status_val == 2">
+                <div class="order-state">{{$t('hot.order.waitSend')}}</div>
+                <div class="le_btn btn_white_border" v-if="orderData.can_canel == 1" @click="cacelOrder(orderData.parent_code)">{{$t('com.btn.cancel')}}</div>
+                <div class="clearFloat"></div>
+                <div class="order-tips">{{$t('hot.order.waitSendTip')}}</div>
+            </div>
+            <!--/未发货-->
+            <!--已发货,待收货-->
+            <div class="order-detail-top" v-if="orderData.status_val == 8">
+                <div class="order-state">{{$t('hot.order.waitReceive')}}</div>
+                <div class="order-times" v-if="delayTime">{{delayTime}}</div>
+                <div class="clearFloat"></div>
+                <div class="order-tips">{{$t('hot.order.waitReceiveWarn')}}</div>
+            </div>
+            <!--已发货-->
+            <!--已收货-->
+            <div class="order-detail-top finish" v-if="orderData.status_val == 16">
+                <div class="order-state">{{$t('hot.order.receive')}}</div>
+                <div class="le_btn btn_white_border">{{$t('hot.order.return')}}</div>
+                <div class="clearFloat"></div>
+            </div>
+            <!--/已收货-->
+            <!--已关闭-->
+            <div class="order-detail-top closed" v-if="orderData.status_val == -2 ||orderData.status_val == -1">
+                <div class="order-state">{{$t('hot.order.close')}}</div>
+
+                <div class="clearFloat"></div>
+            </div>
+            <!--/已关闭-->
+            <!--已完成-->
+            <div class="order-detail-top finish" v-if="orderData.status_val == 32">
+                <div class="order-state">{{$t('hot.order.finish')}}</div>
+                <div class="clearFloat"></div>
+            </div>
+            <!--/已完成-->
+            <!--物流信息-->
+            <div class="order-flow-box bg_w">
+                <div class="order-flow-tip f_12 f_color_666 bg_w" v-if="orderData.logistics">
+                    {{$t('hot.order.flowInfo')}}
+                </div>
+                <div class="order-flow-cont">
+                    <div class="flow-info d_flex" v-if="orderData.logistics">
+                        <i class="icon-flow-ems">
+                        </i>
+                        <div class="flex_1 m_l_10 m_t_5">
+                            <p class="f_16 f_color_666">{{orderData.logistics.express_com}}</p>
+                            <p class="f_color_666 f_12">{{$t('hot.order.flowNum')}}：<span>{{orderData.logistics.delivery_no}}</span></p>
+                        </div>
+                    </div>
+                    <div class="order-flow-table">
+                        <!--刚开始-->
+                        <div class="order-flow-empty" >
+                            <div class="bg-flowInit" ></div>
+                            <p class="f_14 f_color_d1 t_align_c" v-if="!orderData.logistics||!orderData.logistics.datas">{{$t('hot.order.noflowTips')}}</p>
+                        </div>
+                        <!--/刚开始-->
+                        <!--出现物流信息-->
+                        <div class="flow-lian" v-if="orderData.logistics&&orderData.logistics.datas">
+                            <div class="flow-lian-scroll">
+                                <div class="flow-lian-item disable " :class="{active:iindex==0}" v-for="(idata,iindex) in orderData.logistics.datas">
+                                    <div class="flow-point ">
+                                    </div>
+                                    <p class="f_12 ">{{idata.time}}</p>
+                                    <p class="f_12">{{idata.txt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/出现物流信息-->
+                    </div>
+                </div>
+            </div>
+            <!--/物流信息-->
+            <div class="order-base-info" v-if="orderData.consignee">
+                <div class="w_p_50 f_l d_flex" v-if="orderData.consignee.name">
+                    <i class="icon-name "></i>
+                    <span class="flex_1">{{orderData.consignee.name}}</span>
+                </div>
+                <div class="w_p_50 f_l d_flex" v-if="orderData.consignee.phone">
+                    <i class="icon-telphone "></i>
+                    <span class="flex_1">{{orderData.consignee.phone}}</span>
+                </div>
+                <div class="clearFloat"></div>
+                <div class="w_full" v-if="orderData.consignee.address">
+                    <i class="icon-address fl"></i>
+                    <span class="fl">{{orderData.consignee.address}}</span>
+                </div>
+            </div>
+            <div class="order-cont m_t_10" v-cloak>
+                        <div  class="order-item">
+                            <div class="tit d_flex">
+                                <div class="order-id flex_1"><span>{{$t('hot.order.orderLists')}}</span></div>
+                            </div>
+                            <div class="cart-item">
+                                <div  v-for="sitem in orderData.details"
+                                      :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                    <div class="cont" v-if="sitem.pro_type==1">
+                                        <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                            <div class="logo">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </div>
+                                            <div class="info">
+                                                <div class="tit">
+                                                    {{sitem.name}}
+                                                </div>
+                                                <div class="cate">
+                                                    {{sitem.attr}}
+                                                </div>
+
+                                            </div>
+                                            <div class="price">
+                                                {{sitem.price}} {{$t('hot.money')}}&nbsp;&nbsp;x&nbsp;<span>{{sitem.qty}}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                        <div class="cart-icon-plus"></div>
+                                        <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                            <img :src="appTools.imgSrc(sitem.img,8)"
+                                                 alt="">
+                                        </a>
+                                        <div class="info">
+                                            {{sitem.name}}
+                                        </div>
+                                        <div class="num">x {{sitem.qty}}</div>
+                                    </div>
+
+
+                                </div>
+
+
+
+                            </div>
+                            <div class="order-detail-count">
+                                <div class="d_flex">
+                                    <div class="">{{$t('hot.order.originPrice')}}</div>
+                                    <div class="flex_1 t_align_r"><span>{{orderData.amount}}</span> руб</div>
+                                </div>
+                                <div class="d_flex">
+                                    <div class="">{{$t('hot.order.flowPrice')}}</div>
+                                    <div class="flex_1 t_align_r"><span>{{orderData.freight}}</span> руб</div>
+                                </div>
+                                <div class="d_flex">
+                                    <div class="">{{$t('hot.order.discountPrice')}}</div>
+                                    <div class="flex_1 t_align_r"><span>-{{orderData.activity_pref}}</span> руб</div>
+                                </div>
+                                <div class="d_flex">
+                                    <div class="">{{$t('hot.order.useCoupon')}}</div>
+                                    <div class="flex_1 t_align_r"><span>-{{orderData.coupon_pref}}</span> руб</div>
+                                </div>
+                                <div class="t_align_r f_14 f_color_666 m_t_10">
+                                    {{$t('hot.order.payWithFlow')}}
+                                </div>
+                                <div class="t_align_r f_16 f_color_666 m_t_10">
+                                    <span>{{orderData.pay_amount}}</span> руб
+                                </div>
+                            </div>
+                        </div>
+             </div>
+            <div class="other-info bg_w m_t_10 p_15 f_color_666 f_12">
+                <div >
+                  хао ：<span>{{orderData.order_no}}</span>
+                </div>
+                <div class="m_t_10">
+                    {{$t('hot.order.createTime')}}：<span>{{orderData.order_time}}</span>
+                </div>
+                <div class="m_t_10" v-if="orderData.pay_time">
+                    {{$t('hot.order.payTime')}}：<span>{{orderData.pay_time}}</span>
+                </div>
+                <div class="m_t_10" v-if="orderData.delivery_time">
+                    {{$t('hot.order.sendTime')}}：<span>{{orderData.delivery_time}}</span>
+                </div>
+                 <div class="m_t_10" v-if="orderData.receipt_time">
+                    {{$t('hot.order.receiveTime')}}：<span>{{orderData.receipt_time}}</span>
+                </div>
+                <div class="m_t_10" v-if="orderData.cancel_time">
+                    {{$t('hot.order.cancelTime')}}：<span>{{orderData.cancel_time}}</span>
+                </div>
+                <div class="m_t_10" v-if="orderData.close_time">
+                    {{$t('hot.order.closeTime')}}：<span>{{orderData.close_time}}</span>
+                </div>
+                <div class="m_t_10" v-if="orderData.complete_time">
+                    {{$t('hot.order.finishTime')}}：<span>{{orderData.complete_time}}</span>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="order-detail-foot d_flex" v-if="orderData.status_val == 1">
+            <!--待支付-->
+            <div  class="flex_1 le_btn btn_white btn_react" @click='cacelOrder(orderData.parent_code)'>{{$t('com.btn.cancel')}}</div>
+            <div  class="flex_1 le_btn btn_red btn_react">{{$t('com.btn.pay')}}</div>
+            <!--/待支付-->
+    </div>
+    <div class="order-detail-foot d_flex" v-if="orderData.status_val == 8">
+        <!--//已发货-->
+        <div class="flex_1 le_btn btn_blue btn_react" @click="confirmReceive(orderData.child_code)">{{$t('com.btn.confirmReceive')}}</div>
+    </div>
+    <div class="order-detail-foot d_flex" v-if="orderData.status_val == 16">
+        <!--已收货-->
+        <div class="flex_1 le_btn btn_blue btn_react">{{$t('com.btn.comment')}}</div>
+    </div>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<!--<script src="../../js/lang/lang.js"></script>-->
+<script src="../../js/components/common.js"></script>
+<!--<script src="../../js/common/app_tools.js"></script>-->
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+            orderData : [],
+            orderNum : '',
+            orderMap : appTools.orderState,
+            delayTime : ''
+        },
+        components: {
+        },
+        mounted: function () {
+            var xthis = this;
+            $(function(){
+                appTools.isUserLogined();
+                xthis.initDetail();
+            })
+        },
+        created: function () {
+
+        },
+        methods: {
+            confirmReceive : function(orderID){
+                var xthis = this;
+                appTools.confirm(vm.$t('com.btn.confirmReceive'),{
+                    confirm : function(){
+                        ajaxInstall.com(
+                                xthis.ajaxConfirm,
+                                orderID
+                        ).done(function (data) {
+                            if(data.err == 0){
+                                location.reload();
+                            }
+                        })
+                    },
+                    cancel : function(){ console.log('cancel');}
+                });
+            },
+            ajaxConfirm : function(orderID){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        opt:'order',
+                        cmd:'receiptorder'
+                    },{
+                        "order_no":orderID//订单编号，必须为子订单编号
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            },
+            ajaxCancel : function(orderID){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        opt:'order',
+                        cmd:'cancelorder'
+                    },{
+                        "order_no":orderID//必须为父订单
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            },
+            ajaxDetail : function(orderNum){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data: appTools.ajax.combineDataJson({
+                                        "opt" : "order",
+                                        "cmd" : "orderdetail",
+                                    }, {
+                                        order_no : orderNum
+                                    }),
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            cacelOrder : function(orderId){
+                var xthis = this;
+                appTools.confirm(vm.$t('hot.tips.orderCancelTips'),{
+                    confirm : function(){
+                        ajaxInstall.com(
+                                xthis.ajaxCancel,
+                                orderId
+                        ).done(function(data){
+                            if(data.err==0){
+                                xthis.initDetail();
+                            }
+                        })
+                    },
+                    cancel : function(){ console.log('cancel');}
+                });
+            },
+            initDetail : function(){
+                var xthis = this;
+                var args = appTools.parseUrlQuery(location.href);
+                xthis.orderNum = args.orderNum;
+                if(!xthis.orderNum){
+                    history.back();
+                }
+                ajaxInstall.com(
+                        xthis.ajaxDetail,
+                        xthis.orderNum
+                ).done(function(data){
+                    if(data&&data.err==0){
+                        xthis.orderData = data.data;
+                        Vue.nextTick(function(){
+                            //某些情况没有底部按钮
+                            if(_.indexOf([1,8,16],xthis.orderData.status_val)==-1){
+                                $('.wrap').css({'bottom':0});
+                            }
+                            //插入倒计时
+                            var delayS = xthis.orderData.pay_end_time||xthis.orderData.receipt_end_time;
+                            if(!delayS) return false;
+                            setTimeout(function(){
+                                location.reload();
+                            },delayS);
+                            setInterval(function(){
+                                delayS = parseInt(delayS)   -  1;
+                                var remainS =  delayS;
+                                var h = Math.floor(remainS/60/60);
+                                remainS = (remainS -  h*60*60);
+                                var m = Math.floor( remainS /60) ;
+                                remainS = (remainS -  m*60);
+                                var s = Math.floor( remainS ) ;
+                                xthis.delayTime = h + ' h ' + m + ' m ' + s +' s ';
+                      },1000)
+
+                        })
+                    }
+                })
+            }
+        }
+
+    });
+</script>
+</html>

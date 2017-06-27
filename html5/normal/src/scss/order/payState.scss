@@ -1,0 +1,41 @@
+@import '../comomn/_mixin';
+@import '../comomn/_variable';
+$bgUrl: '../../images/order/pay/';
+body {
+  background: #F4F4F4;
+}
+.PayState{
+  background: #FFF;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    .scroll{
+      display: block;
+    }
+  }
+  .pay-result{
+    @include px2rem('width',480px/2);
+    display: block;
+    margin:auto;
+    @include px2rem('margin-top',120px);
+    .pay-success{
+      .pay-img{
+        @include bg-image($bgUrl+'pay-success');
+        @include wh(480px/2,356px/2);
+        display: block;
+      }
+    }
+
+    .pay-error{
+      .pay-img{
+        @include bg-image($bgUrl+'pay-err');
+        @include wh(500px/2,406px/2);
+        display: block;
+      }
+    }
+  }
+}
+

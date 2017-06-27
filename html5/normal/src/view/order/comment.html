@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>comment</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/comment.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Comment" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('comment.header')}}</div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <div class="m_t_10 bg_w">
+                <div class="cart-item">
+                    <div class="singal">
+                        <div class="cont">
+                            <div class="sku">
+                                <div class="logo">
+                                    <img src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"
+                                         alt="">
+                                </div>
+                                <div class="info">
+                                    <div class="tit">
+                                        <a href="#">
+                                            Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                            Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                        </a>
+                                    </div>
+                                    <div class="cate">
+                                        4GB + 64GB релиз
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-box">
+                    <div class="d_relative">
+                        <div class="f_14 f_color_999">{{$t('comment.product')}}</div>
+                        <div class="starts ">
+                            <starts :num="0" margin=".2" canused="true" xkey="['1234','sku']" @changestart="changeStart"></starts>
+
+                        </div>
+                    </div>
+                    <div class="d_relative m_t_10">
+                        <div class="f_14 f_color_999">{{$t('comment.flow')}}</div>
+                        <div class="starts ">
+                            <starts :num="0" margin=".2" canused="true" xkey="['1234','flow']" @changestart="changeStart"></starts>
+                        </div>
+                    </div>
+                    <div class="d_relative m_t_10">
+                        <div class="f_14 f_color_999">{{$t('comment.service')}}</div>
+                        <div class="starts ">
+                            <starts :num="0" margin=".2" canused="true" xkey="['1234','service']" @changestart="changeStart"></starts>
+                        </div>
+                    </div>
+                    <div class="form-item w-full">
+                        <textarea name="" id=""  :placeholder="$t('com.form.inputComment.placeholder')"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="m_t_10 bg_w">
+                <div class="cart-item">
+                    <div class="singal">
+                        <div class="cont">
+                            <div class="sku">
+                                <div class="logo">
+                                    <img src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"
+                                         alt="">
+                                </div>
+                                <div class="info">
+                                    <div class="tit">
+                                        <a href="#">
+                                            Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                            Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                        </a>
+                                    </div>
+                                    <div class="cate">
+                                        4GB + 64GB релиз
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-box">
+                    <div class="d_relative">
+                        <div class="f_14 f_color_999">{{$t('comment.product')}}</div>
+                        <div class="starts ">
+                            <starts :num="0" margin=".2" canused="true" xkey="['1234','sku']" @changestart="changeStart"></starts>
+
+                        </div>
+                    </div>
+                    <div class="d_relative m_t_10">
+                        <div class="f_14 f_color_999">{{$t('comment.flow')}}</div>
+                        <div class="starts ">
+                            <starts :num="0" margin=".2" canused="true" xkey="['1234','flow']" @changestart="changeStart"></starts>
+                        </div>
+                    </div>
+                    <div class="d_relative m_t_10">
+                        <div class="f_14 f_color_999">{{$t('comment.service')}}</div>
+                        <div class="starts ">
+                            <starts :num="0" margin=".2" canused="true" xkey="['1234','service']" @changestart="changeStart"></starts>
+                        </div>
+                    </div>
+                    <div class="form-item w-full">
+                        <textarea name="" id=""  :placeholder="$t('com.form.inputComment.placeholder')"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="le_btn btn_blue btn_react">{{$t('com.btn.confirm')}}</div>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/components/common.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+        },
+        components: {
+            starts : starts
+        },
+        mounted: function () {
+            //修复输入法使得视窗变小bug
+            var wheight = $(window).height();
+            var sheight = $('.wrap').height();
+            $('.scroll').height(sheight);
+            $(window).resize(function(){
+                    $('.le_btn').hide();
+                     if($(window).height() == wheight){
+                         $('.le_btn').show();
+                     }
+            })
+
+
+        },
+        created: function () {
+        },
+        methods: {
+            changeStart : function(obj,key){
+                console.log(obj);
+                console.log(key);
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,162 @@
+@import '../comomn/_mixin';
+$bgUrl :'../../images/user/fav/';
+body{
+  background: #F4F4F4;
+}
+.Fav{
+  overflow: visible!important;
+  background: #F4F4F4;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    .scroll{
+      display: block;
+    }
+  }
+  .actives{
+    background: #fff;
+    overflow: hidden;
+    @include px2rem('margin-top',10px);
+    .active-tit{
+      i{
+        @include bg-image($bgUrl+'flag');
+        @include wh(16px,16px);
+        display: inline-block;
+        vertical-align: middle;
+        @include px2rem('margin-right',10px);
+      }
+      color: #fff;
+      @include px2px('font-size',24px);
+      background:#ff2929;
+      border-radius:0 52px 52px 0;
+      @include px2rem('line-height',24px);
+      @include px2rem('margin-top',15px);
+      @include px2rem('margin-bottom',3px);
+      box-sizing: border-box;
+      @include px2rem('padding-left',15px);
+      @include px2rem('padding-right',15px);
+      display: inline-block;
+    }
+    .cart-split{
+      width:percentage(335/375);
+      @include px2rem('height',1.09px);
+      background: #f4f4f4;
+      margin-left:percentage((375-335)/375);
+    }
+  }
+  .cart-item {
+    width: 100%;
+    overflow: hidden;
+    .cont {
+      width: percentage(477/377);
+      @include px2rem('height', 120px);
+      display: block;
+      background: #fff;
+      transition: transform .3s ease;
+      position: relative;
+      .shoteOut{
+        position: absolute;
+        width: percentage(377/477);
+        height:100%;
+        .shadow{
+          background: #000;
+          opacity: .5;
+          width:100%;
+          height:100%;
+          position: absolute;
+
+        }
+        i{
+          @include wh(96px,87px);
+          display: block;
+          @include bg-image($bgUrl+'shoteOut');
+          @include  px2rem('right',33px);
+          @include px2rem('top',17px);
+          position: absolute;
+        }
+      }
+      &.move {
+        transform: translate3D(-2.6rem,0,0);
+        .del{
+          opacity: 1;
+        }
+      }
+      .sku {
+        width: percentage(377/477);
+        @include px2rem('height', 120px);
+        @include px2rem('padding-left',40px);
+        @include px2rem('padding-top',20px);
+        box-sizing: border-box;
+        position: relative;
+
+        @include fl();
+        .le-num-control{
+          @include px2rem('right',20px);
+          @include px2rem('top',70px);
+        }
+        .logo{
+          @include fl();
+          @include px2rem('height',80px);
+          @include px2rem('width',80px);
+          image{
+            width:100%;
+            height:100%;
+          }
+        }
+        .info{
+          @include fl();
+          //@include px2rem('width',212px);
+          @include px2rem('margin-left',10px);
+          width:65%;
+          .tit{
+
+              color: #666;
+
+            @include px2px('font-size',28px);
+            display:-webkit-box;
+            -webkit-box-orient:vertical;
+            -webkit-line-clamp:2;
+            line-height:1.25;
+            width:100%;
+            overflow: hidden;
+            line-height: 1.1em;
+          }
+          .price{
+            @include px2px('font-size',28px);
+            color:#666666;
+            @include px2rem('margin-top',25px);
+          }
+        }
+
+      }
+      &>.del {
+        width: percentage(100 / 477);
+        @include px2rem('height', 120px);
+        background: #4a4a4a;
+        @include fl();
+        opacity: 0;
+        transition:opacity .3s ease;
+        &:after {
+          content: '';
+          @include px2rem('height', 120px);
+          @include px2rem('width', 22px);
+          @include bg-image($bgUrl+'del');
+          background-position: center center;
+          display: block;
+          position: absolute;
+          @include px2rem('margin-left',39px);
+        }
+      }
+    }
+  }
+}
+.empty-cont{
+  .empty-logo{
+    @include bg-image($bgUrl+'empty');
+    @include wh(142px,141px);
+    margin-top:30%;
+  }
+}

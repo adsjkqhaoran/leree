@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>user</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/user/user.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="User" v-cloak>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.306">
+                <!--user-box-->
+                <a href="/view/user/account.html" class="user-box">
+                    <!--头像部分-->
+                    <div class="account-logo-cont" >
+                        <div class="circle">
+                        </div>
+                        <div class="img-hold">
+                            <template v-if="userInfo.image_url">
+                                <img :src="userInfo.image_url" alt="">
+                            </template>
+                            <template v-else>
+                                <img src="../../images/user/user/defaultLogo@3x.png" alt="">
+                            </template>
+                        </div>
+                    </div>
+                    <!--/头像部分-->
+                    <div class="user-name">
+                        <template v-if="userInfo.nick_name">
+                            {{userInfo.nick_name}}
+                        </template>
+                        <template v-else>
+                            {{$t('user.noNickName')}}
+                        </template>
+                        <div class="user-id" v-if="userInfo.user_code">
+                            ID：{{userInfo.user_code}}
+                        </div>
+                    </div>
+                </a>
+                <!--/user-box-->
+                <!--my-order-->
+                <div class="my-order">
+                    <a href="/view/order/lists.html" class="my-order-tit d_flex">
+                        <div class="text f_14 f_color_666">{{$t('hot.order.myOrder')}}</div>
+                        <div class="flex_1 t_align_r f_12 f_color_999 p_lr_15">{{$t('hot.order.allOrder')}}</div>
+                        <div class="s_arrow dark"></div>
+                    </a>
+                    <div class="my-order-center">
+                        <a class="order-center-item" href="/view/order/lists.html?tabIndex=1">
+                                <i class="icon-waitpay">
+                                    <dt v-if="orderCenter.wait_pay">{{orderCenter.wait_pay}}</dt>
+                                </i>
+                                <p>{{$t('hot.order.waitPay')}}</p>
+
+                        </a>
+                        <a class="order-center-item" href="/view/order/lists.html?tabIndex=2">
+                            <i class="icon-waitsend">
+                                <dt v-if="orderCenter.wait_delivery">{{orderCenter.wait_delivery}}</dt>
+                            </i>
+                            <p>{{$t('hot.order.waitSend')}}</p>
+                        </a>
+                        <a class="order-center-item" href="/view/order/lists.html?tabIndex=3">
+                            <i class="icon-send">
+                                <dt v-if="orderCenter.wait_receipt">{{orderCenter.wait_receipt}}</dt>
+                            </i>
+                            <p>{{$t('hot.order.send')}}</p>
+                        </a>
+                        <a class="order-center-item" href="/view/order/backLists.html">
+                            <i class="icon-receive"></i>
+                            <p>{{$t('hot.order.exchange')}}</p>
+                        </a>
+                        <div class="clearFloat"></div>
+                    </div>
+                </div>
+                <!--/my-order-->
+                <div class="m_t_10 bg_w">
+                    <a href="/view/coupon/coupon.html" href="javascript:void(0);" class="user-li d_flex p_15">
+                        <i class="icon-coupon"></i>
+                        <div class="flex_1 t_align_l p_l_10 f_14 f_color_666">{{$t('user.coupon')}}</div>
+                        <div class="s_arrow dark"></div>
+                    </a>
+                    <a href="/view/order/editAdress.html" class="user-li d_flex p_15">
+                        <i class="icon-address"></i>
+                        <div class="flex_1 t_align_l p_l_10 f_14 f_color_666">{{$t('user.sendAddress')}}</div>
+                        <div class="s_arrow dark"></div>
+                    </a>
+                    <a href="/view/user/account.html" class="user-li d_flex p_15">
+                        <i class="icon-account"></i>
+                        <div class="flex_1 t_align_l p_l_10 f_14 f_color_666">{{$t('user.myAccount')}}</div>
+                        <div class="s_arrow dark"></div>
+                    </a>
+                </div>
+                <div class="m_t_10 bg_w">
+                    <a href="javascript:void(0);" class="user-li d_flex p_15">
+                        <i class="icon-service"></i>
+                        <div class="flex_1 t_align_l p_l_10 f_14 f_color_666">{{$t('user.service')}}</div>
+                        <div class="s_arrow dark"></div>
+                    </a>
+                    <a href="/view/user/setting.html" class="user-li d_flex p_15">
+                        <i class="icon-setting"></i>
+                        <div class="flex_1 t_align_l p_l_10 f_14 f_color_666">{{$t('user.setting')}}</div>
+                        <div class="s_arrow dark"></div>
+                    </a>
+                </div>
+            </pull-wrap>
+        </div>
+    </div>
+    <le-foot :a-index="3"></le-foot>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/alloy_touch.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el : "#app",
+        i18n : i18n,
+        data : {
+            userInfo : {},
+            orderCenter : {}
+        },
+        components : {
+            pullWrap : pullWrap,
+            leFoot : leFoot
+        },
+        mounted : function(){
+            var xthis = this;
+            this.initLogoImg();
+            $(function(){
+                appTools.isUserLogined(true);
+                xthis.getStorage();
+                xthis.initOrderCenter();
+            })
+
+        },
+        created:function(){
+        },
+        methods:{
+            ajaxGetOrderCenter : function(){
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                                "opt": "order", //*
+                                "cmd": "get_order_statistic" //*
+                            }),
+                    type: 'post',dataType:'json',
+                    cache:false
+                });
+            },
+            initOrderCenter : function(){
+                var xthis = this;
+                ajaxInstall.com(
+                    xthis.ajaxGetOrderCenter
+                ).done(function(data){
+                    if(data&&data.err==0){
+                        xthis.orderCenter = data.data;
+                    }
+                })
+            },
+            initLogoImg : function(){
+                var animateDom = $('.account-logo-cont').find('.circle');
+                animateDom.velocity({scale:[0.9,1],opacity:[0.5,1]},{duration:1500,delay:300,loop:true});
+            },
+            getStorage : function(){
+                appTools.isUserLogined();
+                var userInfo =  appTools.userInfo;
+                if(userInfo['image_url']){
+                    userInfo['image_url'] = appTools.imgSrc(userInfo['image_url'],5);
+                }
+                //修改图片
+                this.userInfo = userInfo;
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,128 @@
+@import '../comomn/_mixin';
+$bgUrl :'../../images/user/setting/';
+body{
+  background: #F4F4F4;
+}
+.Setting{
+  overflow: visible!important;
+  background: #F4F4F4;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    .scroll{
+      display: block;
+      webkit-overflow-scrolling: touch;
+    }
+  }
+  .account-cell{
+    background: #fff;
+    @include padding-lr(15px,15px);
+    @include padding-tb(10px,10px);
+    @include border-px(1.06px,#eee,bottom);
+    &>.icon{
+      @include  wh(22px,40px);
+      display: inline-block;
+      background-position: center center;
+
+    }
+    &>.text{
+      @include px2rem('padding-left',15px);
+      &.cell-1{
+        @include l-height(40px);
+        @include font-size(16px);
+        color:#666;
+      }
+      p:nth-child(1){
+        @include font-size(14px);
+        color:#999;
+        line-height: 1.5em;
+      }
+      p:nth-child(2){
+        @include font-size(16px);
+        color:#333333;
+        line-height: 1.1em;
+      }
+    }
+    &>.bar{
+      .edit-icon{
+        @include wh(30px,40px);
+        display: inline-block;
+       &:before{
+         content: '';
+         @include bg-image($bgUrl+'edit');
+         @include wh(17px,40px);
+         background-position: center center;
+         display: block;
+         margin:auto;
+       }
+      }
+      .s_arrow{
+        @include wh(20px,41px);
+        display: inline-block;
+      }
+    }
+  }
+  //弹窗内样式
+  .edit-box{
+    background: #fff;
+    width: 100%;
+    position: absolute;
+    display: inline-block;
+    top:0px;
+    overflow: hidden;
+    width:100%;
+    bottom:0px;
+    webkit-overflow-scrolling: touch;
+    .header{
+      position: fixed;
+    }
+    .edit-cont{
+      overflow: scroll;
+      position: absolute;
+      display: block;
+      @include px2rem('top',40px);
+      bottom:0px;
+      webkit-overflow-scrolling: touch;
+    }
+  }
+  .about-img{
+    width:100%;
+    @include px2rem('height',200px);
+    background:lighten(#00A4E7,10%);
+    position: relative;
+    overflow: hidden;
+    .logo{
+      @include bg-image($bgUrl+'logo');
+      @include  wh(69px,89px);
+      display: block;
+      margin:auto;
+      @include px2rem('margin-top',40px);
+    }
+    .vesion{
+      text-align: center;
+      @include  px2rem('margin-top',30px);
+    }
+  }
+  .about-desc{
+    @include font-size(14px);
+    color: #333;
+    @include padding-lr(20px,20px);
+    @include padding-tb(20px,20px);
+    p{
+      text-indent: 2em;
+    }
+  }
+}
+.icon-about{
+  @include bg-image($bgUrl+'about');
+}
+.icon-paper{
+  @include bg-image($bgUrl+'paper');
+}
+.icon-quite {
+  @include bg-image($bgUrl+'quite');
+}

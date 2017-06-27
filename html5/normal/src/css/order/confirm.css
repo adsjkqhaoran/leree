@@ -1,0 +1,205 @@
+body {
+  background: #F4F4F4; }
+
+.EditAdress {
+  overflow: visible !important;
+  background: #F4F4F4; }
+  .EditAdress .wrap {
+    width: 100%;
+    position: absolute;
+    top: 1.06667rem;
+    bottom: 0rem;
+    overflow: hidden; }
+    .EditAdress .wrap .scroll {
+      display: block; }
+  .EditAdress .add-address {
+    height: 1.38667rem;
+    line-height: 1.38667rem;
+    background: #fff;
+    width: 100%;
+    color: #00A4E7;
+    text-align: center;
+    margin-top: 0.26667rem;
+    -webkit-transition: background .3s ease;
+    transition: background .3s ease;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
+    .EditAdress .add-address:active {
+      background: #eee; }
+    .EditAdress .add-address span {
+      position: relative;
+      padding-left: 0.4rem;
+      font-size: 14px; }
+      .EditAdress .add-address span:before {
+        content: '';
+        display: inline-block;
+        background-image: url("../../images/order/order/editAdressaddblue@2x.png");
+        -webkit-background-size: 100% 100%;
+                background-size: 100%;
+        background-repeat: no-repeat;
+        width: 0.66667rem;
+        height: 1.38667rem;
+        background-position: center center;
+        position: absolute;
+        left: -0.4rem; }
+        [data-dpr="3"] .EditAdress .add-address span:before {
+          background-image: url("../../images/order/order/editAdressaddblue@3x.png"); }
+      [data-dpr="2"] .EditAdress .add-address span {
+        font-size: 28px; }
+      [data-dpr="2.5"] .EditAdress .add-address span {
+        font-size: 35px; }
+      [data-dpr="2.75"] .EditAdress .add-address span {
+        font-size: 39px; }
+      [data-dpr="3"] .EditAdress .add-address span {
+        font-size: 42px; }
+      [data-dpr="4"] .EditAdress .add-address span {
+        font-size: 28px; }
+  .EditAdress .order-address {
+    width: 100%;
+    height: 2.13333rem;
+    line-height: 2.13333rem;
+    background: #fff;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    display: -webkit-box;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    text-align: center;
+    color: #666666;
+    position: relative; }
+    .EditAdress .order-address:nth-child(1) {
+      margin-top: 0.26667rem; }
+    .EditAdress .order-address:nth-child(2) {
+      margin-top: 0.26667rem; }
+    .EditAdress .order-address:nth-child(n+2) {
+      border-bottom-width: 0.02827rem;
+      border-bottom-style: solid;
+      border-bottom-color: #eee; }
+    .EditAdress .order-address .address-default {
+      position: absolute;
+      background-image: url("../../images/order/order/editAdressdefault@2x.png");
+      -webkit-background-size: 100% 100%;
+              background-size: 100%;
+      background-repeat: no-repeat;
+      width: 1.33333rem;
+      height: 1.36rem;
+      display: block;
+      top: 0px;
+      right: 0px; }
+      [data-dpr="3"] .EditAdress .order-address .address-default {
+        background-image: url("../../images/order/order/editAdressdefault@3x.png"); }
+    .EditAdress .order-address .address-edit {
+      width: 0.66667rem;
+      height: 0.66667rem;
+      position: absolute;
+      bottom: 0px;
+      right: 0.26667rem; }
+      .EditAdress .order-address .address-edit:after {
+        content: '';
+        background-image: url("../../images/order/order/editAdressedit@2x.png");
+        -webkit-background-size: 100% 100%;
+                background-size: 100%;
+        background-repeat: no-repeat;
+        width: 0.42667rem;
+        height: 0.48rem;
+        display: block; }
+        [data-dpr="3"] .EditAdress .order-address .address-edit:after {
+          background-image: url("../../images/order/order/editAdressedit@3x.png"); }
+    .EditAdress .order-address > .content {
+      padding: 0.4rem;
+      padding-top: 5%;
+      font-size: 12px;
+      line-height: 1.1em;
+      text-align: left; }
+      [data-dpr="2"] .EditAdress .order-address > .content {
+        font-size: 24px; }
+      [data-dpr="2.5"] .EditAdress .order-address > .content {
+        font-size: 30px; }
+      [data-dpr="2.75"] .EditAdress .order-address > .content {
+        font-size: 33px; }
+      [data-dpr="3"] .EditAdress .order-address > .content {
+        font-size: 36px; }
+      [data-dpr="4"] .EditAdress .order-address > .content {
+        font-size: 24px; }
+      .EditAdress .order-address > .content .col_2 {
+        margin-top: 0.26667rem;
+        vertical-align: middle; }
+    .EditAdress .order-address > i {
+      background-image: url("../../images/order/order/editAdressaddress@2x.png");
+      -webkit-background-size: 100% 100%;
+              background-size: 100%;
+      background-repeat: no-repeat;
+      width: 0.74667rem;
+      height: 0.8rem;
+      display: inline-block;
+      vertical-align: middle; }
+      [data-dpr="3"] .EditAdress .order-address > i {
+        background-image: url("../../images/order/order/editAdressaddress@3x.png"); }
+  .EditAdress .new-address-pop .content > .box {
+    background: #fff;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    display: inline-block; }
+    .EditAdress .new-address-pop .content > .box .new-address-box {
+      height: 10.93333rem;
+      overflow: scroll;
+      margin: auto;
+      margin-top: 1.2rem;
+      padding-bottom: 1.6rem;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box; }
+      .EditAdress .new-address-pop .content > .box .new-address-box .form-item i {
+        display: block;
+        position: absolute;
+        top: 0px;
+        width: 0.4rem;
+        height: 1.06667rem;
+        background-position: center center;
+        margin-left: 0.53333rem; }
+        .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.user-icon {
+          background-image: url("../../images/order/order/editAdressusername@2x.png");
+          -webkit-background-size: 100% 100%;
+                  background-size: 100%;
+          background-repeat: no-repeat; }
+          [data-dpr="3"] .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.user-icon {
+            background-image: url("../../images/order/order/editAdressusername@3x.png"); }
+        .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.tel-icon {
+          background-image: url("../../images/order/order/editAdresstelphone@2x.png");
+          -webkit-background-size: 100% 100%;
+                  background-size: 100%;
+          background-repeat: no-repeat; }
+          [data-dpr="3"] .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.tel-icon {
+            background-image: url("../../images/order/order/editAdresstelphone@3x.png"); }
+        .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.email-icon {
+          background-image: url("../../images/order/order/editAdressemail@2x.png");
+          -webkit-background-size: 100% 100%;
+                  background-size: 100%;
+          background-repeat: no-repeat; }
+          [data-dpr="3"] .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.email-icon {
+            background-image: url("../../images/order/order/editAdressemail@3x.png"); }
+        .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.code-icon {
+          background-image: url("../../images/order/order/editAdresscode@2x.png");
+          -webkit-background-size: 100% 100%;
+                  background-size: 100%;
+          background-repeat: no-repeat; }
+          [data-dpr="3"] .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.code-icon {
+            background-image: url("../../images/order/order/editAdresscode@3x.png"); }
+        .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.area-icon {
+          background-image: url("../../images/order/order/editAdressarea@2x.png");
+          -webkit-background-size: 100% 100%;
+                  background-size: 100%;
+          background-repeat: no-repeat; }
+          [data-dpr="3"] .EditAdress .new-address-pop .content > .box .new-address-box .form-item i.area-icon {
+            background-image: url("../../images/order/order/editAdressarea@3x.png"); }
+    .EditAdress .new-address-pop .content > .box .le_btn {
+      position: absolute;
+      bottom: 0px;
+      display: block;
+      width: 100%; }

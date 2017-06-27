@@ -1,0 +1,257 @@
+@import '../comomn/_mixin';
+$bgUrl :'../../images/user/login/';
+body{
+  background: #1A1A1A;
+}
+.user-bg{
+  //background: url('../../images/user/login/bg@1x.png') no-repeat;
+  background: #000;
+  background-size:100% 100% ;
+}
+
+.User{
+   .header{
+     border-bottom:none;
+   }
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',0px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    .scroll{
+      display: block;
+      min-height: 100%;
+    }
+  }
+  .Login{
+    display: flex;
+    display: -webkit-box;
+    flex-direction: column;
+    flex-box-direction: column;
+    margin:auto;
+    height:100%;
+    @at-root .logo{
+      @include px2rem('width',97px);
+      @include px2rem('height',97px);
+      @include bg-image($bgUrl+'logo');
+      margin:auto;
+      display: block;
+      @include px2rem('margin-top',40px);
+    }
+    .autoflex{
+      flex:1 1 2.7rem;
+    }
+    .share{
+      @include px2rem('width',295px);
+      margin:auto;
+      display: block;
+      .tit{
+        width:100%;
+        @include px2rem('height',18px);
+        @include px2rem('line-height',18px);
+        display:inline-block;
+        position: relative;
+        text-align: center;
+        color: #666;
+        @include px2px('font-size',32px);
+        &:before{
+          content:'';
+          @include px2rem('width',63px);
+          @include px2rem('height',1.09px);
+          position: absolute;
+          top:50%;
+          left:0%;
+          background: #666;
+        }
+        &:after{
+          content:'';
+          @include px2rem('width',63px);
+          @include px2rem('height',1.09px);
+          position: absolute;
+          top:50%;
+          right:0%;
+          background: #666;
+        }
+      }
+      .icon{
+        width:100%;
+        @include px2rem('padding-top',28px);
+        @include px2rem('height',28px);
+        li{
+          height:100%;
+          display: inline-block;
+          a{
+            background-position:center center;
+            display: block;
+            margin:auto;
+            @include px2rem('height',28px);
+          }
+          &:nth-child(1){
+            width:percentage(0.3/1.6);
+            a{
+              @include px2rem('width',26px);
+              @include bg-image($bgUrl+'twitter');
+            }
+          }
+          &:nth-child(2){
+            width:percentage(0.9/1.6);
+            a{
+              @include px2rem('width',15px);
+              @include bg-image($bgUrl+'facebook');
+            }
+          }
+          &:nth-child(3){
+            width:percentage(0.3/1.6);
+            a{
+              @include px2rem('width',26px);
+              @include bg-image($bgUrl+'wk');
+            }
+          }
+        }
+      }
+    }
+    .forget-tip{
+      text-align: center;
+      @include px2px('font-size',32px);
+      color:#999999;
+    }
+    .register-tip{
+      color:#999999;
+      text-align: center;
+      @include px2rem('margin-top',25px);
+      @include px2px('font-size',24px);
+      @include px2rem('margin-bottom',35px);
+      span{
+        color:#00a4e7;
+      }
+    }
+  }
+  .Register{
+    display: flex;
+    display: -webkit-box;
+    flex-direction: column;
+    flex-box-direction: column;
+    width:100%;
+    min-height: 100%;
+    .register-tips{
+      text-align: center;
+      @include px2rem('margin-top',30px);
+    }
+    .tologin-tip{
+      position: absolute;
+      @include px2rem('bottom',30px);
+      text-align: center;
+      width:100%;
+      color: #666;
+    }
+  }
+  .Register2{
+    display: flex;
+    display: -webkit-box;
+    flex-direction: column;
+    flex-box-direction: column;
+    width:100%;
+    min-height: 100%;
+    .msg-send{
+      width: percentage(296/375);
+      margin:auto;
+      @include px2rem('margin-top',92px);
+    }
+  }
+  i{
+    position: absolute;
+    @include px2rem('width',30px);
+    @include px2rem('height',30px);
+    background-position: center center;
+    &.icon-user{
+      @include bg-image($bgUrl+'user');
+      @include px2rem('width',18px);
+      left:0px;
+    }
+    &.icon-paw{
+      @include bg-image($bgUrl+'paw');
+      @include px2rem('width',18px);
+      left:0px;
+    }
+    &.icon-paw-show{
+      @include px2rem('right',0px);
+      @include bg-image($bgUrl+'showpaw');
+      @include px2rem('width',26px);
+    }
+    &.icon-paw-hide{
+      right:0px;
+      @include bg-image($bgUrl+'hidepaw');
+      @include px2rem('width',26px);
+    }
+    &.icon-code{
+      @include bg-image($bgUrl+'code');
+      @include px2rem('width',23px);
+    }
+    &.icon-msg{
+      @include bg-image($bgUrl+'msg');
+      @include px2rem('width',23px);
+    }
+  }
+}
+
+@at-root .form{
+  display: block;
+  margin:auto;
+  @include px2rem('padding-top',15px);
+  @include px2rem('padding-bottom',30px);
+  .form-item-l{
+    @include px2rem('width',295px);
+    @include px2rem('padding-top',25px);
+    position: relative;
+    margin:auto;
+    @include px2rem('height',30px);
+    .input-cont{
+      position: absolute;
+      @include px2rem('left',30px);
+      @include px2rem('line-height',29px);
+      @include px2rem('height',29px);
+      right:0px;
+      display: inline-block;
+      &.half{
+        width:55%;
+      }
+      @include px2rem('border-bottom',1.099px);
+      //@include border-1px(#999);
+      border-bottom-color: #999999;
+      border-bottom-style:solid ;
+      input,input[type=text]{
+        color: #999;
+        @include px2rem('padding-left',20px);
+        background: none;
+        border:none;
+        @include px2rem('line-height',29px);
+        @include px2px('font-size',28px);
+        appearance: none;
+        display: block;
+      }
+    }
+    .msg-btn{
+      @include wh(96px,40px);
+      @include l-height(40px);
+      bottom: 0px;
+      position: absolute;
+      right: 0px;
+    }
+    .imgValidCode{
+      @include wh(96px,40px);
+      bottom: 0px;
+      position: absolute;
+      right: 0px;
+    }
+  }
+  .le_btn{
+  }
+}
+.validLogin-tip{
+  position: fixed;
+  @include px2rem('bottom',25px);
+  color: #999;
+  text-align: center;
+  width: 100%;
+}

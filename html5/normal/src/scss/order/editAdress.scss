@@ -1,0 +1,183 @@
+@import '../comomn/_mixin';
+@import '../comomn/_variable';
+$bgUrl: '../../images/order/editAdress/';
+body {
+  background: #F4F4F4;
+}
+.EditAdress{
+  overflow: visible!important;
+  background: #F4F4F4;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    .scroll{
+      display: block;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+  .add-address{
+    @include px2rem('height',52px);
+    @include px2rem('line-height',52px);
+    background: #fff;
+    width: 100%;
+    color: #00A4E7;
+    text-align: center;
+    @include px2rem('margin-top',10px);
+    transition:background .3s ease;
+    @include noSelect();
+    &:active{
+      background: #eee;
+    }
+    span{
+      &:before{
+        content: '';
+        display:inline-block;
+        @include bg-image($bgUrl+'addblue');
+        @include wh(25px,52px);
+        background-position: center center;
+        position: absolute;
+        @include px2rem('left',-15px);
+      }
+      position: relative;
+      @include px2rem('padding-left',15px);
+      @include px2px('font-size',28px);
+    }
+  }
+  .order-address{
+    &:nth-child(1){
+     @include px2rem('margin-top',10px);
+    }
+    &:nth-child(2){
+      @include px2rem('margin-top',10px);
+    }
+    &:nth-child(n+2){
+      @include border-px(1.06px,#eee,bottom);
+    }
+    width:100%;
+    @include px2rem('height',80px);
+    @include px2rem('line-height',80px);
+    background:#fff;
+    display: flex;
+    display: -webkit-box;
+    @include px2rem('padding-left',15px);
+    @include px2rem('padding-right',15px);
+    box-sizing: border-box;
+    text-align: center;
+    color:#666666;
+    position: relative;
+    .address-default{
+      position: absolute;
+      @include bg-image($bgUrl+'default');
+      @include wh(50px,51px);
+      display: block;
+      top:0px;
+      right:0px;
+    }
+    .address-edit{
+      @include wh(25px,25px);
+      position: absolute;
+      bottom:0px;
+      @include px2rem('right',10px);
+      &:after{
+        content: '';
+        @include bg-image($bgUrl+'edit');
+        @include wh(16px,18px);
+        display: block;
+      }
+    }
+    .address-del{
+      @include wh(25px,25px);
+      position: absolute;
+      bottom:0px;
+      @include px2rem('right',40px);
+      &:after{
+        content: '';
+        @include bg-image($bgUrl+'del-dark');
+        @include wh(16px,18px);
+        display: block;
+      }
+    }
+    &>.content{
+      @include px2rem('padding',15px);
+      padding-top:5%;
+      @include px2px('font-size',24px);
+      line-height:1.1em;
+      text-align: left;
+      .col_2{
+        @include px2rem('margin-top',10px);
+        vertical-align: middle;
+        @include padding-lr(0px,50px);
+      }
+    }
+    &>i{
+      @include bg-image($bgUrl+'address');
+      @include  wh(28px,30px);
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  .new-address-pop{
+    .content{
+      &>.box{
+        background: #fff;
+        width:100%;
+        position: absolute;
+        bottom:0px;
+        display: block;
+        -webkit-overflow-scrolling: touch;
+        .new-address-box {
+          @include px2rem('height',410px);
+          overflow-y: scroll;
+          margin:auto;
+          @include px2rem('margin-top',45px);
+          @include px2rem('padding-bottom',60px);
+          box-sizing: border-box;
+          -webkit-overflow-scrolling: touch;
+          .form-item{
+            i{
+              display: block;
+              position: absolute;
+              top:0px;
+              @include  wh(15px,40px);
+              background-position: center center;
+              @include px2rem('margin-left',20px);
+              &.user-icon{
+                @include bg-image($bgUrl+'username');
+              }
+              &.tel-icon{
+                @include bg-image($bgUrl+'telphone');
+              }
+              &.email-icon{
+                @include bg-image($bgUrl+'email');
+              }
+              &.code-icon{
+                @include bg-image($bgUrl+'code');
+              }
+              &.area-icon{
+                @include bg-image($bgUrl+'area');
+              }
+            }
+            .d_flex{
+              input:nth-child(2){
+                @include px2rem('padding-left',20px);
+                margin-left:4%;
+              }
+            }
+          }
+        }
+        .le_btn{
+          position: absolute;
+          bottom:0px;
+          display: block;
+          width:100%;
+        }
+      }
+    }
+
+  }
+}
+

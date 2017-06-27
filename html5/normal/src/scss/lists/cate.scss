@@ -1,0 +1,99 @@
+@import '../comomn/_mixin';
+@import '../comomn/_variable';
+$bgUrl: '../../images/lists/cate/';
+body {
+  background: #F4F4F4;
+}
+.Cate{
+  background: #F4F4F4;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    .scroll{
+      display: block;
+      width:100%;
+    }
+  }
+  .left-wrap{
+    width:percentage(110/375);
+    position: absolute;
+    @include px2rem('top',0px);
+    @include px2rem('bottom',0px);
+    @include px2rem('left',0px);
+    overflow: hidden;
+    background: #f4f4f4;
+    .left-cate-ul{
+      li{
+       box-sizing: border-box;
+        @include padding-tb(25px,25px);
+        @include padding-lr(15px,15px);
+        color:#666666;
+        @include font-size(12px);
+        @include border-px(1.06px,#eee,top);
+        &.active{
+          background: #fff;
+          @include border-px(4px,#00A4E7,left);
+          @include border-px(1.06px,#f4f4f4,top);
+        }
+        p{
+          @include px2rem('width',70px);
+          text-align: center;
+        }
+      }
+    }
+  }
+  .right-wrap{
+    width:percentage((375 - 110)/375);
+    position: absolute;
+    @include px2rem('top',0px);
+    @include px2rem('bottom',0px);
+    @include px2rem('right',0px);
+    overflow: hidden;
+    background: #fff;
+    @include border-px(1.06px,#f4f4f4,top);
+    .right-item{
+      @include px2rem('padding',2px);
+      .item-img{
+        width:100%;
+        img{
+        }
+      }
+      .item-group{
+        @include px2rem('margin-top',5px);
+        .item-group-name{
+          color:#666666;
+          @include font-size(12px);
+          text-align: center;
+          @include l-height(50px);
+        }
+        .item-group-ul{
+          li{
+            width:33%;
+            @include fl();
+            box-sizing: border-box;
+            @include padding-lr(15px,15px);
+            @include px2rem('height',95px);
+            @include px2rem('margin-top',5px);
+            .imghold{
+              @include wh(60px,60px);
+              overflow: hidden;
+              img{
+                width:100%;
+              }
+            }
+            p{
+              color:#666666;
+              @include font-size(10px);
+              text-align: center;
+              @include px2rem('margin-top',5px);
+              line-height: 1.1em;
+            }
+          }
+        }
+      }
+    }
+  }
+}

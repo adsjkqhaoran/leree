@@ -1,0 +1,28 @@
+@import '../comomn/_mixin';
+$bgUrl :'../../images/state/';
+body{
+  background: #F4F4F4;
+}
+.state-404{
+  overflow: visible!important;
+  background: #F4F4F4;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    .scroll{
+      display: block;
+      webkit-overflow-scrolling: touch;
+    }
+  }
+  .tips-logo{
+    @include bg-image($bgUrl+'404');
+    @include wh(247px,182px);
+    display: block;
+    margin:auto;
+    @include px2rem('margin-top',120px);
+  }
+}

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>editAdress</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/editAdress.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="EditAdress" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('editAdress.header')}}</div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.06">
+                <lists-animate>
+                <div class="order-address"  v-for="(item,index) in adressList" :key="item.id">
+                    <i class=""></i>
+                    <div class="content flex_1" @click="orderSelect(item.id)">
+                        <div class="d_flex">
+                            <div class="flex_1">{{item.full_name.replace('|',' ')}}</div>
+                            <div class="flex_1">{{item.mobile}}</div>
+                        </div>
+                        <div class="col_2">{{item.province_name}} {{item.city_name}} {{item.area_name}} {{item.street}} ({{item.zip}})</div>
+                    </div>
+                    <div class="address-default" v-if="item.is_default"></div>
+                    <div class="address-del" @click="delAdress(item.id,index)"></div>
+                    <div class="address-edit" @click="editAdress(item.id)"></div>
+                </div>
+                </lists-animate>
+                <!--<div class="order-address">-->
+                    <!--<i class=""></i>-->
+                    <!--<div class="content flex_1">-->
+                        <!--<div class="d_flex">-->
+                            <!--<div class="flex_1">Khrushkova Alena</div>-->
+                            <!--<div class="flex_1">86 8911888886</div>-->
+                        <!--</div>-->
+                        <!--<div class="col_2">Kostyukova 1a appВнешний аккумулятор LeTV Super 40БЕЛГОРОД, (190008)</div>-->
+                    <!--</div>-->
+                    <!--<div class="address-del"></div>-->
+                    <!--<div class="address-edit"></div>-->
+                <!--</div>-->
+
+                <div class="add-address" @click="showNewSlide(),disableEditState()">
+                    <span>{{$t('com.btn.newAdress')}}</span>
+                </div>
+            </pull-wrap>
+        </div>
+    </div>
+    <new-slide-pop :state="isShowNewSlide" width-rem="10" direct="bottom" duration="250" slide-class="new-address-pop"
+                   opacity=".8" v-cloak>
+        <div class="box" v-if="!isEdit">
+            <div class="pop_close" @click="hideNewSlide"></div>
+            <div class="new-address-box" id="edit-form">
+                <div class="form-item " >
+                    <i class="user-icon"></i>
+                    <div class="d_flex">
+                        <input
+                                type="text"
+                                id="giveName"
+                                name="giveName"
+                                class="flex_1"
+                                value=""
+                                required
+                                :pattern="$t('regex.limit50')"
+                                :placeholder="$t('com.form.giveName.placeholder')"
+                                style="width:45%;"
+                        />
+                        <input
+                                type="text"
+                                id="familyName"
+                                name="familyName"
+                                class="flex_2"
+                                value=""
+                                required
+                                :pattern="$t('regex.limit50')"
+                                :placeholder="$t('com.form.familyName.placeholder')"
+                                style="width: 49%;"
+                        />
+
+                    </div>
+
+                </div>
+                <div class="form-item">
+                    <i class="quhao">+{{$t('com.form.quhao')}}</i>
+                    <input
+                           type="text"
+                           id="mobile"
+                           name="mobile"
+                           required
+                           :pattern="$t('regex.tel')"
+                            value=""
+                           :placeholder="$t('com.form.tel.placeholder')"
+                           :notMatchTips="$t('com.form.tel.notMatchTips')"
+                    />
+                </div>
+                <div class="form-item">
+                    <i class="email-icon"></i>
+                    <input
+                            type="text"
+                            id="email"
+                            name="email"
+                            value=""
+                            required
+                            :pattern="$t('regex.email')"
+                            :placeholder="$t('com.form.email.placeholder')"
+                            :notMatchTips="$t('com.form.email.notMatchTips')"
+                    />
+                </div>
+
+                <div class="form-item">
+                    <i class="area-icon"></i>
+                    <input
+                            type="text"
+                            id="city0"
+                            name="country"
+                            :value="cityJson.selected.city0.name"
+                            required
+                            readonly
+                           :placeholder="$t('com.form.country.placeholder')"
+                            @click="showCityPicker('city0')"
+                    />
+                </div>
+                <div class="form-item">
+                    <input
+                            type="text"
+                            @click="showCityPicker('city1')"
+                            :placeholder="$t('com.form.area.placeholder')"
+                            id="city1"
+                            required
+                            name="area"
+                            :value="cityJson.selected.city1.name"
+                    />
+                    <div class="s_arrow"></div>
+                </div>
+                <div class="form-item">
+                    <input
+                            type="text"
+                            @click="showCityPicker('city2')"
+                            readonly="readonly"
+                            id="city2"
+                            required
+                            name="city"
+                           :value="cityJson.selected.city2.name"
+                            :placeholder="$t('com.form.city.placeholder')"
+                    />
+                    <div class="s_arrow"></div>
+                </div>
+                <div class="form-item">
+                    <i class="code-icon"></i>
+                    <input
+                            type="text"
+                            id="zip"
+                            name="code"
+                            required
+                            :value="cityJson.selected.city2.code||cityJson.selected.city1.code"
+                           :placeholder="$t('com.form.zipCode.placeholder')"
+                    />
+                </div>
+                <div class="form-item">
+                    <textarea
+                            id="detailAdress"
+                            name="area"
+                            value=""
+                            required
+                            :placeholder="$t('com.form.detailAdress.placeholder')"
+                    ></textarea>
+                </div>
+                <div class="form-item set-default">
+                    <le-check :is-checked="isdefault" @lecheck="defaultCheck(false)"></le-check>
+                    <span>{{$t('editAdress.setDefault')}}</span>
+                </div>
+            </div>
+            <div class="le_btn btn_blue btn_react" @click="postNew()">
+                {{$t('com.btn.save')}}
+            </div>
+        </div>
+        <div class="box" v-else>
+            <div class="pop_close" @click="hideNewSlide"></div>
+            <div class="new-address-box" id="edit-form">
+                <div class="form-item " >
+                    <i class="user-icon"></i>
+                    <div class="d_flex">
+                        <input
+                                type="text"
+                                id="giveName"
+                                name="giveName"
+                                class="flex_1"
+                                :value="editInfo.full_name.split('|')[0]"
+                                required
+                                :pattern="$t('regex.limit50')"
+                                :placeholder="$t('com.form.giveName.placeholder')"
+                                style="width:45%;"
+                        />
+                        <input
+                                type="text"
+                                id="familyName"
+                                name="familyName"
+                                class="flex_2"
+                                :value="editInfo.full_name.split('|')[1]"
+                                required
+                                :pattern="$t('regex.limit50')"
+                                :placeholder="$t('com.form.familyName.placeholder')"
+                                style="width: 49%;"
+                        />
+
+                    </div>
+
+                </div>
+                <div class="form-item">
+                    <i class="quhao">+{{$t('com.form.quhao')}}</i>
+                    <input
+                            type="text"
+                            id="mobile"
+                            name="mobile"
+                            required
+                            :pattern="$t('regex.tel')"
+                            :value="editInfo.mobile"
+                            :placeholder="$t('com.form.tel.placeholder')"
+                            :notMatchTips="$t('com.form.tel.notMatchTips')"
+                    />
+                </div>
+                <div class="form-item">
+                    <i class="email-icon"></i>
+                    <input
+                            type="text"
+                            id="email"
+                            name="email"
+                            :value="editInfo.email"
+                            required
+                            :pattern="$t('regex.email')"
+                            :placeholder="$t('com.form.email.placeholder')"
+                            :notMatchTips="$t('com.form.email.notMatchTips')"
+                    />
+                </div>
+
+                <div class="form-item">
+                    <i class="area-icon"></i>
+                    <input
+                            type="text"
+                            id="city0"
+                            name="country"
+                            :value="cityJson.selected.city0.name"
+                            required
+                            readonly
+                            :placeholder="$t('com.form.country.placeholder')"
+                            @click="showCityPicker('city0')"
+                    />
+                </div>
+                <div class="form-item">
+                    <input
+                            type="text"
+                            @click="showCityPicker('city1')"
+                            :placeholder="$t('com.form.area.placeholder')"
+                            id="city1"
+                            required
+                            name="area"
+                            :value="cityJson.selected.city1.name"
+                    />
+                    <div class="s_arrow"></div>
+                </div>
+                <div class="form-item">
+                    <input
+                            type="text"
+                            @click="showCityPicker('city2')"
+                            readonly="readonly"
+                            id="city2"
+                            required
+                            name="city"
+                            :value="cityJson.selected.city2.name"
+                            :placeholder="$t('com.form.city.placeholder')"
+                    />
+                    <div class="s_arrow"></div>
+                </div>
+                <div class="form-item">
+                    <i class="code-icon"></i>
+                    <input
+                            type="text"
+                            id="zip"
+                            name="code"
+                            required
+                            :value="cityJson.selected.city2.code||cityJson.selected.city1.code"
+                            :placeholder="$t('com.form.zipCode.placeholder')"
+                    />
+                </div>
+                <div class="form-item">
+                    <textarea
+                            id="detailAdress"
+                            name="area"
+                            :value="editInfo.street"
+                            required
+                            :placeholder="$t('com.form.detailAdress.placeholder')"
+                    ></textarea>
+                </div>
+                <div class="form-item set-default">
+                    <le-check :is-checked="editInfo.is_default" @lecheck="defaultCheck(true)"></le-check>
+                    <span>{{$t('editAdress.setDefault')}}</span>
+                </div>
+            </div>
+            <div class="le_btn btn_blue btn_react" @click="postEdit()">
+                {{$t('com.btn.save')}}
+            </div>
+        </div>
+    </new-slide-pop>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n: i18n,
+        data: {
+            inOrder : false,//是否为订单页跳过来的
+            adressList : [],
+            isShowNewSlide: false,
+            isEdit : false,
+            isdefault : 0,
+            cityJson: {
+                selected: {
+                    city0:{},
+                    city1: {},
+                    city2: {}
+                },
+                city0:[],
+                city1: [],
+                city2: [],
+            },
+            editInfo : {}
+        },
+        components: {
+            pullWrap: pullWrap,
+            newSlidePop: slidePop,
+            leCheck: leCheck,
+            listsAnimate : listsAnimate
+        },
+        mounted: function () {
+            var xthis = this;
+            //初始化城市pick
+            $(function(){
+                var arg = appTools.parseUrlQuery(window.location.href);
+                if(arg){
+                    xthis.inOrder = arg.inOrder;
+                }
+                xthis.initAdressList();
+                appTools.setUserCookie();
+                appTools.isUserLogined();
+            })
+        },
+        created: function () {
+
+        },
+        methods: {
+            orderSelect : function(addressId){
+                var xthis = this;
+                if(xthis.inOrder){
+                    ajaxInstall.com(
+                            xthis.ajaxOrderDefault,
+                            addressId
+                    ).done(function(data){
+                        if(data.err==0){
+                            window.location = "/view/order/order.html";
+                        }
+                    })
+                }
+            },
+            ajaxOrderDefault : function(addressId){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData(
+                            {
+                                "opt": "1",
+                                "cmd": "18"
+                            },{
+                                "address_id": addressId
+                            }
+                    ) ,
+                    type: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            //关闭编辑状态
+            disableEditState : function(){
+                this.isEdit = false;
+            },
+            //设置默认
+            defaultCheck :function(isEdit){
+                if(isEdit){
+                    if(this.editInfo.is_default==0){
+                        this.editInfo.is_default = 1;
+                    }else{
+                        this.editInfo.is_default = 0;
+                    }
+                }else{
+                    if(this.isdefault==0){
+                        this.isdefault = 1;
+                    }else{
+                        this.isdefault = 0;
+                    }
+                }
+
+            },
+
+            ajaxDelAdress : function(id){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "17", //*
+                    },{
+                        "address_id":id  //* 收货地址ID
+                    }),
+                    type: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            ajaxAdressList : function(){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "14"
+                    }),
+                    type: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            ajaxSaveAdress : function(address_id,full_name,province_code,province_name,city_code,city_name,area_code,area_name,street,zip,mobile,email,is_default){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data:appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "16"
+                    },{
+                        "uid": appTools.userInfo.user_code, //* 用户编号（wap端不用传）
+                        "address_id":address_id,  //* 收货地址ID
+                        "full_name":full_name,  //* 姓|名 。例如：zhong|dahui
+                        "province_code":province_code,  //* 国
+                        "province_name":province_name,  //*
+                        "city_code":city_code,  //* 洲
+                        "city_name":city_name,  //*
+                        "area_code":area_code,  //* 市
+                        "area_name":area_name,  //*
+                        "street":street,  //* 街道
+                        "zip":zip,  //* 邮编
+                        "mobile":mobile,  //* 收货人手机
+                        "email":email,  //* 收货人邮箱
+                        "is_default":is_default  //* 是否设置为默认地址，1是，0否，默认为不
+                    }),
+                    type: 'get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+            ajaxEditAdress : function(addressId){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data:appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "15"
+                    },{
+                        "address_id":addressId  //* 收货地址ID
+                    }),
+                    type: 'Get',
+                    cache: false,
+                    dataType: "jsonp"
+                });
+            },
+
+
+            initAdressList : function(){
+                var xthis = this;
+                ajaxInstall.com(
+                    xthis.ajaxAdressList
+                ).done(function(data){
+                    if(data.err==0){
+                        if(data.data){
+                            var dataLists = _.sortBy(data.data,'is_default');
+                            var defaultData = dataLists.pop();
+                            dataLists.unshift(defaultData);
+                            xthis.adressList = dataLists;
+                        }
+                    }
+                }).then(function(){
+                    xthis.initCityPick(1, 1);
+                })
+            },
+            delAdress : function(id,index){
+                var xthis = this;
+                appTools.confirm(vm.$t('hot.tips.confirmDel'),{
+                    confirm : function(){
+                        ajaxInstall.com(
+                                xthis.ajaxDelAdress,
+                                id
+                        ).done(function(data){
+                            if(data.err==0){
+                                xthis.adressList.splice(index,1);
+                            }
+                        })
+                    }
+                });
+            },
+            editAdress : function(id){
+                var xthis = this;
+                ajaxInstall.com(
+                        xthis.ajaxEditAdress,
+                        id
+                ).done(function(data){
+                    if(data.err==0){
+                        xthis.editInfo = data.data;
+                        xthis.isEdit = true;
+                        //刷新地址
+                        xthis.cityJson.selected.city0 = {
+                            'id': data.data.province_code,
+                            'name':data.data.province_name
+                        };
+                        xthis.cityJson.selected.city1 = {
+                            'id': data.data.city_code,
+                            'name':data.data.city_name
+                        };
+                        xthis.cityJson.selected.city2 = {
+                            'id': data.data.area_code,
+                            'name':data.data.area_name,
+                            'code' :data.data.zip
+                        };
+                        xthis.showNewSlide();
+                    }
+                })
+            },
+
+            showNewSlide: function () {
+                //修复输入法使得视窗变小bug
+                var height = $(window).height();
+                $('.new-address-pop').height(height);
+                this.isShowNewSlide = true;
+            },
+            hideNewSlide: function () {
+                this.isShowNewSlide = false;
+            },
+
+            //初始化城市数据
+            initCityPick: function (depth, id, callback) {
+                var xthis = this;
+                ajaxInstall.com(
+                        appTools.ajax.getCity,
+                        id
+                        )
+                        .done(function (data) {
+                            if (data.err == 0) {
+                                var tempCityJson = [];
+                                _.each(data.data, function (item, key) {
+                                    tempCityJson.push({
+                                        label: item.name,
+                                        value: item.id + '|' + item.zip_code
+                                    });
+                                })
+                                xthis.cityJson['city' + depth] = tempCityJson;
+                                if (callback) {
+                                    callback('city' + depth)
+                                }
+                            }
+                        })
+
+            },
+            /**
+             * 把请求来的picker数据出入picker
+             * @param cityIndex pick的id
+             */
+            inSertCityPickData: function (cityIndex) {
+                var xthis = this;
+                weui.picker(xthis.cityJson[cityIndex], {
+                    onChange: function (result) {
+                    },
+                    onConfirm: function (result) {
+                        var infoArr = result[0].value.split('|');
+                        xthis.cityJson.selected[cityIndex] = {name: result[0].label, id: infoArr[0], code: infoArr[1]};
+                    },
+                    cancel: vm.$t('com.btn.cancel'),
+                    confirm: vm.$t('com.btn.confirm'),
+                    depth: 1,
+                    id: cityIndex
+                });
+            },
+            /**
+             * 通过选择的pick不同请求不同的城市数据
+             * @param city
+             */
+            showCityPicker: function (city) {
+                var xthis = this;
+                var strategy = {};
+                appTools.rHightInput('#edit-form');
+                strategy['city0'] = function () {
+                    xthis.initCityPick(0,0,xthis.inSertCityPickData)
+                    xthis.cityJson.selected.city1 = {};
+                    xthis.cityJson.selected.city2 = {};
+                }
+                strategy['city1'] = function () {
+                    if (_.isEmpty(xthis.cityJson.selected['city0'])) {
+                        appTools.hightInput('#edit-form', $('#city0'));
+                        Vue.$toast({message: xthis.$t('com.form.selectTips')});
+                    }else{
+                        xthis.initCityPick(1,xthis.cityJson.selected['city0'].id,xthis.inSertCityPickData)
+                        xthis.cityJson.selected.city2 = {};
+                    }
+                }
+                strategy['city2'] = function () {
+                    if (_.isEmpty(xthis.cityJson.selected['city1'])) {
+                        appTools.hightInput('#edit-form', $('#city1'));
+                        Vue.$toast({message: xthis.$t('com.form.selectTips')});
+                    } else {
+                        //初始化城市pick
+                        xthis.initCityPick(2, xthis.cityJson.selected['city1'].id, xthis.inSertCityPickData);
+                    }
+                }
+                strategy[city]();
+            },
+
+
+            //新增表单
+            postNew: function () {
+                var xthis = this;
+                appTools.formValidate('#edit-form',{
+                    success : function(){
+//                        address_id,full_name,province_code,province_name,city_code,city_name,area_code,area_name,street,zip,mobile,email,is_default
+                        ajaxInstall.com(
+                                xthis.ajaxSaveAdress,
+                                '',
+                                $('#giveName').val()+'|'+$('#familyName').val(),
+                                xthis.cityJson.selected.city0.id,
+                                xthis.cityJson.selected.city0.name,
+                                xthis.cityJson.selected.city1.id,
+                                xthis.cityJson.selected.city1.name,
+                                xthis.cityJson.selected.city2.id,
+                                xthis.cityJson.selected.city2.name,
+                                $('#detailAdress').val(),
+                                $('#zip').val(),
+                                $('#mobile').val(),
+                                $('#email').val(),
+                                xthis.isdefault
+                        ).done(function(data){
+                            if(data.err==0){
+
+                              if(xthis.inOrder){
+                                  window.location = "/view/order/order.html";
+                              }
+                                Vue.$toast({message:vm.$t('hot.tips.eventSuccess')});
+                                xthis.hideNewSlide();
+                            }else{
+                                Vue.$toast({message:data.msg});
+                            }
+                        }).then(function(){
+                            xthis.initAdressList();
+                        })
+                    }
+                })
+            },
+            //编辑表单
+            postEdit: function () {
+                var xthis = this;
+                appTools.formValidate('#edit-form',{
+                    success : function(){
+//                        address_id,full_name,province_code,province_name,city_code,city_name,area_code,area_name,street,zip,mobile,email,is_default
+                        ajaxInstall.com(
+                                xthis.ajaxSaveAdress,
+                                xthis.editInfo.id,
+                                $('#giveName').val()+'|'+$('#familyName').val(),
+                                xthis.cityJson.selected.city0.id,
+                                xthis.cityJson.selected.city0.name,
+                                xthis.cityJson.selected.city1.id,
+                                xthis.cityJson.selected.city1.name,
+                                xthis.cityJson.selected.city2.id,
+                                xthis.cityJson.selected.city2.name,
+                                $('#detailAdress').val(),
+                                $('#zip').val(),
+                                $('#mobile').val(),
+                                $('#email').val(),
+                                xthis.editInfo.is_default
+                        ).done(function(data){
+                            if(data.err==0){
+                                Vue.$toast({message:vm.$t('hot.tips.eventSuccess')});
+                                _.delay(function(){
+                                    var arg = appTools.parseUrlQuery(window.location.href);
+                                    if(xthis.inOrder){
+                                        window.location = "/view/order/order.html";
+                                    }
+                                },300)
+                                xthis.hideNewSlide();
+                            }else{
+                                Vue.$toast({message:data.msg});
+                            }
+                        }).then(function(){
+                            xthis.initAdressList();
+                        })
+                    }
+                })
+            }
+        }
+    });
+</script>
+</html>

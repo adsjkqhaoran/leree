@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>cart</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/cart/cart.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Cart cart-bg" v-cloak >
+
+    <div class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('cart.header')}}</div>
+        <div class="editbar" v-cloak>
+            <div class="edit" v-show="!isEdit" @click="toEdit()"></div>
+            <div class="finish-edit" v-show="isEdit" @click="editPost">
+                {{$t('cart.finishEdit')}}
+            </div>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="3.6">
+                <template v-for="(item,index) in cartLists">
+                    <!--活动-->
+                    <div class="actives " v-if="item.is_full_act=='1'&&item.full_act_type=='1'">
+                        <div class="active-tit">
+                            <i></i><span>{{item.full_act_atrr}}</span>
+                        </div>
+                        <div class="cart-item" v-for="(sitem,sindex) in item.goods[0].goods_list"
+                             :goods-attr="item.cart_main_code+'|'+sitem.cart_detail_code+'|'+sitem.goods_selected+'|'+goodsLists[sitem.goods_id].goods_amount+'|'+sitem.goods_id">
+                            <div class="cont">
+                                <le-check :disable="parseInt(sitem.store) == 0" :is-checked="parseInt(sitem.goods_selected)"
+                                          @lecheck="singalCheck"></le-check>
+                                <div class="sku">
+                                    <a class="logo" :href="'/view/goods/detail.html?skuId='+sitem.goods_id">
+                                        <img :src="sitem.goods_img"
+                                             alt="">
+                                    </a>
+                                    <a class="info" v-if="!isEdit"
+                                       :href="'/view/goods/detail.html?skuId='+sitem.goods_id">
+                                        <div class="tit">
+                                            {{sitem.goods_title}}
+                                        </div>
+                                        <div class="cate">
+                                            {{sitem.goods_attr}}
+                                        </div>
+                                        <div class="price">
+                                            <span>{{sitem.goods_pice}}</span> руб
+                                        </div>
+                                    </a>
+                                    <div class="info singal-info" v-else>
+                                        <div class="cate">
+                                            {{sitem.goods_attr}}
+                                        </div>
+                                    </div>
+                                    <template v-if="parseInt(goodsLists[sitem.goods_id].goods_amount) > parseInt(sitem.store)  && parseInt(sitem.store) != 0">
+                                        <div class="stock-tips un-enough">{{$t('hot.tips.noEnoughStock')}}</div>
+                                    </template>
+                                    <template v-if=" parseInt(sitem.store) == 0">
+                                        <div class="stock-tips no-stock">{{$t('hot.tips.noStock')}}</div>
+                                    </template>
+                                    <div class="num" v-if="!isEdit">x{{goodsLists[sitem.goods_id].goods_amount}}</div>
+
+                                    <num-control
+                                            :state=true
+                                            :num="parseInt(goodsLists[sitem.goods_id].goods_amount)"
+                                            :step=1
+                                            :trace="sitem.goods_id"
+                                            :min="parseInt(sitem.start_count)"
+                                            :max="parseInt(sitem.store)"
+                                            :limit = "parseInt(sitem.max_buy_count)"
+                                            @countnumdel="numDel"
+                                            @countnumplus="numPlus"
+                                            v-else>
+                                    </num-control>
+                                </div>
+                                <div class="cart-split"></div>
+                                <div class="shoteOut" v-if="sitem.goods_status!='1'">
+                                    <div class="shadow"></div>
+                                    <i></i>
+                                </div>
+                                <div class="del">
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--/活动-->
+                    <!--单品-->
+                    <div class="signal muti" v-if="item.is_full_act=='0'">
+                        <div class="cart-item" v-for="(sitem,sindex) in item.goods[0].goods_list"
+                             :goods-attr="item.cart_main_code+'|'+sitem.cart_detail_code+'|'+sitem.goods_selected+'|'+goodsLists[sitem.goods_id].goods_amount+'|'+sitem.goods_id">
+                            <div class="cont">
+                                <le-check :disable="parseInt(sitem.store) == 0" :is-checked="parseInt(sitem.goods_selected)"
+                                          @lecheck="singalCheck"></le-check>
+                                <div class="sku">
+                                    <a class="logo" :href="'/view/goods/detail.html?skuId='+sitem.goods_id">
+                                        <img :src="sitem.goods_img"
+                                             alt="">
+                                    </a>
+                                    <a class="info" v-if="!isEdit"
+                                       :href="'/view/goods/detail.html?skuId='+sitem.goods_id">
+                                        <div class="tit">
+                                            {{sitem.goods_title}}
+                                        </div>
+                                        <div class="cate">
+                                            {{sitem.goods_attr}}
+                                        </div>
+                                        <div class="price">
+                                            <span>{{sitem.goods_pice}}</span> руб
+                                        </div>
+                                    </a>
+                                    <div class="info singal-info" v-else>
+                                        <div class="cate">
+                                            {{sitem.goods_attr}}
+                                        </div>
+                                    </div>
+                                    <template v-if="parseInt(goodsLists[sitem.goods_id].goods_amount) > parseInt(sitem.store)  && parseInt(sitem.store) != 0">
+                                        <div class="stock-tips un-enough">{{$t('hot.tips.noEnoughStock')}}</div>
+                                    </template>
+                                    <template v-if=" parseInt(sitem.store) == 0">
+                                        <div class="stock-tips no-stock">{{$t('hot.tips.noStock')}}</div>
+                                    </template>
+                                    <div class="num" v-if="!isEdit">x{{goodsLists[sitem.goods_id].goods_amount}}</div>
+                                    <num-control
+                                            :state= true
+                                            :num="parseInt(goodsLists[sitem.goods_id].goods_amount)"
+                                            :step=1
+                                            :trace="sitem.goods_id"
+                                            :min="parseInt(sitem.start_count)"
+                                            :max="parseInt(sitem.store)"
+                                            :limit = "parseInt(sitem.max_buy_count)"
+                                            @countnumdel="numDel"
+                                            @countnumplus="numPlus"
+                                            v-else>
+                                    </num-control>
+                                </div>
+
+                                <div class="cart-split" v-if="!sitem.selected_goods_gift_list"></div>
+                                <div class="shoteOut" v-if="sitem.goods_status!='1'">
+                                    <div class="shadow"></div>
+                                    <i></i>
+                                </div>
+                                <div class="del">
+                                </div>
+
+                            </div>
+                            <div class="muti-cont"
+                                 v-if="sitem.selected_goods_gift_list&&sitem.selected_goods_gift_list.length>0"
+                                 v-for="mulitem in sitem.selected_goods_gift_list">
+                                <div class="cart-icon-plus"></div>
+                                <a :href="'/view/goods/detail.html?skuId='+mulitem.goods_id" class="sku-logo ">
+                                    <img :src="mulitem.goods_img"
+                                         alt="">
+                                </a>
+                                <a :href="'/view/goods/detail.html?skuId='+mulitem.goods_id"  class="info">
+                                   {{mulitem.goods_title}}
+                                </a>
+                                <div class="num">x {{mulitem.goods_amount}}</div>
+                                <div class="change-bar" @click="showPop('change',sitem.cart_detail_code,sitem.select_goods_gift_list,sitem.single_gifts_select_num)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/单品-->
+                    <!--组合-->
+                    <!--<div class="muti">-->
+                    <!--<div class="cart-item">-->
+                    <!--<div class="cont">-->
+                    <!--<le-check :is-checked=false></le-check>-->
+                    <!--<div class="sku">-->
+                    <!--<div class="logo">-->
+                    <!--<img src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"-->
+                    <!--alt="">-->
+                    <!--</div>-->
+                    <!--<div class="info" v-if="!isEdit">-->
+                    <!--<div class="tit">-->
+                    <!--<a href="#">-->
+                    <!--Внешний аккумулятор LeTV Super Power Bank 13400 мАч-->
+                    <!--Внешний аккумулятор LeTV Super Power Bank 13400 мАч-->
+                    <!--</a>-->
+                    <!--</div>-->
+                    <!--<div class="cate">-->
+                    <!--4GB + 64GB релиз-->
+                    <!--</div>-->
+                    <!--<div class="price">-->
+                    <!--<span>461,00</span> руб-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="info singal-info" v-else>-->
+                    <!--<div class="cate">-->
+                    <!--4GB + 64GB релиз-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="num" v-if="!isEdit">x1</div>-->
+                    <!--<num-control :state=true :num=2 :step=1 @countnumdel="countNumDel" :min=3 :max=10 v-else></num-control>-->
+                    <!--</div>-->
+                    <!--<div class="del">-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+                    <!--<div class="muti-cont">-->
+                    <!--<div class="cart-icon-plus"></div>-->
+                    <!--<a href="#" class="sku-logo ">-->
+                    <!--<img src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"-->
+                    <!--alt="">-->
+                    <!--</a>-->
+                    <!--<div class="info">-->
+                    <!--<a href="#">-->
+                    <!--Внешний аккумулятор LeTV Super Power Bank 13400 мАч-->
+                    <!--Внешний аккумулятор LeTV Super Power Bank 13400 мАч-->
+                    <!--</a>-->
+                    <!--</div>-->
+                    <!--<div class="num">x 1</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--/组合-->
+                    <!--下架-->
+
+                    <!--<div class="signal">-->
+                    <!--<div class="cart-item">-->
+                    <!--<div class="cont">-->
+                    <!--<le-check :is-checked=false></le-check>-->
+                    <!--<div class="sku">-->
+                    <!--<div class="logo">-->
+                    <!--<img src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"-->
+                    <!--alt="">-->
+                    <!--</div>-->
+                    <!--<div class="info" v-if="!isEdit">-->
+                    <!--<div class="tit">-->
+                    <!--<a href="#">-->
+                    <!--Внешний аккумулятор LeTV Super Power Bank 13400 мАч-->
+                    <!--Внешний аккумулятор LeTV Super Power Bank 13400 мАч-->
+                    <!--</a>-->
+                    <!--</div>-->
+                    <!--<div class="cate">-->
+                    <!--4GB + 64GB релиз-->
+                    <!--</div>-->
+                    <!--<div class="price">-->
+                    <!--<span>461,00</span> руб-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="info singal-info" v-else>-->
+                    <!--<div class="cate">-->
+                    <!--4GB + 64GB релиз-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="num" v-if="!isEdit">x1</div>-->
+                    <!--<num-control :state=true :num=2 :step=1 @countnumdel="countNumDel" :min=3 :max=10 v-else></num-control>-->
+                    <!--</div>-->
+                    <!--<div class="del">-->
+                    <!--</div>-->
+                    <!--<div class="shoteOut">-->
+                    <!--<div class="shadow"></div>-->
+                    <!--<i></i>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+                    <!--/下架-->
+                </template>
+                <template v-if="cartLists.length==0&&hasInit">
+                    <div class="cart-empty">
+                        <div class="empty-img">
+
+                        </div>
+                        <div class="empty-tips">
+                            {{$t('hot.tips.emptyCart')}}
+                        </div>
+                        <a href="/" class="le_btn btn_blue_border empty-btn">
+                            {{$t('com.btn.goShopping')}}
+                        </a>
+                    </div>
+                </template>
+            </pull-wrap>
+        </div>
+    </div>
+    <change-slide-pop :state="slidePop.change" width-rem="10" direct="bottom" duration="250" opacity=".8">
+        <div class="change-box" id="edit-form">
+            <div class="change-scroll" v-if="giftData">
+                <div  class="cart-item" v-for="(gitem,gkey) in giftData.lists">
+                    <div class="cont">
+                        <le-check :is-checked="gitem.is_selected=='1'" @lecheck="giftSelect(gkey)"></le-check>
+                        <div class="sku"><a href="javascript:void(0);" class="logo">
+                            <img
+                                :src="gitem.goods_img"
+                                alt=""></a> <a href="javascript:void(0);" class="info">
+                            <div class="tit">
+                                {{gitem.goods_title}}
+                            </div>
+                            <div class="cate">
+                                {{gitem.goods_attr}}
+                            </div>
+                            <div class="price"><span>{{gitem.goods_pice}}</span> руб
+                            </div>
+                        </a>
+                            <div class="num">x{{gitem.goods_amount}}</div>
+                        </div> <!---->
+                        <div class="del"></div>
+                        <div class="cart-split"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="le_btn btn_react btn_blue" @click="giftSubmit">{{$t('com.btn.confirm')}}</div>
+        </div>
+    </change-slide-pop>
+    <!--结算-->
+    <div class="count-bar" v-cloak v-if="cartLists.length!=0&&hasInit">
+        <le-check :is-checked="isCheckAll" @lecheck="checkAll"></le-check>
+        <span class="count-all-tips">{{$t('cart.selectAll')}}</span>
+        <div class="count-btn" v-if="!isEdit">
+            <a href="javascipt:void(0);" @click="toOrder" class="le_btn btn_red btn_react">{{$t('com.btn.pay')}}</a>
+        </div>
+        <div class="count-btn" v-else>
+            <a href="javascript:void(0);" class="le_btn btn_blue btn_react" @click="addFav">
+                <span v-html="$t('cart.addFav')"></span>
+            </a>
+        </div>
+        <div class="count-num" v-show="!isEdit">
+            <span>{{countPrice}}</span> руб
+        </div>
+        <div class="count-del" v-show="isEdit" @click="dellPost"></div>
+
+    </div>
+    <!--/结算-->
+    <le-foot :a-index="2"></le-foot>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n: i18n,
+        data: {
+            hasInit : false,
+            isEdit: false,
+            cartLists: [],
+            goodsLists: [],
+            countPrice: 0,
+            isCheckAll: false,
+            cartLoginObj: {},
+            slidePop: {
+                change: false
+            },
+            giftData : {
+                cart_detail_code : '',
+                lists : [],
+                limit : 0,
+                selected :0
+            }
+        },
+        components: {
+            pullWrap: pullWrap,
+            leFoot: leFoot,
+            leCheck: leCheck,
+            numControl: numControl,
+            changeSlidePop: slidePop
+        },
+        mounted: function () {
+            var tapObj = {};
+            var skuDom = $('.cart-item>.cont');
+            var xthis = this;
+            //兼容自带左右滑动的浏览器= =
+//            appTools.fixSwiper();
+//            touch.on(skuDom, 'swipeleft', function (ev) {
+//                $(this).parents('.cont').addClass('move');
+//            });
+//            touch.on(skuDom, 'swiperight tap', function (ev) {
+//                $(this).parents('.cont').removeClass('move');
+//            });
+            $(function () {
+                xthis.getStorage();
+                xthis.getCartLists();
+            })
+        },
+        created: function () {
+
+        },
+        methods: {
+            addFav : function(){
+                var xthis  = this;
+                appTools.isUserLogined(true);
+                if(_.isEmpty(appTools.userInfo)){
+                    appTools.confirm(vm.$t('hot.tips.pleaseLogin'),{
+                        confirm : function(){
+                            appTools.redirect();
+                        }
+                    })
+                }else{
+                    var postGoodsArr = [];
+                     $('.cart-item').each(function(){
+                       var attrArr =  $(this).attr('goods-attr').split('|');
+                         if(attrArr[2] == 1)  {
+                             postGoodsArr.push(attrArr[4]);
+                         }
+                     });
+                    ajaxInstall.com(
+                            xthis.ajaxAddFav,
+                            postGoodsArr
+                    ).done(function(data){
+                        if(data.err==0){
+                            Vue.$toast({message:vm.$t('hot.tips.addFavSuccess')})
+                        }
+                    });
+                }
+            },
+            ajaxAddFav : function(skuIds){
+                return  $.ajax({
+                    url:appTools.api.productApi,
+                    xhrFields : {withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        "opt": "product",
+                        "cmd": "addcollect"
+                    },{
+                        skus :skuIds
+                    }),
+                    type:'post',
+                    dataType: "json"
+                });
+            },
+            ajaxGiftSubmit : function(cartCode,gifts){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data: appTools.ajax.combineDataJson({
+                        "opt": "5",
+                        "cmd": "23"
+                    },{
+                        cart_detail_code : cartCode,
+                        gifts : gifts
+                    })
+                    ,
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            giftSubmit : function(){
+                var xthis = this;
+                if(xthis.giftData.limit!=xthis.giftData.selected){
+//                  判断单复数
+                    var signal = xthis.giftData.limit=='1'?1:2;
+                    Vue.$toast({message : vm.$tc('hot.tips.giftSelectedLimitedTips',signal,[xthis.giftData.limit])});
+                    return false;
+                }
+                //拼接提交数据
+                var giftArr = [];
+                _.map(_.where(xthis.giftData.lists,{is_selected:'1'}),function(item){
+                    giftArr.push({
+                        "sku_code" : item.goods_id
+                    });
+                }) ;
+                ajaxInstall.com(
+                        xthis.ajaxGiftSubmit,
+                        xthis.giftData.cart_detail_code,
+                        giftArr
+                ).done(function(data){
+                    if(data.err==0){
+                        xthis.hidePop('change');
+                        xthis.getCartLists();
+                    }
+                })
+            },
+            giftSelect : function(key){
+                var xthis = this;
+                //是否超出限制数
+                if(xthis.giftData.lists[key].is_selected=='0'){
+                    if(xthis.giftData.selected==xthis.giftData.limit) {
+                        //                  判断单复数
+                        var signal = xthis.giftData.limit=='1'?1:2;
+                        Vue.$toast({message : vm.$tc('hot.tips.giftHasSelectedTips',signal,[xthis.giftData.limit])});
+                        return false
+                    };
+
+                }
+                //选中并增减限制数
+                xthis.giftData.lists[key].is_selected = xthis.giftData.lists[key].is_selected=='1'?'0' : '1';
+                if(xthis.giftData.lists[key].is_selected=='0'){
+                    xthis.giftData.selected --;
+                }
+                if(xthis.giftData.lists[key].is_selected=='1'){
+                    xthis.giftData.selected ++;
+                }
+            },
+            singalCheck: function (el) {
+                var xthis = this;
+                var attrArr = $(el).parents('.cart-item').attr('goods-attr').split('|');
+                var postGoodsArr = [];
+                postGoodsArr.push({
+                    "cart_main_code": attrArr[0],
+                    "cart_detail_code": attrArr[1],
+                    "goods_selected": attrArr[2] == 1 ? 0 : 1 //选中为1，未选中为0
+                });
+                ajaxInstall.com(
+                        xthis.ajaxCheck,
+                        xthis.isEdit ? '1' : '0',
+                        postGoodsArr
+                ).done(function (data) {
+                    if (data.err == 0) {
+                        xthis.renderLists(data.data);
+
+                    }
+                });
+
+            },
+            getStorage: function () {
+                appTools.isUserLogined(true);
+                this.cartLoginObj = {
+
+                    "is_login": appTools.userInfo ? 1 : 0,              //*登录标识，登陆时为1，未登录时为0
+                };
+            },
+            dellPost: function () {
+                var xthis = this;
+                ajaxInstall.com(
+                        xthis.ajaxDellPost
+                ).done(function (data) {
+                    if (data.err == 0) {
+                        xthis.renderLists(data.data);
+                        appTools.event.trigger('cartNumChange');
+                    }
+                })
+            },
+            ajaxAddOrder : function(){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data: appTools.ajax.combineDataJson({
+                        "opt": "5",
+                        "cmd": "9" //*删除选中
+                    },xthis.cartLoginObj)
+                    ,
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            toOrder : function(){
+                var xthis = this;
+                if(parseFloat(xthis.countPrice)<=0) return false;
+                ajaxInstall.com(
+                    xthis.ajaxAddOrder
+                ).done(function(data){
+                    if(data.err==0){
+                        window.location = '/view/order/order.html';
+                    }else{
+                        vm.$toast({'message':data.msg });
+                    }
+                })
+            },
+            ajaxDellPost: function () {
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data: appTools.ajax.combineDataJson({
+                                "opt": "5",
+                                "cmd": "6" //*删除选中
+                            },xthis.cartLoginObj)
+                    ,
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            ajaxEditPost: function (goods) {
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data:
+                            appTools.ajax.combineDataJson({
+                                "opt": "5",
+                                "cmd": "13",//批量更新购物车
+                            },xthis.cartLoginObj,{
+                                "goods_code": goods
+                            }),
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            editPost: function () {
+                var xthis = this;
+                //组装所有选中状态
+                var postGoodsArr = [];
+                $('.scroll').find('.cart-item').each(function () {
+                    var attrArr = $(this).attr('goods-attr').split('|');
+                    postGoodsArr.push({
+                        "cart_main_code": attrArr[0],
+                        "cart_detail_code": attrArr[1],
+                        "buy_qty": attrArr[3]
+                    });
+                });
+                if (postGoodsArr.length == 0) {
+                    xthis.isEdit = false;
+                    return false;
+                }
+                ajaxInstall.com(
+                        xthis.ajaxEditPost,
+                        postGoodsArr
+                ).done(function (data) {
+                    if (data.err == 0) {
+                        xthis.renderLists(data.data);
+                        xthis.isEdit = false;
+                        appTools.event.trigger('cartNumChange');
+                    }
+                })
+            },
+            ajaxCheck: function (state, goods) {
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data:
+                            appTools.ajax.combineDataJson({
+                                        "opt": "5",//*购物车接口
+                                        "cmd": "4", //选中接口
+                                    },
+                                    xthis.cartLoginObj,
+                                    {
+                                        "mode": state,//0浏览，1编辑
+                                        "goods_code": goods
+                                    }),
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            checkAll: function () {
+                var xthis = this;
+                //组装所有选中状态
+                var postGoodsArr = [];
+                $('.scroll').find('.cart-item').each(function () {
+                    var attrArr = $(this).attr('goods-attr').split('|');
+                    postGoodsArr.push({
+                        "cart_main_code": attrArr[0],
+                        "cart_detail_code": attrArr[1],
+                        "goods_selected": !xthis.isCheckAll ? '1' : '0' //选中为1，未选中为0
+                    });
+                });
+                ajaxInstall.com(
+                        xthis.ajaxCheck,
+                        xthis.isEdit ? '1' : '0',
+                        postGoodsArr
+                ).done(function (data) {
+                    if (data.err == 0) {
+                        xthis.renderLists(data.data);
+                    }
+                })
+
+            },
+            renderLists: function (data) {
+                var xthis = this;
+                xthis.countPrice = data.real_price;
+                xthis.cartLists = data.list;
+                //重新组装过易于修改组装的商品数据
+                xthis.goodsLists = [];
+                _.map(data.list, function (item, index) {
+                    xthis.goodsLists = [].concat.apply(xthis.goodsLists, item.goods[0].goods_list);
+                });
+                //添加key
+                xthis.goodsLists = _.indexBy(xthis.goodsLists, 'goods_id');
+                xthis.isCheckAll = data.checked_all == '0' ? false : true;
+            },
+            ajaxCartLists: function (isChecked) {
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.cartApi,
+                    data:
+                            appTools.ajax.combineDataJson({
+                                        "opt": "5",    //*5表示购物车接口
+                                        "cmd": "3",     //*1表示获取购物车数据
+                                    },
+                                    xthis.cartLoginObj,
+                                    {
+                                        "v": "1",          //*API版本号
+                                        "is_change_checked": isChecked ? 1 : 0    //*是否改变选中，为1时所有明细选中，为0时不改变选中状态
+                                    }
+                            )
+                    ,
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            getCartLists: function () {
+                var xthis = this;
+                ajaxInstall.com(
+                        xthis.ajaxCartLists,
+                        0
+                ).done(function (data) {
+                    if (data&&data.err == 0) {
+                        xthis.renderLists(data.data);
+                    }
+                }).then(function(){
+                    xthis.hasInit = true;
+                });
+            },
+            //购买数量加1
+            numPlus: function (option) {
+                if (option.state == 'invalid') {
+                    //超出库存
+                    vm.$toast({'message': this.$t('com.numControl.maxTips')});
+                    ;
+                } else if (option.state == 'limit') {
+                    //限购
+                    vm.$toast({'message': this.$t('com.numControl.limitTips', [option.info])});
+                } else {
+                    this.goodsLists[option.trace].goods_amount++;
+                }
+            },
+            //购买数据减1
+            numDel: function (option) {
+                if (option.state == 'invalid') {
+                    vm.$toast({'message': this.$t('com.numControl.minTips', [option.info])});
+                } else {
+                    this.goodsLists[option.trace].goods_amount--;
+                }
+            },
+            toEdit: function () {
+                this.isEdit = !this.isEdit;
+            },
+            showPop: function (strage) {
+                var xthis = this;
+                if(strage=='change'){
+                    xthis.giftData['cart_detail_code'] = arguments[1];
+                    xthis.giftData['lists'] = arguments[2];
+                    xthis.giftData['limit'] = arguments[3];
+                    xthis.giftData['selected'] = arguments[3];
+                }
+                this.slidePop[strage] = true;
+
+            },
+            hidePop: function (strage) {
+                this.slidePop[strage] = false;
+            }
+        }
+    });
+</script>
+</html>

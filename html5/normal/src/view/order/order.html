@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>order</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/order.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Order" v-cloak v-if="orderData">
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('order.header')}}</div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="2.5">
+                <a href="/view/order/editAdress.html?inOrder=true" class="order-address disable" v-if="!orderData.consignee">
+                    <span>{{$t('com.btn.newAdress')}}</span>
+                </a>
+                <a href="/view/order/editAdress.html?inOrder=true" class="order-address" v-else>
+                    <i class="flex_0"></i>
+                    <div class="content flex_1">
+                        <div class="d_flex">
+                            <div class="flex_1">{{orderData.consignee.name}}</div>
+                            <div class="flex_1">{{orderData.consignee.phone}}</div>
+                        </div>
+                        <div class="col_2">{{orderData.consignee.address}}</div>
+                    </div>
+                    <div class="s_arrow white flex_0"></div>
+                </a>
+                <!--订单列表-->
+                <div class="order-box">
+                    <div class="tit">{{$t('order.orderLists')}}</div>
+                    <div class="order-list">
+                        <div class="cart-item">
+
+
+
+                            <div v-for="item  in orderData.goods" :class="{singal:item.pro_type==1,'muti-no':item.pro_type!=1}">
+                                <div class="cont" v-if="item.pro_type==1">
+                                    <div class="sku">
+                                        <div class="logo">
+                                            <img :src="appTools.imgSrc(item.img,8)"
+                                                 alt="">
+                                        </div>
+                                        <a :href="'/view/goods/detail.html?skuId='+item.sku" class="info">
+                                            <div class="tit">
+                                                   {{item.name}}
+                                            </div>
+                                            <div class="cate">
+                                                {{item.attr}}
+                                            </div>
+
+                                        </a>
+                                        <div class="price">
+                                            <span>{{item.show_price}}</span> руб   x <span>{{item.qty}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="muti-cont"   v-if="item.pro_type==2 ||item.pro_type==3">
+                                        <div class="cart-icon-plus"></div>
+                                        <a href="#" class="sku-logo ">
+                                            <img :src="appTools.imgSrc(item.img,8)"
+                                                 alt="">
+                                        </a>
+                                        <div class="info">
+                                            <a :href="'/view/goods/detail.html?skuId='+item.sku">
+                                                {{item.name}}
+                                            </a>
+                                        </div>
+                                        <div class="num">x {{item.qty}}</div>
+                                    </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <!--/订单列表-->
+
+                <!--其他-->
+                <div class="other-box">
+                    <div class="item  actives d_flex">
+                        <i class="logo "></i>
+                        <div class="text flex_1">{{$t('order.disCount')}}</div>
+                        <div class="bar ">-{{orderData.pref_money}} руб</div>
+                    </div>
+                    <div class="item  coupon d_flex" @click="showCouponPop">
+                        <i class="logo "></i>
+                        <div class="text flex_1 ">{{$t('order.useCoupon')}}</div>
+                        <div class="bar "> <span class="f_blue" v-if="selectedCoupon.discount">-{{selectedCoupon.discount}} руб</span><i class="s_arrow"></i></div>
+                    </div>
+                </div>
+                <!--/其他-->
+            </pull-wrap>
+        </div>
+    </div>
+    <!--结算-->
+    <div class="count-bar">
+
+        <div class="count-btn">
+            <a href="javascript:void(0);" class="le_btn btn_red btn_react" @click="submitOrder">{{$t('com.btn.pay')}}</a>
+        </div>
+        <div class="count-num">
+            <span>{{finallyPrice}}</span> руб
+        </div>
+        <span class="count-all-tips">{{$t('order.allPrice')}}：</span>
+    </div>
+    <!--/结算-->
+    <coupon-slide-Pop direct="bottom" :width-rem=10 :duration=250 slide-class="coupon-pop" :state="isCouponPopShow" :opacity="0.9" v-cloak>
+        <div class="box" >
+            <div class="pop_close" @click="hideCouponPop"></div>
+            <div class="coupon-box">
+                <div class="coupon-tips">
+                    {{$t('hot.coupon.useTip')}}
+                </div>
+                <div class="coupon-item " v-for="(item,key) in orderData.coupons" v-if="orderData.coupons.length!=0">
+                    <div class="coupon-item-cont d_flex " :class="{disabled:!item.can_use}" @click="selectCoupon(item.can_use,key)">
+                        <div class="coupon-prizes ">
+                            {{item.show_pref}}
+                        </div>
+                        <div class="coupon-info flex_1 d_flex d_flex_verical">
+                            <div class="coupon-active">{{item.name}}</div>
+                            <div class="coupon-name flex_1">{{item.condition}}</div>
+                            <div class="coupon-data">{{item.valid_period}}</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="coupon-empty" v-else></div>
+            </div>
+            <div class="le_btn btn_blue btn_react" @click="showHalfPop('addCoupon')">
+               {{$t('com.btn.addCoupon')}}
+            </div>
+        </div>
+    </coupon-slide-Pop>
+    <add-coupon-half-pop :state="halfPop.addCoupon" :shadow-close="true" @hidehalfpop="hideHalfPop('addCoupon')" :btn="[{'name':'Отменить','color':'#666'},{'name':'платить'}]" @btncheck="addCoupon"  v-cloak>
+        <div class="input_full">
+            <span class="f_14 f_color_d1">Введите номер ваучера</span>
+        </div>
+        <div class="input_full">
+            <input type="text" id="couponKey" placeholder="">
+        </div>
+     </add-coupon-half-pop>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+            orderData : [],
+            selectedCoupon :{
+                discount : 0,
+                code : ''
+            } ,
+            isCouponPopShow : false,
+            'halfPop' : {
+               addCoupon  : false
+            }
+
+        },
+        components: {
+            couponSlidePop : slidePop,
+            pullWrap : pullWrap,
+            addCouponHalfPop : halfPop,
+        },
+        computed : {
+          finallyPrice : function(){
+//              total_money-pref_money+freight-优惠券优惠金额
+              var xthis = this;
+              if(!_.isEmpty(xthis.orderData)){
+                  return (parseFloat(xthis.orderData.total_money)   -
+                          parseFloat(xthis.orderData.pref_money) +
+                          parseFloat(xthis.orderData.freight) -
+                          parseFloat(xthis.selectedCoupon.discount)).toFixed(2);
+              }else{
+                  return 0;
+              }
+
+          }
+        },
+        mounted: function () {
+            //修复输入法使得视窗变小bug
+            var xthis = this;
+            var height = $(window).height();
+            $('.coupon-pop').height(height);
+            $(function(){
+                appTools.isUserLogined();
+                xthis.initLists();
+            })
+        },
+        created: function () {
+        },
+        methods: {
+            submitOrder : function(){
+                var xthis = this;
+                    ajaxInstall.com(
+                            xthis.ajaxSubmit,
+                            xthis.selectedCoupon.code
+                    ).done(function(data){
+                        if(data.err==0){
+                            Vue.$toast({'message':vm.$t('hot.tips.eventSuccess')});
+                        }else{
+                            Vue.$toast({'message':data.msg});
+                        }
+                    })
+            },
+            ajaxSubmit : function(couponKey){
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data: appTools.ajax.combineDataJson({
+                                opt:'order',
+                                cmd:'submit_order'
+                            },{
+                                submit_type : 0,
+                                kill_code	: '',
+                                kill_sign : '',
+                                coupon_code : couponKey
+                            }
+                    ),
+                    type: 'post',
+                    cache: false,
+                    dataType : 'json'
+                });
+            },
+            ajaxAdd : function(couponKey){
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data: appTools.ajax.combineDataJson({
+                                opt:'order',
+                                cmd:'bind_coupon'
+                            },{
+                                submit_type : 0,
+                                kill_code	: '',
+                                kill_sign : '',
+                                bind_code : couponKey
+                            }
+                    ),
+                    type: 'post',
+                    cache: false,
+                    dataType : 'json'
+                });
+            },
+            //绑定优惠券
+            addCoupon: function (key) {
+                var xthis = this;
+                if(key==0){
+                    this.halfPop.addCoupon = false;
+                    return false;
+                }
+                var couponKey = $('#couponKey').val();
+                if(!couponKey){
+                    Vue.$toast({'message':vm.$t('com.form.emptyTips')});
+                    return false;
+                }
+                ajaxInstall.com(xthis.ajaxAdd,couponKey)
+                        .done(function(data){
+                            if(data.err==0){
+                                //绑定成功
+                                Vue.$toast({'message':vm.$t('hot.tips.eventSuccess')});
+                                xthis.orderData.coupons.unshift(data.data);
+                                xthis.halfPop.addCoupon = false;
+                            }else{
+                                Vue.$toast({'message':data.msg});
+                            }
+                        })
+                this.halfPop.add = false;
+
+            },
+            showHalfPop : function(style){
+                this.halfPop[style] =  true ;
+            },
+            hideHalfPop : function(style){
+                this.halfPop[style] =  false;
+            },
+            selectCoupon : function(state,key){
+                if(state==1){
+                  this.selectedCoupon.discount = this.orderData.coupons[key].pref_money ;
+                  this.selectedCoupon.code = this.orderData.coupons[key].code;
+                  this.hideCouponPop();
+                }
+            },
+            showCouponPop:function(){
+                this.isCouponPopShow = true;
+
+            },
+            hideCouponPop:function(){
+                this.isCouponPopShow = false;
+            },
+            ajaxLists : function(){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data: appTools.ajax.combineDataJson({
+                        "opt": "order",
+                        "cmd": "get_submit_data" //*删除选中
+                    },{
+                        "submit_type":0,
+                        "kill_code":"",
+                        "kill_sign":""
+                    }),
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                });
+            },
+            initLists : function(){
+                var xthis = this;
+                 ajaxInstall.com(
+                         xthis.ajaxLists
+                 ).done(function(data){
+                    if(data.err == 0&&data.data){
+                        var newGoods = [];
+                        var newGoodsKey = 0;
+//                        _.map(data.data.goods,function(item,key){
+//                            if(item.pro_type != 1){
+//                                if(newGoods[newGoodsKey]['child']){
+//                                    newGoods[newGoodsKey]['child'].push(item);
+//                                }else{
+//                                    newGoods[newGoodsKey]['child'] = [];
+//                                    newGoods[newGoodsKey]['child'].push(item);
+//                                }
+//                            }else{
+//                                newGoodsKey = key;
+//                                newGoods.push(item);
+//                            }
+//                        })
+                        //把可用的排序到前面
+                        data.data.coupons = _.sortBy(data.data.coupons, function(item){
+                            return -1*item.can_use;
+                        });
+//                        data.data.goods = newGoods;
+                        xthis.orderData = data.data;
+                    }
+                 })
+            }
+        }
+    });
+</script>
+</html>

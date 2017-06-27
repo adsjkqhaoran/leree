@@ -1,0 +1,177 @@
+@import '../comomn/_mixin';
+$bgUrl :'../../images/user/user/';
+body{
+  background: #F4F4F4;
+}
+.User{
+  overflow: hidden;
+  background: #F4F4F4;
+
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',0px);
+    @include px2rem('bottom',0px);
+    overflow: hidden;
+    .scroll{
+      display: block;
+    }
+  }
+  .user-box{
+    width:100%;
+    @include px2rem('height',180px);
+    background: #00A4E7;
+    display: block;
+    .account-logo-cont{
+      @include wh(130px,130px);
+      position: relative;
+      @include xy-lt(17px,20px);
+      &>.circle{
+        @include wh(130px,130px);
+        margin:auto;
+        @include border-px(2px,#32b6ec);
+        border-radius: 50%;
+        position: relative;
+      }
+      .img-hold{
+        @include border-px(3px, #ffed00);
+        @include wh(96px,96px);
+        border-radius:50%;
+        @include px2rem('margin-top',16.5px);
+        position: absolute;
+        @include xy-lt(16.5px,0px);
+        overflow: hidden;
+        display: block;
+        img{
+          width:100%;
+          height: 100%;
+          object-fit: cover;
+          margin:auto;
+          border-radius:50%;
+          display: block;
+
+        }
+      }
+
+    }
+    .user-name{
+      @include font-size(20px);
+      color: #fff;
+      @include wh(163px,74px);
+      position: absolute;
+      @include xy-lt(169px,40px);
+      .user-id{
+        @include font-size(12px);
+        color: #eee;
+        @include px2rem('margin-top',20px);
+      }
+    }
+  }
+  .my-order{
+    background: #fff;
+    .my-order-tit{
+      @include l-height(35px);
+      @include border-px(1.06px,#eee,bottom);
+      @include padding-lr(15px,15px);
+      .s_arrow{
+        transform: scale(.7) rotateZ(-180deg);
+      }
+    }
+    .my-order-center{
+      .order-center-item{
+        width:25%;
+        @include px2rem('height',90px);
+        @include fl();
+        position: relative;
+        transition : background .3s ease;
+        &:active{
+          background: #eee;
+        }
+        i{
+          position: relative;
+          dt{
+            position: absolute;
+            @include px2rem('width',15px);
+            @include px2rem('height',15px);
+            @include px2rem('line-height',15px);
+            text-align: center;
+            color: #fff;
+            background: #ff2929;
+            border-radius: 50%;
+            @include px2px('font-size',20px);
+            @include xy-rt(-12px,-0px);
+          }
+        }
+
+        p{
+          width:93%;
+          @include font-size(12px);
+          color: #666;
+          text-align: center;
+          @include px2rem('margin-top',10px);
+          line-height: 1.2em;
+        }
+      }
+    }
+  }
+}
+
+i{
+
+  &.icon-waitpay{
+    @include bg-image($bgUrl+'waitpay');
+    @include wh(24px,24px);
+    display: block;
+    margin: auto;
+    @include px2rem('margin-top',14px);
+  }
+  &.icon-waitsend{
+    @include wh(33px,24px);
+    @include bg-image($bgUrl+'waitsend');
+    display: block;
+    margin: auto;
+    @include px2rem('margin-top',14px);
+  }
+  &.icon-send{
+    @include wh(33px,24px);
+    @include bg-image($bgUrl+'send');
+    display: block;
+    margin: auto;
+    @include px2rem('margin-top',14px);
+  }
+  &.icon-receive{
+    @include wh(33px,32px);
+    @include bg-image($bgUrl+'receive');
+    display: block;
+    margin: auto;
+    @include px2rem('margin-top',14px);
+  }
+  &.icon-coupon{
+    @include bg-image($bgUrl+'coupon');
+    @include wh(22px,22px);
+    display: inline-block;
+  }
+  &.icon-address{
+    @include bg-image($bgUrl+'address');
+    @include wh(20px,21px);
+    display: inline-block;
+  }
+  &.icon-account{
+    @include bg-image($bgUrl+'account');
+    @include wh(20px,21px);
+    display: inline-block;
+    background-position: center center ;
+  }
+  &.icon-service{
+    @include bg-image($bgUrl+'service');
+    @include wh(20px,21px);
+    display: inline-block;
+    background-position: center center ;
+  }
+  &.icon-setting{
+    @include bg-image($bgUrl+'setting');
+    @include wh(20px,21px);
+    display: inline-block;
+    background-position: center center ;
+  }
+}

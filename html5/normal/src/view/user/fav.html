@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>fav</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/user/fav.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Fav" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('fav.header')}}
+        </div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.06" :down-refresh="canLoadMore" @loadmore="loadMore" @canload="canLoad" @cancelload="cancelLoad">
+                <div class="m_t_10 bg_w" v-if="favLists.length > 0">
+
+                    <!--单品-->
+                    <div class="actives">
+                       <lists-animate>
+                        <div class="cart-item" v-for="(item,index) in favLists" :key="item.sku">
+                            <div class="cont">
+                                <a class="sku" :href="'/view/goods/detail.html?skuId='+item.sku">
+                                    <div class="logo" >
+                                        <img :src="item.img"
+                                             alt="">
+                                    </div>
+                                    <div class="info">
+                                        <div class="tit">
+                                              {{item.name}}
+                                        </div>
+
+                                        <div class="price">
+                                            <span>{{item.p}}</span> {{$t('hot.money')}}
+                                        </div>
+                                    </div>
+
+                                </a>
+                                <div class="del" @click="delFav(item.sku,index)">
+                                </div>
+                            </div>
+                            <div class="cart-split"></div>
+                        </div>
+                       </lists-animate>
+                    </div>
+                    <!--/单品-->
+                </div>
+                <div class="empty-cont " v-else>
+                    <div class="empty-logo"></div>
+                </div>
+                <!--加载更多-->
+                <load-More :state="loadState" v-if="canLoadMore">
+                    {{$t('com.loadMore.scanMore')}}
+                </load-More>
+                <!--/加载更多-->
+            </pull-wrap>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/alloy_touch.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+
+<script>
+    var vm = new Vue({
+        el : "#app",
+        i18n: i18n,
+        data : {
+            favLists : [],
+            loadState : '',
+            canLoadMore : true,
+            pageIndex :1
+        },
+        components : {
+            pullWrap : pullWrap,
+            loadMore : loadMore,
+            listsAnimate : listsAnimate
+        },
+        mounted : function(){
+            var xthis = this;
+
+            //兼容自带左右滑动的浏览器= =
+            appTools.fixSwiper();
+            $(function(){
+                appTools.isUserLogined();
+                xthis.getFavList(1);
+            })
+        },
+        created:function(){
+        },
+        methods:{
+            ajaxDelFav : function(skuID){
+                        return $.ajax({
+                            url: appTools.api.productApi,
+                            xhrFields : {withCredentials: true},
+                            data:appTools.ajax.combineDataJson({
+                                'opt':'product',
+                                'cmd':'delcollect',
+                            },{
+                                'skus':[skuID]
+                            }),
+                            type: 'post',
+                            dataType:'json',
+                            cache:false
+                        });
+            },
+            ajaxFavList : function(pageIndex){
+                return $.ajax({
+                    url: appTools.api.productApi,
+                    xhrFields : {withCredentials: true},
+                    data: appTools.ajax.combineDataJson({
+                        'opt':'product',
+                        'cmd':'getcollect',
+                    },{
+                        'page':pageIndex,
+                        'pagesize':10
+                    }),
+                    type: 'post',
+                    dataType:'json',
+                    cache:false
+                });
+            },
+            delFav : function(skuId,index){
+                var xthis = this;
+                ajaxInstall.com(
+                        xthis.ajaxDelFav,
+                        skuId
+                ).done(function(data){
+                    if(data.err==0){
+                        _.delay(function(){
+                            xthis.favLists.splice(index,1);
+                        },300)
+                    }
+                })
+            },
+            getFavList : function(pageIndex){
+                var xthis = this;
+               return ajaxInstall.com(
+                        xthis.ajaxFavList,
+                        pageIndex
+                ).done(function(data){
+                    if(data&&data.err==0&&data.data&&data.data.list){
+                        _.map(data.data.list,function(item,index){
+                            data.data.list[index].img = appTools.imgSrc(item.img,8);
+                        })
+                        if(pageIndex>1){
+                            xthis.favLists =  xthis.favLists.concat(data.data.list);
+                        }else{
+                            xthis.favLists = data.data.list;
+                        }
+                        xthis.pageIndex ++;
+                        xthis.bindDel();
+
+                    }
+                })
+            },
+            bindDel : function(){
+                Vue.nextTick(function(){
+                    var skuDom = $('.cart-item>.cont');
+                    touch.on(skuDom, 'swipeleft', function (ev) {
+                        $(this).parents('.cont').addClass('move');
+                    });
+                    touch.on(skuDom, 'swiperight tap', function (ev) {
+                        $(this).parents('.cont').removeClass('move');
+                    });
+                });
+            },
+            //加载更多相关
+            loadMore:function(obj){
+                var xthis = this;
+                xthis.loadState = 'loadMore';
+                xthis.getFavList(xthis.pageIndex).done(function(){
+                    obj.touchObj.to(0);
+                    xthis.loadState = 'end';
+                });
+            },
+            canLoad : function(){
+                this.loadState = 'canLoad';
+            },
+            cancelLoad:function(){
+                this.loadState = '';
+            },
+            ajaxFav : function(){
+                var xthis = this;
+                return $.ajax({
+                    url : appTools.api.productApi,
+                    xhrFields : {withCredentials: true},
+                    data : appTools.ajax.combineDataJson({
+                        "opt": "product",
+                        "cmd": "addcollect"
+                    },{
+                        sku	:'10000010000006',
+                        skus :''
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            }
+        }
+    });
+</script>
+</html>

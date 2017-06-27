@@ -1,0 +1,227 @@
+@import '../comomn/_mixin';
+$bgUrl :'../../images/user/account/';
+body{
+  background: #F4F4F4;
+}
+.Account{
+  overflow: visible!important;
+  background: #F4F4F4;
+  z-index: -1;
+  .wrap{
+    width:100%;
+    position:absolute;
+    @include px2rem('top',40px);
+    @include px2rem('bottom',0px);
+    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    .scroll{
+      display: block;
+      webkit-overflow-scrolling: touch;
+    }
+  }
+  .account-logo-wrap{
+    @include px2rem('height',220px);
+    width:100%;
+    overflow: hidden;
+    background: #00A4E7;
+    .account-logo-cont{
+      @include wh(130px,130px);
+      margin:auto;
+      position: relative;
+      &>.circle{
+        @include wh(130px,130px);
+        margin:auto;
+        @include px2rem('margin-top',25px);
+        @include border-px(2px,#32b6ec);
+        border-radius: 50%;
+        position: relative;
+        &:after{
+          content: '';
+          @include bg-image($bgUrl+'addPhoto');
+          @include wh(28px,28px);
+          display: block;
+          position: absolute;
+          @include xy-rb(7px,0px);
+        }
+      }
+      .img-hold{
+        @include border-px(3px, #ffed00);
+        @include wh(96px,96px);
+        border-radius:50%;
+        @include px2rem('margin-top',16.5px);
+        position: absolute;
+        @include xy-lt(16.5px,0px);
+        overflow: hidden;
+        display: block;
+        img{
+          width:100%;
+          height: 100%;
+          object-fit: cover;
+          margin:auto;
+          border-radius:50%;
+          display: block;
+
+        }
+        #uploadPortrait{
+          position: absolute;
+          right: 0px;
+          top: 0px;
+          width:100%;
+          height: 100%;
+          opacity: 0;
+        }
+      }
+
+    }
+    .account-info {
+      color: #fff;
+      text-align: center;
+      @include px2rem('margin-top',13px);
+      p{
+        @include px2px('font-size',24px);
+      }
+    }
+
+  }
+  .account-cell{
+    background: #fff;
+    @include padding-lr(15px,15px);
+    @include padding-tb(16px,16px);
+    @include border-px(1.06px,#eee,bottom);
+    &>.icon{
+      @include  wh(16px,40px);
+      display: inline-block;
+      background-position: center center;
+
+    }
+    &>.text{
+      @include px2rem('padding-left',15px);
+      &.cell-1{
+        @include l-height(40px);
+        @include font-size(16px);
+        color:#999;
+        span:nth-child(1){
+          @include font-size(14px);
+          color:#999;
+        }
+        span:nth-child(2){
+          @include font-size(14px);
+          color:#333;
+          @include fr();
+        }
+      }
+      p:nth-child(1){
+        @include font-size(14px);
+        color:#999;
+        line-height: 1.5em;
+      }
+      p:nth-child(2){
+        @include font-size(16px);
+        color:#333333;
+        line-height: 1.1em;
+      }
+    }
+    &>.bar{
+      .edit-icon{
+        @include wh(30px,40px);
+        display: inline-block;
+       &:before{
+         content: '';
+         @include bg-image($bgUrl+'edit');
+         @include wh(17px,40px);
+         background-position: center center;
+         display: block;
+         margin:auto;
+       }
+      }
+      .s_arrow{
+        @include wh(20px,41px);
+        display: inline-block;
+      }
+    }
+  }
+  //弹窗内样式
+  .edit-box{
+    background: #F4F4F4;
+    width: 100%;
+    position: absolute;
+    display: inline-block;
+    top:0px;
+    width:100%;
+    bottom:0px;
+    webkit-overflow-scrolling: touch;
+    .header{
+      position: fixed;
+    }
+    .edit-cont{
+      overflow: scroll;
+      position: relative;
+      display: block;
+      @include px2rem('top',40px);
+      webkit-overflow-scrolling: touch;
+      .form-group{
+          .form-item{
+            i{
+              display: block;
+              position: absolute;
+              top:0px;
+              @include  wh(18px,40px);
+              background-position: center center;
+              @include px2rem('margin-left',20px);
+              &.icon-paw-hide{
+                @include px2rem('right',10px);
+                @include bg-image($bgUrl+'hidepaw');
+                @include  wh(26px,40px);
+              }
+              &.icon-paw-show{
+                @include px2rem('right',10px);
+                @include bg-image($bgUrl+'showpaw');
+                @include  wh(26px,40px);
+              }
+
+            }
+          }
+       }
+    }
+    .foot-btn{
+      position: absolute;
+      width:100%;
+      bottom:0px;
+      left:0px;
+    }
+  }
+}
+
+.user-icon{
+  @include bg-image($bgUrl+'username');
+}
+.tel-icon{
+  @include bg-image($bgUrl+'tel');
+}
+.email-icon{
+  @include bg-image($bgUrl+'email');
+}
+.paw-icon{
+  @include bg-image($bgUrl+'paw');
+}
+.nickname-icon{
+  @include bg-image($bgUrl+'nickname');
+}
+.username-icon{
+  @include bg-image($bgUrl+'username');
+}
+.sex-icon{
+  @include bg-image($bgUrl+'sex');
+}
+.birthday-icon{
+  @include bg-image($bgUrl+'birthday');
+}
+.area-icon{
+  @include bg-image($bgUrl+'area');
+}
+.paw-confirm-icon{
+  @include bg-image($bgUrl+'confirmPaw');
+}
+.msg-icon{
+  @include bg-image($bgUrl+'msg');
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>backLists</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/backLists.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="backLists" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('backLists.header')}}</div>
+    </nav>
+    <pull-tab :tab-arr="tabArr" width-rem="5" change-box=".order-cont" :a-index="tabIndex"
+              @changetab="changeTab"></pull-tab>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="2.22" :tab-fix="tabFix">
+                <!--订单列表-->
+                <ul class="order-cont" v-cloak>
+                    <li v-show="tabIndex == 0">
+                        <div class="order-item m_t_10">
+                            <a href="/view/order/backDetail.html" class="tit d_flex">
+                                <div class="order-id flex_1">хао&nbsp;：<span>101703071703416635</span></div>
+                                <div class="order-state wait-pay">
+                                    приложение
+                                </div>
+                            </a>
+                            <div class="cart-item">
+                                <div class="singal">
+                                    <div class="cont">
+                                        <div class="sku">
+                                            <div class="logo"><img
+                                                    src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"
+                                                    alt=""></div>
+                                            <div class="info">
+                                                <div class="tit"><a href="#">
+                                                    Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                                    Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                                </a></div>
+                                                <div class="cate">
+                                                    4GB + 64GB релиз
+                                                </div>
+                                            </div>
+                                            <div class="price">
+                                                x <span>1</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="singal">
+                                    <div class="cont">
+                                        <div class="sku">
+                                            <div class="logo"><img
+                                                    src="http://img1.aolaigo.com/group1/M00/14/E2/CggUFlh0QG6AJ2MrAAWHn4FhbFQ987=320x4096.JPG"
+                                                    alt=""></div>
+                                            <div class="info">
+                                                <div class="tit"><a href="#">
+                                                    Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                                    Внешний аккумулятор LeTV Super Power Bank 13400 мАч
+                                                </a></div>
+                                                <div class="cate">
+                                                    4GB + 64GB релиз
+                                                </div>
+                                            </div>
+                                            <div class="price">
+                                                x <span>1</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-count">
+                                <a href="javascript:void(0);" class="order-btn le_btn btn_red m_t_10">{{$t('com.btn.sendOut')}}</a>
+                                <a href="javascript:void(0);" class="order-btn le_btn btn_gray_border m_t_10">{{$t('com.btn.cancel')}}</a>
+                                <div class="clearFloat"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li v-show="tabIndex == 1">
+                        <div class="order-empty">
+                            <div class="empty-cont">
+                                <div class="empty-logo"></div>
+                                <div class="order-empty-tips">
+                                    {{$t('hot.order.orderListsEmptyTips')}}
+                                </div>
+                                <div class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <!--/订单列表-->
+            </pull-wrap>
+        </div>
+    </div>
+
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n: i18n,
+        data: {
+            tabArr: [],
+            tabFix: 0,//切换tab后修正滚动距离
+            isSearch: false,
+            tabIndex: 0
+        },
+        components: {
+            pullTab: pullTab,
+            pullWrap: pullWrap
+        },
+        mounted: function () {
+            var xthis = this;
+            this.tabArr = [this.$t('hot.order.return'),
+                this.$t('hot.order.exchange')
+            ];
+            //兼容自带左右滑动的浏览器= =
+            appTools.fixSwiper();
+            touch.on($('.order-cont')[0],'swipeleft',function(){
+                      if(xthis.tabIndex==(xthis.tabArr.length-1)){
+                          return false;
+                      }
+                      xthis.tabIndex = xthis.tabIndex + 1;
+                      xthis.tabFix = xthis.tabFix + 1;
+                  });
+              touch.on($('.order-cont')[0],'swiperight',function(){
+                      if(xthis.tabIndex==0){
+                          return false;
+                      }
+                      xthis.tabIndex = xthis.tabIndex - 1;
+                      xthis.tabFix = xthis.tabFix - 1;
+                  });
+            },
+        created: function () {
+        },
+        methods: {
+            changeTab: function (index) {
+                this.tabIndex = index;
+                this.tabFix = index;
+            }
+        }
+    });
+</script>
+</html>

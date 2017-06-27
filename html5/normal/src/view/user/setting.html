@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>account</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta content="telephone=no" name="format-detection">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/user/setting.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Setting" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('setting.header')}}
+        </div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.06">
+                <div class="account-cell d_flex" @click="showPop('about')">
+                    <div class="icon icon-about"></div>
+                    <div class="text cell-1 flex_1">{{$t('setting.about')}}</div>
+                    <div class="s_arrow"></div>
+                </div>
+                <div class="account-cell d_flex" @click="showPop('protocol')">
+                    <div class="icon icon-paper"></div>
+                    <div class="text cell-1 flex_1">{{$t('setting.protocol')}}</div>
+                    <div class="s_arrow"></div>
+                </div>
+                <div class="account-cell d_flex m_t_20" @click="toQuite()">
+                    <div class="icon icon-quite"></div>
+                    <div class="text cell-1 flex_1">{{$t('setting.quite')}}</div>
+                    <div class="s_arrow"></div>
+                </div>
+            </pull-wrap>
+        </div>
+    </div>
+
+    <about-slide-pop direct="right" :width-rem=10 :duration=250  :state="slidePop.about" :opacity="0.9" v-cloak>
+        <div class="edit-box">
+            <nav class="header light">
+                <i class="back" @click="hidePop('about')"></i>
+                <div class="tit">{{$t('setting.about')}}
+                </div>
+            </nav>
+            <div class="edit-cont">
+                <div class="about-img">
+                    <div class="logo"></div>
+                    <div class="vesion f_14 f_white">v 1.0.0</div>
+                </div>
+                <div class="about-desc">
+                    <h1 class="f_16">LeRee</h1>
+                    <p>LeRee (LeEco Russia and Eastern Europe) — дочерняя компания глобального технологического холдинга LeEco. Создана в 2016 году для ведения бизнеса в России, Восточной Европе и странах СНГ.</p>
+                    <p>
+                        Основатель и президент LeRee — Виктор Сюй, в прошлом президент JD.com и глава ключевых подразделений Huawei. Виктор — академик Международной Телекоммуникационной Академии и руководитель рабочей группы «Интернет + Китай» при Институте Развития Интернета. 
+                    </p>
+                    <p>
+                        12 сентября 2016 года прошла первая презентация LeRee в России. 19 сентября 2016 года начались официальные продажи смартфонов компании на российском рынке.
+                    </p>
+                    <h1 class="f_16">LeEco</h1>
+                    <p>LeEco (Leshi Internet Information & Technology Beijing) основана китайским предпринимателем Юэтином Цзя в 2004 году. В 2010 году компания стала первой в мире онлайн-видеоплатформой, акции которой разместили на бирже. Cегодня Le.com — единственная в Китае онлайн-видеоплатформа, которая котируется на бирже.</p>
+                    <p>LeEco — это глобальный технологический холдинг с капитализацией 30 млрд долларов США. Компания создала уникальную вертикально интегрированную экосистему, которая объединяет онлайн-платформу, устройства, мобильные приложения и контент.</p>
+                    <p>LeEco — первая в мире интернет-компания, которая производит смартфоны и смарт-телевизоры под своим брендом. Это компания с самой высокой рыночной стоимостью в видеоиндустрии Китая и самыми высокими темпами роста, первая интернет-компания Китая с собственной крупной киностудией. Le Vision Pictures (LeVP) входит в тройку частных киностудий Китая с самыми высокими кассовыми сборами. В 2016 году LeVP открыла 1 000 кинотеатров в Китае. </p>
+                    <p>Охват Le.com — 800 млн пользователей в месяц. В библиотеке видеоплатформы — 100 000 эпизодов сериалов и 5 000 фильмов, защищенных авторским правом.</p>
+                    <p>Компания LeSports обладает авторскими правами на показ 10 000 спортивных мероприятий и выпускает под своим брендом смарт-велосипеды. </p>
+                    <p>E-commerce подразделение компании LeMall.com занимает 3-е место по трафику среди крупнейших компаний интернет-торговли в Китае.</p>
+                    <p>LeSuperTV был признан интернет-телевизионным брендом № 1 с совокупными продажами свыше 6 млн смарт-телевизоров в год. Продажи смартфонов Le Superphones превысили 10 млн устройств в год.</p>
+                    <p>В автомобильной индустрии LeEco развивает проект СЭЭ (Супер Электрическая Экосистема). Компания производит систему IOV (Internet on the Vehicle), которая используется в электрическом суперкаре Aston Martin Rapide S. 20 апреля 2016 года LeEco представила собственный электромобиль с самообучаемым автопилотом LeSEE, его серийное производство начнется в Китае и США в 2018 году. В мае 2016 года LeEco представила второе поколение системы каршеринга с использованием электромобилей LeShare, призванной решить проблему транспортной перегруженности в Китае. Первое поколение системы действует с декабря 2015 года.</p>
+                    <p>В июне 2016 года LeEco стала крупнейшим акционером Coolpad. Эта сделка позволит обеим компаниям увеличить совокупные поставки до 100 млн мобильных устройств в 2017 году. </p>
+                    <p>Журнал Fast Company и сайт Alphr признали LeEco самым инновационным брендом 2016 года.</p>
+                </div>
+            </div>
+        </div>
+    </about-slide-pop>
+    <protocol-slide-pop direct="right" :width-rem=10 :duration=250  :state="slidePop.protocol" :opacity="0.9" v-cloak>
+        <div class="edit-box">
+            <nav class="header light">
+                <i class="back" @click="hidePop('protocol')"></i>
+                <div class="tit">{{$t('setting.protocol')}}
+                </div>
+            </nav>
+            <div class="edit-cont">
+                <div class="about-desc">
+                    <h1 class="f_16">LeRee</h1>
+                    <p>LeRee (LeEco Russia and Eastern Europe) — дочерняя компания глобального технологического холдинга LeEco. Создана в 2016 году для ведения бизнеса в России, Восточной Европе и странах СНГ.</p>
+                    <p>
+                        Основатель и президент LeRee — Виктор Сюй, в прошлом президент JD.com и глава ключевых подразделений Huawei. Виктор — академик Международной Телекоммуникационной Академии и руководитель рабочей группы «Интернет + Китай» при Институте Развития Интернета. 
+                    </p>
+                    <p>
+                        12 сентября 2016 года прошла первая презентация LeRee в России. 19 сентября 2016 года начались официальные продажи смартфонов компании на российском рынке.
+                    </p>
+                    <h1 class="f_16">LeEco</h1>
+                    <p>LeEco (Leshi Internet Information & Technology Beijing) основана китайским предпринимателем Юэтином Цзя в 2004 году. В 2010 году компания стала первой в мире онлайн-видеоплатформой, акции которой разместили на бирже. Cегодня Le.com — единственная в Китае онлайн-видеоплатформа, которая котируется на бирже.</p>
+                    <p>LeEco — это глобальный технологический холдинг с капитализацией 30 млрд долларов США. Компания создала уникальную вертикально интегрированную экосистему, которая объединяет онлайн-платформу, устройства, мобильные приложения и контент.</p>
+                    <p>LeEco — первая в мире интернет-компания, которая производит смартфоны и смарт-телевизоры под своим брендом. Это компания с самой высокой рыночной стоимостью в видеоиндустрии Китая и самыми высокими темпами роста, первая интернет-компания Китая с собственной крупной киностудией. Le Vision Pictures (LeVP) входит в тройку частных киностудий Китая с самыми высокими кассовыми сборами. В 2016 году LeVP открыла 1 000 кинотеатров в Китае. </p>
+                    <p>Охват Le.com — 800 млн пользователей в месяц. В библиотеке видеоплатформы — 100 000 эпизодов сериалов и 5 000 фильмов, защищенных авторским правом.</p>
+                    <p>Компания LeSports обладает авторскими правами на показ 10 000 спортивных мероприятий и выпускает под своим брендом смарт-велосипеды. </p>
+                    <p>E-commerce подразделение компании LeMall.com занимает 3-е место по трафику среди крупнейших компаний интернет-торговли в Китае.</p>
+                    <p>LeSuperTV был признан интернет-телевизионным брендом № 1 с совокупными продажами свыше 6 млн смарт-телевизоров в год. Продажи смартфонов Le Superphones превысили 10 млн устройств в год.</p>
+                    <p>В автомобильной индустрии LeEco развивает проект СЭЭ (Супер Электрическая Экосистема). Компания производит систему IOV (Internet on the Vehicle), которая используется в электрическом суперкаре Aston Martin Rapide S. 20 апреля 2016 года LeEco представила собственный электромобиль с самообучаемым автопилотом LeSEE, его серийное производство начнется в Китае и США в 2018 году. В мае 2016 года LeEco представила второе поколение системы каршеринга с использованием электромобилей LeShare, призванной решить проблему транспортной перегруженности в Китае. Первое поколение системы действует с декабря 2015 года.</p>
+                    <p>В июне 2016 года LeEco стала крупнейшим акционером Coolpad. Эта сделка позволит обеим компаниям увеличить совокупные поставки до 100 млн мобильных устройств в 2017 году. </p>
+                    <p>Журнал Fast Company и сайт Alphr признали LeEco самым инновационным брендом 2016 года.</p>
+                </div>
+            </div>
+        </div>
+        </protocol-slide-pop>
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/alloy_touch.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el : "#app",
+        i18n : i18n,
+        data : {
+
+            slidePop : {
+                about : false,
+                protocol : false
+            }
+        },
+        components : {
+            pullWrap : pullWrap,
+            aboutSlidePop : slidePop,
+            protocolSlidePop : slidePop
+        },
+        mounted : function(){
+
+        },
+        created:function(){
+        },
+        methods:{
+            showPop : function(strage){
+                this.slidePop[strage] = true;
+            },
+            hidePop : function(strage){
+                this.slidePop[strage] = false;
+            },
+            ajaxQuite : function(){
+                return $.ajax({
+                    url: appTools.api.memberApi,
+                    data: appTools.ajax.combineData({
+                        "opt": "1", //*
+                        "cmd": "19", //*
+                    }),
+                    type: 'get',dataType:'jsonp',
+                    cache:false
+                })
+            },
+            toQuite : function(){
+                var xthis = this;
+                ajaxInstall.com(
+                    xthis.ajaxQuite
+                )
+                .done(function(data){
+                    if(data.err==0){
+                        _.delay(function(){
+                            appTools.clearUserCookie();
+                            window.location ='/';
+                        },1000);
+                    }else{
+
+                    }
+                    Vue.$toast({message:vm.$t('hot.tips.eventSuccess')});
+                })
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>pay</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/pay.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Pay" v-cloak>
+    <nav class="header light">
+        <i class="back"></i>
+        <div class="tit">{{$t('pay.header')}}</div>
+    </nav>
+    <div class="wrap">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="1.06">
+                <div class="pay-count">
+                    460,000 руб
+                </div>
+                <div class="pay-type-box bg_w m_t_10">
+                    <div class="pay-type-box-tit f_14 f_color_999">{{$t('pay.choosePayType')}}</div>
+                    <ul class="pay-type-ul">
+                        <li class="d_flex" @click="showPop('yandex')">
+                            <i class="icon-yandex"></i>
+                            <div class="flex_1"></div>
+                            <div class="s_arrow "></div>
+                            <div class="clearFloat"></div>
+                        </li>
+                        <li class="d_flex" @click="showPop('qiwi')">
+                            <i class="icon-qiwi"></i>
+                            <div class="flex_1"></div>
+                            <div class="s_arrow "></div>
+                            <div class="clearFloat"></div>
+                        </li>
+                        <li class="d_flex" @click="showPop('paypal')">
+                            <i class="icon-paypal"></i>
+                            <div class="flex_1"></div>
+                            <div class="s_arrow "></div>
+                            <div class="clearFloat"></div>
+                        </li>
+                        <li class="d_flex" @click="showPop('cod')">
+                            <div>
+                                <i class="icon-cod"></i>
+                                <p class="f_12 f_color_999">{{$t('pay.cod')}}</p>
+                            </div>
+                            <div class="flex_1"></div>
+                            <div class="s_arrow "></div>
+                            <div class="clearFloat"></div>
+                        </li>
+                    </ul>
+                </div>
+            </pull-wrap>
+        </div>
+    </div>
+    <!--yandex-->
+    <yandex-half-pop  :state="halfPop.yandex" :shadow-close="true" @hidehalfpop="hidePop('yandex')" :btn="[{'name':$t('com.btn.confirm')}]" v-cloak>
+        <div class="half_pop_cell p_15 d_flex">
+            <i class="icon-wallet"></i>
+            <div class="half_content_text f_14 f_color_666 flex_1 p_l_10">{{$t('pay.yandexWallet')}}</div>
+            <le-check :is-checked="false"></le-check>
+        </div>
+        <div class="half_pop_cell p_15 d_flex">
+            <i class="icon-card"></i>
+            <div class="half_content_text f_14 f_color_666 flex_1 p_l_10">{{$t('pay.card')}}</div>
+            <le-check :is-checked="false"></le-check>
+        </div>
+    </yandex-half-pop>
+    <!--/yandex-->
+    <!--qiwi-->
+    <qiwi-half-pop :state="halfPop.qiwi" :shadow-close="true" @hidehalfpop="hidePop('qiwi')" :btn="[{'name':$t('com.btn.confirm')}]" v-cloak>
+        <div class="qiwi-tips f_color_d1 f_14 t_align_c m_t_20">
+            {{$t('pay.confirmTel')}}
+        </div>
+        <div class="input_full qiwi-input-full ">
+            <i class="icon-telphone"></i>
+            <div class="input_qu_hao">+7</div>
+            <input type="text" class="quhao" value="9202046110">
+        </div>
+    </qiwi-half-pop>
+    <!--/qiwi-->
+    <!--paypal-->
+    <paypal-half-pop :state="halfPop.paypal" :shadow-close="true" @hidehalfpop="hidePop('paypal')" :btn="[{'name':$t('com.btn.confirm')}]" v-cloak>
+        <div class="paypal-tips p_15 f_14 f_color_666">
+            {{$t('pay.paypalTips')}}
+        </div>
+    </paypal-half-pop>
+    <!--/paypal-->
+    <!--cod-->
+    <cod-half-pop :state="halfPop.cod" :shadow-close="true" @hidehalfpop="hidePop('cod')" :btn="[{'name':$t('com.btn.confirm')}]" v-cloak>
+        <div class="cod-tips f_color_d1 f_14 t_align_c m_t_20">
+            {{$t('pay.confirmTel')}}
+        </div>
+        <div class="input_full cod-input-full ">
+            <i class="icon-telphone"></i>
+            <div class="input_qu_hao">+7</div>
+            <input type="text" class="quhao" value="9202046110">
+        </div>
+        <div class="input_full cod-input-full">
+            <div class="input_half f_l">
+                <i class="icon-msg"></i>
+                <input type="text" value="">
+            </div>
+            <div class="input_half f_l">
+                <div class="le_btn btn_blue_border">
+                    {{$t('com.btn.send')}}</div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </cod-half-pop>
+    <!--/cod-->
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src="../../js/lang/lang.js"></script>
+<script src="../../js/components/common.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+            'halfPop' : {
+                yandex : false,
+                qiwi : false,
+                paypal : false,
+                cod : false
+            }
+        },
+        components: {
+            pullWrap:pullWrap,
+            yandexHalfPop : halfPop,
+            qiwiHalfPop : halfPop,
+            paypalHalfPop : halfPop,
+            codHalfPop : halfPop,
+            leCheck : leCheck
+        },
+        mounted: function () {
+
+        },
+        created: function () {
+        },
+        methods: {
+            showPop : function(style){
+                this.halfPop[style] =  true ;
+            },
+            hidePop : function(style){
+                this.halfPop[style] =  false;
+            }
+        }
+    });
+</script>
+</html>

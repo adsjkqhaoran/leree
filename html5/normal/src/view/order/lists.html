@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>lists</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../css/comomn/common.css">
+    <link rel="stylesheet" href="../../css/order/lists.css">
+    <script src="../../js/bundle/common/prev.bundle.js"></script>
+</head>
+<body>
+<div id="app" class="Lists" v-cloak>
+    <nav class="header light">
+        <i class="back "  @click="hideSearch(search.isSearch)"></i>
+        <div class="tit">{{$t('orderLists.header')}}</div>
+        <i class="icon-search" @click="searchShow()"></i>
+        <div class="header_search" style="display: none;">
+            <input type="text" class="header_search_inpt" v-model="search.key">
+            <div class="header_search_btn" @click="toSearch" style="display: none;">{{$t('com.btn.search')}}</div>
+        </div>
+    </nav>
+    <pull-tab :tab-arr="tabArr" width-rem="5"  :a-index="tabIndex" @changetab="changeTab" v-show="search.key==''"></pull-tab>
+    <div class="wrap" v-show="search.key==''">
+        <div class="scroll">
+            <pull-wrap wrap-dom=".wrap" scroll-dom=".scroll" fix-rem="2.12" :tab-fix="tabFix"  :down-refresh="canLoadMore" @loadmore="loadMore" @canload="canLoad" @cancelload="cancelLoad">
+                <!--订单列表-->
+                <ul class="order-cont" v-cloak>
+                    <li v-show="tabIndex == 0">
+                        <template v-if="orderLists[0]">
+                            <div class="order-item m_t_10" v-for="(item , index) in orderLists[0].datas" :key="item.order_no">
+                                <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                    <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                    <div class="order-state" :class="stateStrage[item.status_val]">
+                                        {{item.status_txt}}
+                                    </div>
+                                </a>
+                                <div class="cart-item">
+                                        <div  v-for="sitem in item.details"
+                                        :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                            <div class="cont" v-if="sitem.pro_type==1">
+                                                <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                                    <div class="logo">
+                                                        <img :src="appTools.imgSrc(sitem.img,8)"
+                                                             alt="">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="tit">
+                                                            {{sitem.name}}
+                                                        </div>
+                                                        <div class="cate">
+                                                            {{sitem.attr}}
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="price">
+                                                        x <span>{{sitem.qty}}</span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                                <div class="cart-icon-plus"></div>
+                                                <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                                         alt="">
+                                                </a>
+                                                <div class="info">
+                                                    {{sitem.name}}
+                                                </div>
+                                                <div class="num">x {{sitem.qty}}</div>
+                                            </div>
+
+
+                                        </div>
+
+
+
+                                </div>
+                                <div class="order-count">
+                                    <div class="order-result">
+                                        {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                    </div>
+                                    <!--'32': 'finish',-->
+                                    <!--'-2': "closed",-->
+                                    <!--'-1': "canceled",-->
+                                    <!--'2': "wait-pay",-->
+                                    <!--'4': "wait-delivery",-->
+                                    <!--'8': "wait-receive"-->
+                                    <template v-if="stateStrage[item.status_val]=='closed'">
+                                    </template>
+                                    <template v-if="stateStrage[item.status_val]=='finish'">
+
+                                    </template>
+                                    <template v-if="stateStrage[item.status_val]=='wait-pay'">
+                                        <a href="/view/order/pay.html" class="order-btn le_btn btn_red">{{$t('com.btn.pay')}}</a>
+                                        <a href="javascript:void(0);" @click="cancelOrder(item.order_no,index)" class="order-btn le_btn btn_gray_border">{{$t('com.btn.cancel')}}</a>
+                                    </template>
+                                    <template v-if="stateStrage[item.status_val]=='wait-delivery'">
+                                    </template>
+                                    <template v-if="stateStrage[item.status_val]=='closed'">
+                                    </template>
+                                    <template v-if="stateStrage[item.status_val]=='received'">
+                                        <a href="javascript:void(0);" class="order-btn le_btn btn_blue_border">{{$t('com.btn.comment')}}</a>
+                                        <a href="javascript:void(0);"  class="order-btn le_btn btn_dgray btn_gray_border">{{$t('hot.order.return')}}</a>
+                                    </template>
+                                    <template v-if="stateStrage[item.status_val]=='wait-receive'">
+                                        <a href="javascript:void(0);" @click="confirmReceive(item.child_code)" class="order-btn le_btn btn_blue">{{$t('com.btn.confirmReceive')}}</a>
+                                    </template>
+                                    <div class="clearFloat"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="order-empty">
+                                <div class="empty-cont">
+                                    <div class="empty-logo"></div>
+                                    <div class="order-empty-tips">
+                                        {{$t('hot.order.orderListsEmptyTips')}}
+                                    </div>
+                                    <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                    <li v-show="tabIndex == 1">
+                        <template v-if="orderLists[1]">
+                            <div class="order-item m_t_10" v-for="(item , index) in orderLists[1].datas" :key="item.order_no">
+                                <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                    <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                    <div class="order-state" :class="stateStrage[item.status_val]">
+                                        {{item.status_txt}}
+                                    </div>
+                                </a>
+                                <div class="cart-item">
+                                    <div  v-for="sitem in item.details"
+                                          :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                        <div class="cont" v-if="sitem.pro_type==1">
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                                <div class="logo">
+                                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                                         alt="">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="tit">
+                                                        {{sitem.name}}
+                                                    </div>
+                                                    <div class="cate">
+                                                        {{sitem.attr}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="price">
+                                                    x <span>{{sitem.qty}}</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                            <div class="cart-icon-plus"></div>
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </a>
+                                            <div class="info">
+                                                {{sitem.name}}
+                                            </div>
+                                            <div class="num">x {{sitem.qty}}</div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                                <div class="order-count">
+                                    <div class="order-result">
+                                        {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                    </div>
+                                    <!--'32': 'finish',-->
+                                    <!--'-2': "closed",-->
+                                    <!--'-1': "canceled",-->
+                                    <!--'2': "wait-pay",-->
+                                    <!--'4': "wait-delivery",-->
+                                    <!--'8': "wait-receive"-->
+
+                                        <a href="/view/order/pay.html" class="order-btn le_btn btn_red">{{$t('com.btn.pay')}}</a>
+                                        <a href="javascript:void(0);" @click="cancelOrder(item.order_no)" class="order-btn le_btn btn_gray_border">{{$t('com.btn.cancel')}}</a>
+
+                                    <div class="clearFloat"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="order-empty">
+                                <div class="empty-cont">
+                                    <div class="empty-logo"></div>
+                                    <div class="order-empty-tips">
+                                        {{$t('hot.order.orderListsEmptyTips')}}
+                                    </div>
+                                    <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                    <li v-show="tabIndex == 2">
+                        <!--待发货-->
+                        <template v-if="orderLists[2]">
+                            <div class="order-item m_t_10" v-for="(item , index) in orderLists[2].datas" :key="item.order_no">
+                                <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                    <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                    <div class="order-state" :class="stateStrage[item.status_val]">
+                                        {{item.status_txt}}
+                                    </div>
+                                </a>
+                                <div class="cart-item">
+                                    <div  v-for="sitem in item.details"
+                                          :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                        <div class="cont" v-if="sitem.pro_type==1">
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                                <div class="logo">
+                                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                                         alt="">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="tit">
+                                                        {{sitem.name}}
+                                                    </div>
+                                                    <div class="cate">
+                                                        {{sitem.attr}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="price">
+                                                    x <span>{{sitem.qty}}</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                            <div class="cart-icon-plus"></div>
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </a>
+                                            <div class="info">
+                                                {{sitem.name}}
+                                            </div>
+                                            <div class="num">x {{sitem.qty}}</div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                                <div class="order-count">
+                                    <div class="order-result">
+                                        {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                    </div>
+
+                                    <div class="clearFloat"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="order-empty">
+                                <div class="empty-cont">
+                                    <div class="empty-logo"></div>
+                                    <div class="order-empty-tips">
+                                        {{$t('hot.order.orderListsEmptyTips')}}
+                                    </div>
+                                    <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                    <li v-show="tabIndex == 3">
+                        <!--待收货-->
+                        <template v-if="orderLists[3]">
+                            <div class="order-item m_t_10" v-for="(item , index) in orderLists[3].datas" :key="item.order_no">
+                                <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                    <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                    <div class="order-state" :class="stateStrage[item.status_val]">
+                                        {{item.status_txt}}
+                                    </div>
+                                </a>
+                                <div class="cart-item">
+                                    <div  v-for="sitem in item.details"
+                                          :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                        <div class="cont" v-if="sitem.pro_type==1">
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                                <div class="logo">
+                                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                                         alt="">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="tit">
+                                                        {{sitem.name}}
+                                                    </div>
+                                                    <div class="cate">
+                                                        {{sitem.attr}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="price">
+                                                    x <span>{{sitem.qty}}</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                            <div class="cart-icon-plus"></div>
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </a>
+                                            <div class="info">
+                                                {{sitem.name}}
+                                            </div>
+                                            <div class="num">x {{sitem.qty}}</div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                                <div class="order-count">
+                                    <div class="order-result">
+                                        {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                    </div>
+
+                                    <a href="javascript:void(0);" @click="confirmReceive(item.child_code)" class="order-btn le_btn btn_blue">{{$t('com.btn.confirmReceive')}}</a>
+                                    <div class="clearFloat"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="order-empty">
+                                <div class="empty-cont">
+                                    <div class="empty-logo"></div>
+                                    <div class="order-empty-tips">
+                                     {{$t('hot.order.orderListsEmptyTips')}}
+                                    </div>
+                                    <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                    <li v-show="tabIndex == 4">
+                        <!--已收货-->
+                        <template v-if="orderLists[4]">
+                            <div class="order-item m_t_10" v-for="(item , index) in orderLists[4].datas" :key="item.order_no">
+                                <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                    <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                    <div class="order-state" :class="stateStrage[item.status_val]">
+                                        {{item.status_txt}}
+                                    </div>
+                                </a>
+                                <div class="cart-item">
+                                    <div  v-for="sitem in item.details"
+                                          :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                        <div class="cont" v-if="sitem.pro_type==1">
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                                <div class="logo">
+                                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                                         alt="">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="tit">
+                                                        {{sitem.name}}
+                                                    </div>
+                                                    <div class="cate">
+                                                        {{sitem.attr}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="price">
+                                                    x <span>{{sitem.qty}}</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                            <div class="cart-icon-plus"></div>
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </a>
+                                            <div class="info">
+                                                {{sitem.name}}
+                                            </div>
+                                            <div class="num">x {{sitem.qty}}</div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                                <div class="order-count">
+
+                                    <div class="order-result">
+                                        {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                    </div>
+                                    <a href="javascript:void(0);" class="order-btn le_btn btn_blue_border">{{$t('com.btn.comment')}}</a>
+                                    <a href="javascript:void(0);"  class="order-btn le_btn btn_dgray btn_gray_border">{{$t('hot.order.return')}}</a>
+                                    <div class="clearFloat"></div>
+
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="order-empty">
+                                <div class="empty-cont">
+                                    <div class="empty-logo"></div>
+                                    <div class="order-empty-tips">
+                                        {{$t('hot.order.orderListsEmptyTips')}}
+                                    </div>
+                                    <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                    <li v-show="tabIndex == 5">
+                    <!--已完成-->
+                    <template v-if="orderLists[5]">
+                        <div class="order-item m_t_10" v-for="(item , index) in orderLists[5].datas" :key="item.order_no">
+                            <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                <div class="order-state" :class="stateStrage[item.status_val]">
+                                    {{item.status_txt}}
+                                </div>
+                            </a>
+                            <div class="cart-item">
+                                <div  v-for="sitem in item.details"
+                                      :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                    <div class="cont" v-if="sitem.pro_type==1">
+                                        <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                            <div class="logo">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </div>
+                                            <div class="info">
+                                                <div class="tit">
+                                                    {{sitem.name}}
+                                                </div>
+                                                <div class="cate">
+                                                    {{sitem.attr}}
+                                                </div>
+
+                                            </div>
+                                            <div class="price">
+                                                x <span>{{sitem.qty}}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                        <div class="cart-icon-plus"></div>
+                                        <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                            <img :src="appTools.imgSrc(sitem.img,8)"
+                                                 alt="">
+                                        </a>
+                                        <div class="info">
+                                            {{sitem.name}}
+                                        </div>
+                                        <div class="num">x {{sitem.qty}}</div>
+                                    </div>
+
+
+                                </div>
+
+
+
+                            </div>
+                            <div class="order-count">
+                                <div class="order-result">
+                                    {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                </div>
+
+                                <div class="clearFloat"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="order-empty">
+                            <div class="empty-cont">
+                                <div class="empty-logo"></div>
+                                <div class="order-empty-tips">
+                                    {{$t('hot.order.orderListsEmptyTips')}}
+                                </div>
+                                <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                            </div>
+                        </div>
+                    </template>
+                </li>
+                    <li v-show="tabIndex == 6">
+                        <!--已关闭-->
+                        <template v-if="orderLists[6]">
+                            <div class="order-item m_t_10" v-for="(item , index) in orderLists[6].datas" :key="item.order_no">
+                                <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                                    <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                                    <div class="order-state" :class="stateStrage[item.status_val]">
+                                        {{item.status_txt}}
+                                    </div>
+                                </a>
+                                <div class="cart-item">
+                                    <div  v-for="sitem in item.details"
+                                          :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                                        <div class="cont" v-if="sitem.pro_type==1">
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                                <div class="logo">
+                                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                                         alt="">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="tit">
+                                                        {{sitem.name}}
+                                                    </div>
+                                                    <div class="cate">
+                                                        {{sitem.attr}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="price">
+                                                    x <span>{{sitem.qty}}</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                            <div class="cart-icon-plus"></div>
+                                            <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                                <img :src="appTools.imgSrc(sitem.img,8)"
+                                                     alt="">
+                                            </a>
+                                            <div class="info">
+                                                {{sitem.name}}
+                                            </div>
+                                            <div class="num">x {{sitem.qty}}</div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                                <div class="order-count">
+                                    <div class="order-result">
+                                        {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                                    </div>
+
+                                    <div class="clearFloat"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="order-empty">
+                                <div class="empty-cont">
+                                    <div class="empty-logo"></div>
+                                    <div class="order-empty-tips">
+                                        {{$t('hot.order.orderListsEmptyTips')}}
+                                    </div>
+                                    <a href="/" class="empty-btn le_btn btn_blue_border">{{$t('com.btn.goShopping')}}</a>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                </ul>
+                <!--/订单列表-->
+                <!--加载更多-->
+                <load-More :state="loadState" v-if="canLoadMore">
+                    {{$t('com.loadMore.scanMore')}}
+                </load-More>
+                <!--/加载更多-->
+            </pull-wrap>
+        </div>
+    </div>
+    <div class="wrap-search" v-if="search.key!=''">
+        <div class="scroll-search">
+            <pull-wrap wrap-dom=".wrap-search" scroll-dom=".scroll-search" fix-rem="1.06" >
+                <div class="order-cont">
+                 <div class="order-item m_t_10" v-for="(item , index) in search.data.datas" :key="item.order_no">
+                    <a :href="'/view/order/detail.html?orderNum='+item.order_no" class="tit d_flex">
+                        <div class="order-id flex_1">хао ：<span>{{item.order_no}}</span></div>
+                        <div class="order-state" :class="stateStrage[item.status_val]">
+                            {{item.status_txt}}
+                        </div>
+                    </a>
+                    <div class="cart-item">
+                        <div  v-for="sitem in item.details"
+                              :class="{singal:sitem.pro_type==1,'muti-no':sitem.pro_type!=1}">
+                            <div class="cont" v-if="sitem.pro_type==1">
+                                <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku">
+                                    <div class="logo">
+                                        <img :src="appTools.imgSrc(sitem.img,8)"
+                                             alt="">
+                                    </div>
+                                    <div class="info">
+                                        <div class="tit">
+                                            {{sitem.name}}
+                                        </div>
+                                        <div class="cate">
+                                            {{sitem.attr}}
+                                        </div>
+
+                                    </div>
+                                    <div class="price">
+                                        x <span>{{sitem.qty}}</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="muti-cont" v-if="sitem.pro_type==2 || sitem.pro_type==3">
+                                <div class="cart-icon-plus"></div>
+                                <a :href="'/view/goods/detail.html?skuId='+sitem.sku" class="sku-logo ">
+                                    <img :src="appTools.imgSrc(sitem.img,8)"
+                                         alt="">
+                                </a>
+                                <div class="info">
+                                    {{sitem.name}}
+                                </div>
+                                <div class="num">x {{sitem.qty}}</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="order-count">
+                        <div class="order-result">
+                            {{$t('hot.order.orderPrice')}}：<span>{{item.amount}} руб</span>
+                        </div>
+
+                        <template v-if="stateStrage[item.status_val]=='closed'">
+                        </template>
+                        <template v-if="stateStrage[item.status_val]=='finish'">
+
+                        </template>
+                        <template v-if="stateStrage[item.status_val]=='wait-pay'">
+                            <a href="/view/order/pay.html" class="order-btn le_btn btn_red">{{$t('com.btn.pay')}}</a>
+                            <a href="javascript:void(0);" @click="cancelOrder(item.order_no,index)" class="order-btn le_btn btn_gray_border">{{$t('com.btn.cancel')}}</a>
+                        </template>
+                        <template v-if="stateStrage[item.status_val]=='wait-delivery'">
+                        </template>
+                        <template v-if="stateStrage[item.status_val]=='closed'">
+                        </template>
+                        <template v-if="stateStrage[item.status_val]=='received'">
+                            <a href="javascript:void(0);" class="order-btn le_btn btn_blue_border">{{$t('com.btn.comment')}}</a>
+                            <a href="javascript:void(0);"  class="order-btn le_btn btn_dgray btn_gray_border">{{$t('hot.order.return')}}</a>
+                        </template>
+                        <template v-if="stateStrage[item.status_val]=='wait-receive'">
+                            <a href="javascript:void(0);" @click="confirmReceive(item.child_code)" class="order-btn le_btn btn_blue">{{$t('com.btn.confirmReceive')}}</a>
+                        </template>
+                        <div class="clearFloat"></div>
+                    </div>
+                </div>
+                </div>
+            </pull-wrap>
+        </div>
+    </div>
+
+</div>
+</body>
+<script src="../../js/bundle/common/tool.bundle.js"></script>
+<script src="../../js/bundle/common/animate.bundle.js"></script>
+<script src="../../js/common/vue.min.js"></script>
+<script src="../../js/bundle/common/lang.bundle.js"></script>
+<script src='../../js/lang/lang.js'></script>
+<script src="../../js/components/common.js"></script>
+<script src="../../js/common/app_tools.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        i18n:i18n,
+        data: {
+            search : {
+                key : '',
+                isSearch : false,
+                data : []
+            },
+            tabArr: [],
+            tabFix :0,//切换tab后修正滚动距离
+            orderLists:{
+                0:[],//全部
+                1:[],//代付款
+                2:[],//待发货
+                3:[],//待收货
+                4:[],//已收货
+                5:[],//已完成
+                6:[]//已关闭
+            },
+            stateStrage:appTools.orderState ,
+            pageSize :5,
+            tabIndex:0,
+            loadState : '',
+            tabStateMap : {
+                0 :0,
+                1 :1,
+                2 : 4,
+                3 : 8,
+                4 : 16,
+                5 : 32,
+                6 : -2
+            }//对照表
+        },
+        components: {
+            pullTab: pullTab,
+            pullWrap:pullWrap,
+            searchPop: slidePop,
+            loadMore : loadMore
+        },
+        computed : {
+            canLoadMore : function(){
+                return true;
+            }
+        },
+        mounted: function () {
+            var xthis = this;
+            this.tabArr = [this.$t('hot.order.allOrder'),
+                this.$t('hot.order.waitPay'),
+                this.$t('hot.order.waitSend'),
+                this.$t('hot.order.waitReceive'),
+                this.$t('hot.order.receive'),
+                this.$t('hot.order.finish'),
+                this.$t('hot.order.close')
+            ];
+            //兼容自带左右滑动的浏览器= =
+            appTools.fixSwiper();
+            touch.on($('.order-cont')[0],'swipeleft',function(){
+                if(xthis.tabIndex==(xthis.tabArr.length-1)){
+                    return false;
+                }
+                xthis.tabIndex = xthis.tabIndex + 1;
+                xthis.tabFix = xthis.tabFix + 1;
+                xthis.changeTab(xthis.tabFix);
+            });
+            touch.on($('.order-cont')[0],'swiperight',function(){
+                if(xthis.tabIndex==0){
+                    return false;
+                }
+                xthis.tabIndex = xthis.tabIndex - 1;
+                xthis.tabFix = xthis.tabFix - 1;
+                xthis.changeTab(xthis.tabFix);
+            });
+            $(function(){
+                var args = appTools.parseUrlQuery(location.href);
+                //按照进来的参数跳转到指定选项卡
+                xthis.tabIndex = !_.isEmpty(args)?parseInt(args.tabIndex) : 0;
+                xthis.tabFix = !_.isEmpty(args)?parseInt(args.tabIndex) : 0 ;
+                appTools.isUserLogined(true);
+                xthis.getLists();
+            })
+
+        },
+        created: function () {
+        },
+        methods: {
+            confirmReceive : function(orderID){
+                var xthis = this;
+                appTools.confirm(vm.$t('com.btn.confirmReceive'),{
+                    confirm : function(){
+                        ajaxInstall.com(
+                                xthis.ajaxConfirm,
+                                orderID
+                        ).done(function (data) {
+                            if(data.err == 0){
+                                location.reload();
+                            }
+                        })
+                    },
+                    cancel : function(){ console.log('cancel');}
+                });
+            },
+
+            ajaxConfirm : function(orderID){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        opt:'order',
+                        cmd:'receiptorder'
+                    },{
+                        "order_no":orderID//订单编号，必须为子订单编号
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            },
+            ajaxLists :function(status,pageIndex){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        opt:'order',
+                        cmd:'orderlist'
+                    },{
+                        page_size	: xthis.pageSize,
+                        page_index	: pageIndex,
+                        status : status
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            },
+
+            ajaxCancel : function(orderID){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        opt:'order',
+                        cmd:'cancelorder'
+                    },{
+                        "order_no":orderID
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            },
+            changeTab:function(index){
+                this.tabIndex = index;
+                this.tabFix = index;
+                if(_.isEmpty(this.orderLists[index])){
+                   this.getLists();
+                }
+            },
+            hideSearch : function(){
+                var xthis = this;
+                if(xthis.search.isSearch==true){
+                    xthis.search.isSearch = false;
+                    xthis.search.key = '';
+                    xthis.search.data = [];
+                    $('.header_search').hide().velocity('reverse');
+                    $('.icon-search').velocity('reverse')
+                    $('.header_search_btn').velocity('reverse');
+                    $('.header').find('.back:not(.disable)').eq(0).click(function(){
+                        history.back();
+                        return false;
+                    })
+                }
+
+            },
+            searchShow:function(){
+                var xthis = this;
+                $('.header').find('.back').unbind();
+                this.search.isSearch = true;
+                $('.header_search').show().velocity({
+                    left : '1.3rem'
+                });
+                $('.icon-search').velocity({
+                    left :'1.3rem'
+                })
+                $('.header_search_btn').velocity('fadeIn');
+            },
+            ajaxSearch : function(searchKey,pageIndex){
+                var xthis = this;
+                return $.ajax({
+                    url: appTools.api.orderApi,
+                    xhrFields:{withCredentials: true},
+                    data:appTools.ajax.combineDataJson({
+                        opt:'order',
+                        cmd:'ordersearch'
+                    },{
+                        page_size :	20,
+                        page_index : 1,
+                        search_key :searchKey
+                    }),
+                    type: 'post',
+                    dataType: "json"
+                });
+            },
+            toSearch:function(){
+                var xthis = this;
+                xthis.search.isSearch = true;
+                ajaxInstall.com(
+                    xthis.ajaxSearch,
+                    xthis.search.key
+                ).done(function(data){
+                    if(data.err==0){
+                        xthis.search.data = data.data;
+                    }
+                })
+            },
+
+            cancelOrder : function(orderId){
+                var xthis = this;
+                appTools.confirm(vm.$t('hot.tips.orderCancelTips'),{
+                    confirm : function(){
+                        ajaxInstall.com(
+                                xthis.ajaxCancel,
+                                orderId
+                        ).done(function(data){
+                            if(data.err==0){
+                                 location.reload();
+                            }
+                        })
+                    },
+                    cancel : function(){ console.log('cancel');}
+                });
+            },
+            getLists : function(){
+                var xthis = this;
+                var status = xthis.tabStateMap[xthis.tabIndex];
+                var nowLists = xthis.orderLists[xthis.tabIndex];
+                if(nowLists&&nowLists.datas){
+                    var newPage = Math.ceil(nowLists.datas.length/xthis.pageSize);
+                    var page = Math.ceil(nowLists.rows / xthis.pageSize) > newPage ? newPage + 1 :false;
+                }else{
+                    var page = 1;
+                }
+                ajaxInstall.com(
+                        xthis.ajaxLists,
+                        status,
+                        page
+                        )
+                        .done(function (data) {
+                            if (data.err == 0 ) {
+                                if(page==1){
+                                    xthis.orderLists[xthis.tabIndex] = data.data;
+                                }else{
+                                    xthis.orderLists[xthis.tabIndex].datas = xthis.orderLists[xthis.tabIndex].datas.concat(data.data.datas);
+                                }
+                            } else {
+                                Vue.$toast({'message': xthis.$t('hot.tips.eventError')});
+                            }
+                 });
+            },
+            //加载更多相关
+            loadMore:function(obj){
+                var xthis = this;
+                var status = xthis.tabStateMap[xthis.tabIndex];
+                var nowLists = xthis.orderLists[xthis.tabIndex];
+                var newPage = Math.ceil(nowLists.datas.length/xthis.pageSize);
+                var page = Math.ceil(nowLists.rows / xthis.pageSize) > newPage ? newPage + 1 :false;
+                xthis.loadState = 'loadMore';
+                if(!page){
+                    xthis.loadState = 'end';
+                    obj.touchObj.to(obj.touchObj.min);
+                }else{
+                    ajaxInstall.com(
+                            xthis.ajaxLists,
+                            status,
+                            page
+                            )
+                            .done(function (data) {
+                                if (data.err == 0 && data.data) {
+                                    xthis.loadState = 'end';
+                                    xthis.orderLists[xthis.tabIndex].datas = xthis.orderLists[xthis.tabIndex].datas.concat(data.data.datas);
+                                } else {
+                                    Vue.$toast({'message': xthis.$t('hot.tips.eventError')});
+                                }
+                            });
+                }
+
+            },
+            canLoad : function(){
+                this.loadState = 'canLoad';
+            },
+            cancelLoad:function(){
+                this.loadState = '';
+            }
+
+        }
+    });
+</script>
+</html>
